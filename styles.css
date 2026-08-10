@@ -1415,7 +1415,18 @@ img {
     }
     
     .carousel-btn {
-        display: none;
+        display: flex;
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+    }
+    
+    .carousel-btn.prev-btn {
+        left: 8px;
+    }
+    
+    .carousel-btn.next-btn {
+        right: 8px;
     }
     
     .listings-grid.carousel-track .listing-card {
@@ -1444,8 +1455,16 @@ img {
         grid-template-columns: repeat(2, 1fr);
     }
     
+    .btn-view-all {
+        display: none;
+    }
+    
+    .listings-grid.carousel-track {
+        gap: 16px;
+    }
+    
     .listings-grid.carousel-track .listing-card {
-        flex: 0 0 100%;
+        flex: 0 0 82%;
     }
     
     .hero-title {

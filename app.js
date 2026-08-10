@@ -492,8 +492,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = trackWrapper.querySelector('.listing-card');
             if (card) {
                 const cardWidth = card.offsetWidth;
-                const gap = 24;
-                trackWrapper.scrollBy({ left: -(cardWidth + gap) * 2, behavior: 'smooth' });
+                const gap = window.innerWidth <= 768 ? 16 : 24;
+                const multiplier = window.innerWidth <= 768 ? 1 : 2;
+                trackWrapper.scrollBy({ left: -(cardWidth + gap) * multiplier, behavior: 'smooth' });
             }
         });
 
@@ -501,8 +502,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = trackWrapper.querySelector('.listing-card');
             if (card) {
                 const cardWidth = card.offsetWidth;
-                const gap = 24;
-                trackWrapper.scrollBy({ left: (cardWidth + gap) * 2, behavior: 'smooth' });
+                const gap = window.innerWidth <= 768 ? 16 : 24;
+                const multiplier = window.innerWidth <= 768 ? 1 : 2;
+                trackWrapper.scrollBy({ left: (cardWidth + gap) * multiplier, behavior: 'smooth' });
             }
         });
     }
