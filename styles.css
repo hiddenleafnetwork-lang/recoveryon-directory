@@ -1417,6 +1417,10 @@ img {
     .carousel-btn {
         display: none;
     }
+    
+    .listings-grid.carousel-track .listing-card {
+        flex: 0 0 calc((100% - 24px) / 2);
+    }
 }
 
 @media (max-width: 480px) {
@@ -1437,7 +1441,11 @@ img {
     }
     
     .categories-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .listings-grid.carousel-track .listing-card {
+        flex: 0 0 100%;
     }
     
     .hero-title {
