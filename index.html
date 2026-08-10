@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RecoveryOn | Wellness & Support Directory</title>
+    <meta name="description" content="Find wellness centers, support groups, and recovery resources in your area. RecoveryOn is your trusted directory for health and healing.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="main-header" id="main-header">
+        <div class="header-container">
+            <a href="#" class="logo" id="logo-link">
+                <span class="logo-icon"><i class="fa-solid fa-circle-nodes"></i></span>
+                <span class="logo-text">Recovery<span>On</span></span>
+            </a>
+            
+            <!-- Navigation Menu -->
+            <nav class="nav-menu" id="nav-menu">
+                <ul>
+                    <li><a href="#directory" class="nav-link" id="nav-explore">Explore</a></li>
+                    <li><a href="#categories" class="nav-link" id="nav-categories">Categories</a></li>
+                    <li><a href="#resources" class="nav-link" id="nav-resources">Resources</a></li>
+                    <li><a href="#add-listing" class="btn btn-cta" id="nav-add-listing">Add a Listing</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation Menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Body Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <video autoplay muted loop playsinline class="hero-video">
+                <source src="Nature s Garden Peace Video 1.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="hero-overlay"></div>
+            <div class="hero-container">
+                <h1 class="hero-title">Your Path to Recovery Begins Here</h1>
+                <p class="hero-subtitle">Find trusted recovery centers, therapists, support groups, and wellness services near you.</p>
+                
+                <!-- Search Box -->
+                <div class="search-box-container" id="search-box-container">
+                    <form class="search-form" id="search-form" onsubmit="event.preventDefault();">
+                        <div class="input-group">
+                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            <input type="text" placeholder="Search centers, services, or specialties" id="search-keyword">
+                        </div>
+                        <div class="input-group location-group">
+                            <i class="fa-solid fa-location-dot location-icon"></i>
+                            <input type="text" placeholder="City or ZIP code" id="search-location">
+                        </div>
+                        <button type="submit" class="btn btn-search" id="btn-search">
+                            <span>Search Directory</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Popular Badges -->
+                <div class="popular-tags">
+                    <span class="tags-label">Popular searches:</span>
+                    <a href="#" class="tag-badge" id="tag-rehab">Rehab Centers</a>
+                    <a href="#" class="tag-badge" id="tag-therapy">Therapy</a>
+                    <a href="#" class="tag-badge" id="tag-support">Support Groups</a>
+                    <a href="#" class="tag-badge" id="tag-addiction">Addiction Treatment</a>
+                    <a href="#" class="tag-badge" id="tag-mental">Mental Health</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section class="section categories-section" id="categories">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Browse by Category</h2>
+                    <p class="section-desc">Explore recovery and wellness services categorized for easy navigation.</p>
+                </div>
+                
+                <div class="categories-grid">
+                    <!-- Category Item 1 -->
+                    <div class="category-card" id="cat-card-counseling">
+                        <div class="cat-icon-wrapper"><i class="fa-solid fa-user-doctor"></i></div>
+                        <h3 class="cat-title">Counseling & Therapy</h3>
+                        <p class="cat-count">124 Listings</p>
+                        <a href="#" class="cat-link" id="cat-link-counseling">Explore <i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+                    
+                    <!-- Category Item 2 -->
+                    <div class="category-card" id="cat-card-support">
+                        <div class="cat-icon-wrapper"><i class="fa-solid fa-users"></i></div>
+                        <h3 class="cat-title">Support Groups</h3>
+                        <p class="cat-count">85 Listings</p>
+                        <a href="#" class="cat-link" id="cat-link-support">Explore <i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+
+                    <!-- Category Item 3 -->
+                    <div class="category-card" id="cat-card-holistic">
+                        <div class="cat-icon-wrapper"><i class="fa-solid fa-leaf"></i></div>
+                        <h3 class="cat-title">Holistic Wellness</h3>
+                        <p class="cat-count">62 Listings</p>
+                        <a href="#" class="cat-link" id="cat-link-holistic">Explore <i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+
+                    <!-- Category Item 4 -->
+                    <div class="category-card" id="cat-card-inpatient">
+                        <div class="cat-icon-wrapper"><i class="fa-solid fa-house-medical"></i></div>
+                        <h3 class="cat-title">Treatment Centers</h3>
+                        <p class="cat-count">48 Listings</p>
+                        <a href="#" class="cat-link" id="cat-link-inpatient">Explore <i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Section -->
+        <section class="section featured-section" id="directory">
+            <div class="container">
+                <div class="section-header-row">
+                    <div class="section-header-text">
+                        <h2 class="section-title">Featured Recovery Resources</h2>
+                        <p class="section-desc">Top-rated centers and groups recommended by the community.</p>
+                    </div>
+                    <a href="#directory" class="btn btn-view-all" id="btn-view-all-resources">View All Resources</a>
+                </div>
+
+                <!-- Carousel Wrapper -->
+                <div class="carousel-container">
+                    <button class="carousel-btn prev-btn" aria-label="Previous listings"><i class="fa-solid fa-chevron-left"></i></button>
+                    <div class="carousel-track-wrapper">
+                        <div class="listings-grid carousel-track" id="listings-grid">
+                            <!-- Cards will be injected here automatically by app.js -->
+                        </div>
+                    </div>
+                    <button class="carousel-btn next-btn" aria-label="Next listings"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer" id="main-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Footer Brand Column -->
+                <div class="footer-brand-col">
+                    <a href="#" class="logo footer-logo" id="footer-logo-link">
+                        <span class="logo-icon"><i class="fa-solid fa-circle-nodes"></i></span>
+                        <span class="logo-text">Recovery<span>On</span></span>
+                    </a>
+                    <p class="footer-tagline">Connecting individuals with trusted recovery, health, and holistic support ecosystems nationwide.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-btn" aria-label="Facebook" id="fb-link"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="social-btn" aria-label="Twitter" id="tw-link"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#" class="social-btn" aria-label="Instagram" id="ig-link"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="social-btn" aria-label="LinkedIn" id="li-link"><i class="fa-brands fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <!-- Footer Column 2: Quick Links -->
+                <div class="footer-col">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" id="f-link-home">Home</a></li>
+                        <li><a href="#directory" id="f-link-explore">Explore Directory</a></li>
+                        <li><a href="#categories" id="f-link-categories">Categories</a></li>
+                        <li><a href="#" id="f-link-add-listing">Add a Listing</a></li>
+                        <li><a href="#about" id="f-link-about">About Us</a></li>
+                        <li><a href="#contact" id="f-link-contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Footer Column 3: Resource Categories -->
+                <div class="footer-col">
+                    <h4 class="footer-heading">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" id="f-link-blog">Blog & Articles</a></li>
+                        <li><a href="#" id="f-link-faq">Frequently Asked Questions</a></li>
+                        <li><a href="#" id="f-link-support-helplines">Emergency Helplines</a></li>
+                        <li><a href="#" id="f-link-privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Footer Column 4: Newsletter -->
+                <div class="footer-col footer-newsletter">
+                    <h4 class="footer-heading">Subscribe</h4>
+                    <p class="newsletter-text">Stay updated with fresh recovery insights and support resources.</p>
+                    <form class="newsletter-form" id="newsletter-form" onsubmit="event.preventDefault();">
+                        <input type="email" placeholder="Your Email Address" required id="newsletter-email">
+                        <button type="submit" class="btn btn-subscribe" id="btn-subscribe">
+                            <i class="fa-regular fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 RecoveryOn Directory. All rights reserved.</p>
+                <p>Designed with care for support & wellness.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- App Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
