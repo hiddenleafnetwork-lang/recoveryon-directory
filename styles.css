@@ -12,14 +12,21 @@
     --accent-color: #02c39a; /* Light Accent Teal */
     --accent-hover: #00a896;
     
+    /* Selected Support Colors */
+    --support-navy: #3D52A0;
+    --support-blue: #7091E6;
+    --support-muted-blue: #8697C4;
+    --support-border: #ADBBDA;
+    --support-bg: #EDE8F5;
+    
     /* Neutrals */
     --bg-main: #f8fafc;        /* Soft Cool White */
-    --bg-light-blue: #f1f5f9;  /* Light Neutral Border/Fill */
+    --bg-light-blue: #EDE8F5;  /* Alternate background (Using selected support color #EDE8F5) */
     --bg-card: #ffffff;
     --text-primary: #012a4a;   /* Dark Navy for Primary Headings/Contrast */
     --text-body: #334155;      /* Slate-700 for highly readable body text */
     --text-secondary: #475569; /* Slate-600 */
-    --text-muted: #64748b;     /* Slate-500 */
+    --text-muted: #8697C4;     /* Muted Support Blue/Grey #8697C4 */
     --border-color: #e2e8f0;   /* Slate-200 */
     
     /* Shadows */
@@ -485,7 +492,7 @@ img {
 
 .listing-card:hover {
     transform: translateY(-3px);
-    border-color: rgba(2, 128, 144, 0.2);
+    border-color: var(--support-border);
     box-shadow: var(--shadow-hover);
 }
 
@@ -689,53 +696,63 @@ img {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: 20px; /* Reduced padding */
+    padding: 16px 20px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: center;
     cursor: pointer;
     box-shadow: var(--shadow-sm);
+    height: 110px; /* Reduced by ~20%, compact and premium */
     transition: all var(--transition-normal);
+    position: relative;
 }
 
 .category-card:hover {
     transform: translateY(-2px);
-    border-color: rgba(2, 128, 144, 0.2);
+    border-color: var(--primary-color);
+    background-color: rgba(2, 128, 144, 0.02); /* Soft teal tint */
     box-shadow: var(--shadow-hover);
 }
 
+.category-card::after {
+    content: '\f054'; /* FontAwesome chevron-right */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    bottom: 16px;
+    right: 20px;
+    font-size: 0.75rem;
+    color: var(--primary-color);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: all var(--transition-normal);
+}
+
+.category-card:hover::after {
+    opacity: 1;
+    transform: translateX(0);
+}
+
 .cat-icon-wrapper {
-    width: 40px; /* Smaller icon size */
-    height: 40px;
-    background-color: rgba(2, 128, 144, 0.06);
+    width: 36px;
+    height: 36px;
+    background-color: var(--support-bg); /* #EDE8F5 secondary support background */
     border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--primary-color);
-    font-size: 1.15rem;
-    margin-bottom: 12px;
+    font-size: 1.05rem;
+    margin-bottom: 8px;
 }
 
 .cat-title {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: 12px;
-}
-
-.cat-link {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    margin-top: auto;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.category-card:hover .cat-link {
-    color: var(--accent-hover);
+    margin-bottom: 0;
+    line-height: 1.35;
 }
 
 /* --- Section 4: Browse Recovery Resources by State --- */
@@ -797,7 +814,7 @@ img {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background-color: rgba(2, 128, 144, 0.08);
+    background-color: var(--support-bg);
     color: var(--primary-color);
     display: flex;
     align-items: center;
@@ -904,7 +921,7 @@ img {
 }
 
 .faq-item:hover {
-    border-color: rgba(2, 128, 144, 0.2);
+    border-color: var(--support-border);
 }
 
 .faq-header {

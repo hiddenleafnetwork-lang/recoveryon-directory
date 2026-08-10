@@ -292,7 +292,6 @@ document.addEventListener('DOMContentLoaded', () => {
             card.innerHTML = `
                 <div class="cat-icon-wrapper"><i class="fa-solid ${cat.icon}"></i></div>
                 <h3 class="cat-title">${cat.name}</h3>
-                <span class="cat-link">Explore <i class="fa-solid fa-chevron-right"></i></span>
             `;
             categoriesGrid.appendChild(card);
         });
