@@ -507,7 +507,7 @@ img {
 }
 
 .listing-img-container {
-    height: 160px; /* Structured height */
+    height: 190px; /* Structured height (increased by ~18%) */
     position: relative;
     overflow: hidden;
     border-bottom: 1px solid var(--border-color);
@@ -547,15 +547,7 @@ img {
     padding: 3px 8px;
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-sm);
-}
-
-.listing-img-container .listing-badge.bg-teal {
     background-color: var(--primary-color);
-    color: #ffffff;
-}
-
-.listing-img-container .listing-badge.bg-navy {
-    background-color: var(--secondary-color);
     color: #ffffff;
 }
 

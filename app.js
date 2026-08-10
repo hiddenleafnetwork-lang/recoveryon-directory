@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Category badge overlaid on top-left of image
             const badge = document.createElement('span');
-            badge.className = `listing-badge ${resource.category.toLowerCase().includes('support') ? 'bg-navy' : 'bg-teal'}`;
+            badge.className = 'listing-badge bg-teal';
             badge.textContent = resource.category;
             visualArea.appendChild(badge);
 
@@ -470,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (card) {
                 const cardWidth = card.offsetWidth;
                 const gap = 24;
-                trackWrapper.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
+                trackWrapper.scrollBy({ left: -(cardWidth + gap) * 2, behavior: 'smooth' });
             }
         });
 
@@ -479,7 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (card) {
                 const cardWidth = card.offsetWidth;
                 const gap = 24;
-                trackWrapper.scrollBy({ left: cardWidth + gap, behavior: 'smooth' });
+                trackWrapper.scrollBy({ left: (cardWidth + gap) * 2, behavior: 'smooth' });
             }
         });
     }
