@@ -1,18 +1,17 @@
 /**
  * RecoveryOn Directory - Frontend Interactions
- * Controls mobile responsive menu, header scrolling state, and interactive effects.
+ * Controls mobile responsive menu, dynamic content rendering, and interactive UI behaviors.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
-    const mainHeader = document.getElementById('main-header');
     const mobileToggle = document.getElementById('mobile-toggle');
     const navMenu = document.getElementById('nav-menu');
     const navLinks = document.querySelectorAll('.nav-link');
     const searchForm = document.getElementById('search-form');
     const newsletterForm = document.getElementById('newsletter-form');
 
-    // 2. Mobile Menu Toggle
+    // 1. Mobile Menu Toggle
     if (mobileToggle && navMenu) {
         mobileToggle.addEventListener('click', () => {
             mobileToggle.classList.toggle('active');
@@ -34,6 +33,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // 2. Popular Search Badges Click Handler
+    const popularTags = document.querySelectorAll('.tag-badge');
+    popularTags.forEach(tag => {
+        tag.addEventListener('click', (e) => {
+            e.preventDefault();
+            const keywordInput = document.getElementById('search-keyword');
+            if (keywordInput) {
+                keywordInput.value = tag.textContent;
+                keywordInput.focus();
+            }
+        });
+    });
+
     // 3. Simple Form Submission Handlers
     if (searchForm) {
         searchForm.addEventListener('submit', (e) => {
@@ -52,6 +64,15 @@ document.addEventListener('DOMContentLoaded', () => {
             emailInput.value = '';
         });
     }
+
+    // Add Listing CTAs Click Handler
+    const addListingBtns = document.querySelectorAll('#btn-add-listing-cta, #f-link-add-listing, .btn-cta');
+    addListingBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert("Thank you for your interest! The provider listing application flow is coming soon.");
+        });
+    });
 
     // 4. Resources Cards Data & Rendering
     const resources = [
@@ -221,9 +242,184 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    renderCards();
+    // 5. Category Data & Rendering
+    const categories = [
+        { name: "Treatment Centers", icon: "fa-house-medical", slug: "treatment-centers" },
+        { name: "Counseling & Therapy", icon: "fa-user-doctor", slug: "counseling-therapy" },
+        { name: "Detox Programs", icon: "fa-droplet", slug: "detox-programs" },
+        { name: "Support Groups", icon: "fa-users", slug: "support-groups" },
+        { name: "Sober Living", icon: "fa-bed", slug: "sober-living" },
+        { name: "Mental Health Services", icon: "fa-brain", slug: "mental-health" },
+        { name: "Outpatient Treatment", icon: "fa-door-open", slug: "outpatient" },
+        { name: "Holistic Wellness", icon: "fa-leaf", slug: "holistic-wellness" }
+    ];
 
-    // 5. Carousel Scroll Control
+    const categoriesGrid = document.getElementById('categories-grid');
+
+    function renderCategories() {
+        if (!categoriesGrid) return;
+        categoriesGrid.innerHTML = '';
+        
+        categories.forEach(cat => {
+            const card = document.createElement('div');
+            card.className = 'category-card';
+            card.id = `cat-card-${cat.slug}`;
+            
+            card.addEventListener('click', () => {
+                const keywordInput = document.getElementById('search-keyword');
+                if (keywordInput) {
+                    keywordInput.value = cat.name;
+                    keywordInput.focus();
+                    
+                    const searchSection = document.getElementById('search-box-container');
+                    if (searchSection) {
+                        searchSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+            
+            card.innerHTML = `
+                <div class="cat-icon-wrapper"><i class="fa-solid ${cat.icon}"></i></div>
+                <h3 class="cat-title">${cat.name}</h3>
+                <span class="cat-link">Explore <i class="fa-solid fa-chevron-right"></i></span>
+            `;
+            categoriesGrid.appendChild(card);
+        });
+    }
+
+    // 6. States Data & Rendering
+    const states = [
+        { name: "Alabama", abbr: "AL" }, { name: "Alaska", abbr: "AK" }, { name: "Arizona", abbr: "AZ" },
+        { name: "Arkansas", abbr: "AR" }, { name: "California", abbr: "CA" }, { name: "Colorado", abbr: "CO" },
+        { name: "Connecticut", abbr: "CT" }, { name: "Delaware", abbr: "DE" }, { name: "District of Columbia", abbr: "DC" },
+        { name: "Florida", abbr: "FL" }, { name: "Georgia", abbr: "GA" }, { name: "Hawaii", abbr: "HI" },
+        { name: "Idaho", abbr: "ID" }, { name: "Illinois", abbr: "IL" }, { name: "Indiana", abbr: "IN" },
+        { name: "Iowa", abbr: "IA" }, { name: "Kansas", abbr: "KS" }, { name: "Kentucky", abbr: "KY" },
+        { name: "Louisiana", abbr: "LA" }, { name: "Maine", abbr: "ME" }, { name: "Maryland", abbr: "MD" },
+        { name: "Massachusetts", abbr: "MA" }, { name: "Michigan", abbr: "MI" }, { name: "Minnesota", abbr: "MN" },
+        { name: "Mississippi", abbr: "MS" }, { name: "Missouri", abbr: "MO" }, { name: "Montana", abbr: "MT" },
+        { name: "Nebraska", abbr: "NE" }, { name: "Nevada", abbr: "NV" }, { name: "New Hampshire", abbr: "NH" },
+        { name: "New Jersey", abbr: "NJ" }, { name: "New Mexico", abbr: "NM" }, { name: "New York", abbr: "NY" },
+        { name: "North Carolina", abbr: "NC" }, { name: "North Dakota", abbr: "ND" }, { name: "Ohio", abbr: "OH" },
+        { name: "Oklahoma", abbr: "OK" }, { name: "Oregon", abbr: "OR" }, { name: "Pennsylvania", abbr: "PA" },
+        { name: "Rhode Island", abbr: "RI" }, { name: "South Carolina", abbr: "SC" }, { name: "South Dakota", abbr: "SD" },
+        { name: "Tennessee", abbr: "TN" }, { name: "Texas", abbr: "TX" }, { name: "Utah", abbr: "UT" },
+        { name: "Vermont", abbr: "VT" }, { name: "Virginia", abbr: "VA" }, { name: "Washington", abbr: "WA" },
+        { name: "West Virginia", abbr: "WV" }, { name: "Wisconsin", abbr: "WI" }, { name: "Wyoming", abbr: "WY" }
+    ];
+
+    const statesGrid = document.getElementById('states-grid');
+
+    function renderStates() {
+        if (!statesGrid) return;
+        statesGrid.innerHTML = '';
+        
+        states.forEach(state => {
+            const stateLink = document.createElement('a');
+            const slug = state.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            stateLink.href = `/${slug}/`;
+            stateLink.className = 'state-link';
+            stateLink.id = `state-link-${slug}`;
+            stateLink.textContent = state.name;
+            
+            stateLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert(`Navigating to the dedicated state directory page for ${state.name} (/${slug}/)`);
+            });
+            
+            statesGrid.appendChild(stateLink);
+        });
+    }
+
+    // 7. FAQs Data & Rendering
+    const faqs = [
+        {
+            question: "What is RecoveryOn?",
+            answer: "RecoveryOn is a comprehensive, nationwide directory designed to connect individuals with trusted local recovery centers, therapists, support groups, and wellness services. We are an informational platform and directory, not a direct treatment provider."
+        },
+        {
+            question: "How do I search for recovery resources near me?",
+            answer: "You can use the search tool at the top of the page. Simply enter a keyword (such as a specialty, therapy, or center name) and input your city or ZIP code. Click 'Search Directory' to view localized listings matching your criteria."
+        },
+        {
+            question: "Does RecoveryOn directly provide medical treatment?",
+            answer: "No, RecoveryOn does not directly provide medical treatment, clinical advice, or emergency services. We host directory listings to help you discover third-party organizations. If you are experiencing a medical or mental health emergency, please call 911 or call/text the Suicide & Crisis Lifeline at 988 immediately."
+        },
+        {
+            question: "How can I add my organization to the directory?",
+            answer: "Recovery or wellness providers, therapists, support groups, and other eligible organizations can submit their listing by clicking the 'Add Your Listing' button. Once verified for basic listing requirements, your organization will become visible to searchers nationwide."
+        },
+        {
+            question: "Is resource information independently verified?",
+            answer: "We verify basic licensing, contact details, and provider status to ensure listings are authentic. However, we recommend that users independently contact providers to verify insurance acceptance, current rates, and program details before committing to services."
+        },
+        {
+            question: "How does the location search work?",
+            answer: "Our search matches location queries against a database of cities and ZIP codes across the United States. It filters search results to show active listings within or closest to the specified city or postal code boundary."
+        }
+    ];
+
+    const faqAccordion = document.getElementById('faq-accordion');
+
+    function renderFAQs() {
+        if (!faqAccordion) return;
+        faqAccordion.innerHTML = '';
+        
+        faqs.forEach((faq, index) => {
+            const item = document.createElement('div');
+            item.className = 'faq-item';
+            
+            const header = document.createElement('button');
+            header.className = 'faq-header';
+            header.id = `faq-header-${index}`;
+            header.setAttribute('aria-expanded', 'false');
+            header.setAttribute('aria-controls', `faq-content-${index}`);
+            header.innerHTML = `
+                <span class="faq-question">${faq.question}</span>
+                <span class="faq-icon-toggle"><i class="fa-solid fa-chevron-down"></i></span>
+            `;
+            
+            const content = document.createElement('div');
+            content.className = 'faq-content';
+            content.id = `faq-content-${index}`;
+            content.setAttribute('aria-labelledby', `faq-header-${index}`);
+            content.innerHTML = `
+                <div class="faq-answer">
+                    <p>${faq.answer}</p>
+                </div>
+            `;
+            
+            header.addEventListener('click', () => {
+                const isExpanded = header.getAttribute('aria-expanded') === 'true';
+                
+                // Close all other FAQ items for a clean accordion behavior
+                const allHeaders = faqAccordion.querySelectorAll('.faq-header');
+                const allContents = faqAccordion.querySelectorAll('.faq-content');
+                
+                allHeaders.forEach(h => {
+                    h.setAttribute('aria-expanded', 'false');
+                    h.classList.remove('active');
+                });
+                allContents.forEach(c => {
+                    c.style.maxHeight = null;
+                    c.classList.remove('active');
+                });
+                
+                if (!isExpanded) {
+                    header.setAttribute('aria-expanded', 'true');
+                    header.classList.add('active');
+                    content.classList.add('active');
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }
+            });
+            
+            item.appendChild(header);
+            item.appendChild(content);
+            faqAccordion.appendChild(item);
+        });
+    }
+
+    // 8. Carousel Scroll Control
     const trackWrapper = document.querySelector('.carousel-track-wrapper');
     const prevBtn = document.querySelector('.prev-btn');
     const nextBtn = document.querySelector('.next-btn');
@@ -253,11 +449,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Add event listeners for scroll and resize
         trackWrapper.addEventListener('scroll', updateCarouselArrows);
         window.addEventListener('resize', updateCarouselArrows);
 
-        // Initial trigger (wait slightly for image layouts)
+        // Initial trigger
         setTimeout(updateCarouselArrows, 100);
 
         prevBtn.addEventListener('click', () => {
@@ -278,4 +473,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Render all elements
+    renderCards();
+    renderCategories();
+    renderStates();
+    renderFAQs();
 });

@@ -44,7 +44,7 @@
 
     <!-- Main Body Content -->
     <main class="main-content">
-        <!-- Hero Section -->
+        <!-- Section 1: Hero Search -->
         <section class="hero-section">
             <video autoplay muted loop playsinline class="hero-video">
                 <source src="Nature s Garden Peace Video 1.mp4" type="video/mp4">
@@ -85,52 +85,8 @@
             </div>
         </section>
 
-        <!-- Categories Section -->
-        <section class="section categories-section" id="categories">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Browse by Category</h2>
-                    <p class="section-desc">Explore recovery and wellness services categorized for easy navigation.</p>
-                </div>
-                
-                <div class="categories-grid">
-                    <!-- Category Item 1 -->
-                    <div class="category-card" id="cat-card-counseling">
-                        <div class="cat-icon-wrapper"><i class="fa-solid fa-user-doctor"></i></div>
-                        <h3 class="cat-title">Counseling & Therapy</h3>
-                        <p class="cat-count">124 Listings</p>
-                        <a href="#" class="cat-link" id="cat-link-counseling">Explore <i class="fa-solid fa-chevron-right"></i></a>
-                    </div>
-                    
-                    <!-- Category Item 2 -->
-                    <div class="category-card" id="cat-card-support">
-                        <div class="cat-icon-wrapper"><i class="fa-solid fa-users"></i></div>
-                        <h3 class="cat-title">Support Groups</h3>
-                        <p class="cat-count">85 Listings</p>
-                        <a href="#" class="cat-link" id="cat-link-support">Explore <i class="fa-solid fa-chevron-right"></i></a>
-                    </div>
-
-                    <!-- Category Item 3 -->
-                    <div class="category-card" id="cat-card-holistic">
-                        <div class="cat-icon-wrapper"><i class="fa-solid fa-leaf"></i></div>
-                        <h3 class="cat-title">Holistic Wellness</h3>
-                        <p class="cat-count">62 Listings</p>
-                        <a href="#" class="cat-link" id="cat-link-holistic">Explore <i class="fa-solid fa-chevron-right"></i></a>
-                    </div>
-
-                    <!-- Category Item 4 -->
-                    <div class="category-card" id="cat-card-inpatient">
-                        <div class="cat-icon-wrapper"><i class="fa-solid fa-house-medical"></i></div>
-                        <h3 class="cat-title">Treatment Centers</h3>
-                        <p class="cat-count">48 Listings</p>
-                        <a href="#" class="cat-link" id="cat-link-inpatient">Explore <i class="fa-solid fa-chevron-right"></i></a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Featured Section -->
-        <section class="section featured-section" id="directory">
+        <!-- Section 2: Featured Recovery Resources -->
+        <section class="section featured-section bg-white" id="directory">
             <div class="container">
                 <div class="section-header-row">
                     <div class="section-header-text">
@@ -149,6 +105,140 @@
                         </div>
                     </div>
                     <button class="carousel-btn next-btn" aria-label="Next listings"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Browse by Category -->
+        <section class="section categories-section bg-light" id="categories">
+            <div class="container">
+                <div class="section-header-row">
+                    <div class="section-header-text">
+                        <h2 class="section-title">Browse by Category</h2>
+                        <p class="section-desc">Explore recovery and wellness services categorized for easy navigation.</p>
+                    </div>
+                </div>
+                
+                <div class="categories-grid" id="categories-grid">
+                    <!-- Categories will be injected here automatically by app.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Browse Recovery Resources by State -->
+        <section class="section states-section bg-white" id="states">
+            <div class="container">
+                <div class="section-header-row">
+                    <div class="section-header-text">
+                        <h2 class="section-title">Find Recovery Resources Across the U.S.</h2>
+                        <p class="section-desc">Select a state below to browse localized treatment centers, support groups, and specialists.</p>
+                    </div>
+                </div>
+                
+                <div class="states-grid-container">
+                    <div class="states-grid" id="states-grid">
+                        <!-- State links will be injected here automatically by app.js -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Why Use RecoveryOn + How It Works -->
+        <section class="section trust-section bg-light" id="about">
+            <div class="container">
+                <div class="section-header-row">
+                    <div class="section-header-text">
+                        <h2 class="section-title">Why RecoveryOn & How It Works</h2>
+                        <p class="section-desc">A transparent directory helping you find and connect with the right recovery ecosystem.</p>
+                    </div>
+                </div>
+                
+                <div class="trust-grid">
+                    <!-- Why Use RecoveryOn Side -->
+                    <div class="trust-why-col">
+                        <h3 class="trust-subtitle">Why Use RecoveryOn</h3>
+                        <ul class="trust-benefits-list">
+                            <li>
+                                <div class="benefit-icon"><i class="fa-solid fa-location-crosshairs"></i></div>
+                                <div class="benefit-content">
+                                    <h4>Easy Location-Based Discovery</h4>
+                                    <p>Find local support and specialized centers near you using simple city or ZIP code filters.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="benefit-icon"><i class="fa-solid fa-folder-open"></i></div>
+                                <div class="benefit-content">
+                                    <h4>Clear Service Categories</h4>
+                                    <p>Quickly browse by relevant directories, from therapy and sober living to inpatient rehabilitation.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="benefit-icon"><i class="fa-solid fa-circle-info"></i></div>
+                                <div class="benefit-content">
+                                    <h4>Detailed Resource Information</h4>
+                                    <p>Access reviews, verified status labels, accepted insurance types, and specialized services in one view.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- How It Works Side -->
+                    <div class="trust-how-col">
+                        <h3 class="trust-subtitle">How It Works</h3>
+                        <ol class="trust-steps-list">
+                            <li>
+                                <div class="step-badge">1</div>
+                                <div class="step-content">
+                                    <h4>Search</h4>
+                                    <p>Find resources by selecting a service category and your desired location or ZIP code.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="step-badge">2</div>
+                                <div class="step-content">
+                                    <h4>Compare</h4>
+                                    <p>Review key listing details, ratings, accepted insurance types, and local community feedback.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="step-badge">3</div>
+                                <div class="step-content">
+                                    <h4>Connect</h4>
+                                    <p>Visit provider detail pages or reach out to them directly using available verified details.</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Provider CTA + FAQs -->
+        <section class="section faq-section bg-white" id="faqs">
+            <div class="container">
+                <!-- Provider CTA Banner -->
+                <div class="provider-cta-banner">
+                    <div class="provider-cta-content">
+                        <h3>Are You a Recovery or Wellness Provider?</h3>
+                        <p>Add your organization to RecoveryOn to improve your local visibility to people searching for relevant care and services in your area.</p>
+                    </div>
+                    <div class="provider-cta-action">
+                        <a href="#" class="btn btn-provider-cta" id="btn-add-listing-cta">Add Your Listing</a>
+                    </div>
+                </div>
+
+                <div class="faq-divider"></div>
+
+                <!-- FAQs Accordion -->
+                <div class="section-header-row">
+                    <div class="section-header-text">
+                        <h2 class="section-title">Frequently Asked Questions</h2>
+                        <p class="section-desc">Common questions about using our directory and finding recovery support.</p>
+                    </div>
+                </div>
+
+                <div class="faq-accordion" id="faq-accordion">
+                    <!-- FAQ accordion items will be injected here automatically by app.js -->
                 </div>
             </div>
         </section>
