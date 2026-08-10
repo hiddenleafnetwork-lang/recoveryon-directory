@@ -244,14 +244,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 5. Category Data & Rendering
     const categories = [
-        { name: "Treatment Centers", icon: "fa-house-medical", slug: "treatment-centers" },
-        { name: "Counseling & Therapy", icon: "fa-user-doctor", slug: "counseling-therapy" },
-        { name: "Detox Programs", icon: "fa-droplet", slug: "detox-programs" },
-        { name: "Support Groups", icon: "fa-users", slug: "support-groups" },
-        { name: "Sober Living", icon: "fa-bed", slug: "sober-living" },
-        { name: "Mental Health Services", icon: "fa-brain", slug: "mental-health" },
-        { name: "Outpatient Treatment", icon: "fa-door-open", slug: "outpatient" },
-        { name: "Holistic Wellness", icon: "fa-leaf", slug: "holistic-wellness" }
+        { name: "Treatment Centers", icon: "fa-house-medical", slug: "treatment-centers", countText: "124 centers" },
+        { name: "Counseling & Therapy", icon: "fa-user-doctor", slug: "counseling-therapy", countText: "86 therapists" },
+        { name: "Detox Programs", icon: "fa-droplet", slug: "detox-programs", countText: "42 programs" },
+        { name: "Support Groups", icon: "fa-users", slug: "support-groups", countText: "153 groups" },
+        { name: "Sober Living", icon: "fa-bed", slug: "sober-living", countText: "65 homes" },
+        { name: "Mental Health Services", icon: "fa-brain", slug: "mental-health", countText: "110 services" },
+        { name: "Outpatient Treatment", icon: "fa-door-open", slug: "outpatient", countText: "95 clinics" },
+        { name: "Holistic Wellness", icon: "fa-leaf", slug: "holistic-wellness", countText: "58 centers" }
     ];
 
     const categoriesGrid = document.getElementById('categories-grid');
@@ -292,6 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.innerHTML = `
                 <div class="cat-icon-wrapper"><i class="fa-solid ${cat.icon}"></i></div>
                 <h3 class="cat-title">${cat.name}</h3>
+                <span class="cat-count">${cat.countText}</span>
             `;
             categoriesGrid.appendChild(card);
         });
@@ -299,38 +300,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 6. States Data & Rendering
     const states = [
-        { name: "Alabama", abbr: "AL" }, { name: "Alaska", abbr: "AK" }, { name: "Arizona", abbr: "AZ" },
-        { name: "Arkansas", abbr: "AR" }, { name: "California", abbr: "CA" }, { name: "Colorado", abbr: "CO" },
-        { name: "Connecticut", abbr: "CT" }, { name: "Delaware", abbr: "DE" }, { name: "District of Columbia", abbr: "DC" },
-        { name: "Florida", abbr: "FL" }, { name: "Georgia", abbr: "GA" }, { name: "Hawaii", abbr: "HI" },
-        { name: "Idaho", abbr: "ID" }, { name: "Illinois", abbr: "IL" }, { name: "Indiana", abbr: "IN" },
-        { name: "Iowa", abbr: "IA" }, { name: "Kansas", abbr: "KS" }, { name: "Kentucky", abbr: "KY" },
-        { name: "Louisiana", abbr: "LA" }, { name: "Maine", abbr: "ME" }, { name: "Maryland", abbr: "MD" },
-        { name: "Massachusetts", abbr: "MA" }, { name: "Michigan", abbr: "MI" }, { name: "Minnesota", abbr: "MN" },
-        { name: "Mississippi", abbr: "MS" }, { name: "Missouri", abbr: "MO" }, { name: "Montana", abbr: "MT" },
-        { name: "Nebraska", abbr: "NE" }, { name: "Nevada", abbr: "NV" }, { name: "New Hampshire", abbr: "NH" },
-        { name: "New Jersey", abbr: "NJ" }, { name: "New Mexico", abbr: "NM" }, { name: "New York", abbr: "NY" },
-        { name: "North Carolina", abbr: "NC" }, { name: "North Dakota", abbr: "ND" }, { name: "Ohio", abbr: "OH" },
-        { name: "Oklahoma", abbr: "OK" }, { name: "Oregon", abbr: "OR" }, { name: "Pennsylvania", abbr: "PA" },
-        { name: "Rhode Island", abbr: "RI" }, { name: "South Carolina", abbr: "SC" }, { name: "South Dakota", abbr: "SD" },
-        { name: "Tennessee", abbr: "TN" }, { name: "Texas", abbr: "TX" }, { name: "Utah", abbr: "UT" },
-        { name: "Vermont", abbr: "VT" }, { name: "Virginia", abbr: "VA" }, { name: "Washington", abbr: "WA" },
-        { name: "West Virginia", abbr: "WV" }, { name: "Wisconsin", abbr: "WI" }, { name: "Wyoming", abbr: "WY" }
+        { name: "Alabama", abbr: "AL", count: 48 }, { name: "Alaska", abbr: "AK", count: 18 }, { name: "Arizona", abbr: "AZ", count: 76 },
+        { name: "Arkansas", abbr: "AR", count: 32 }, { name: "California", abbr: "CA", count: 215 }, { name: "Colorado", abbr: "CO", count: 88 },
+        { name: "Connecticut", abbr: "CT", count: 45 }, { name: "Delaware", abbr: "DE", count: 22 }, { name: "District of Columbia", abbr: "DC", count: 19 },
+        { name: "Florida", abbr: "FL", count: 184 }, { name: "Georgia", abbr: "GA", count: 96 }, { name: "Hawaii", abbr: "HI", count: 25 },
+        { name: "Idaho", abbr: "ID", count: 29 }, { name: "Illinois", abbr: "IL", count: 132 }, { name: "Indiana", abbr: "IN", count: 74 },
+        { name: "Iowa", abbr: "IA", count: 41 }, { name: "Kansas", abbr: "KS", count: 38 }, { name: "Kentucky", abbr: "KY", count: 62 },
+        { name: "Louisiana", abbr: "LA", count: 54 }, { name: "Maine", abbr: "ME", count: 28 }, { name: "Maryland", abbr: "MD", count: 82 },
+        { name: "Massachusetts", abbr: "MA", count: 105 }, { name: "Michigan", abbr: "MI", count: 112 }, { name: "Minnesota", abbr: "MN", count: 78 },
+        { name: "Mississippi", abbr: "MS", count: 35 }, { name: "Missouri", abbr: "MO", count: 69 }, { name: "Montana", abbr: "MT", count: 21 },
+        { name: "Nebraska", abbr: "NE", count: 33 }, { name: "Nevada", abbr: "NV", count: 58 }, { name: "New Hampshire", abbr: "NH", count: 27 },
+        { name: "New Jersey", abbr: "NJ", count: 98 }, { name: "New Mexico", abbr: "NM", count: 39 }, { name: "New York", abbr: "NY", count: 176 },
+        { name: "North Carolina", abbr: "NC", count: 102 }, { name: "North Dakota", abbr: "ND", count: 15 }, { name: "Ohio", abbr: "OH", count: 124 },
+        { name: "Oklahoma", abbr: "OK", count: 52 }, { name: "Oregon", abbr: "OR", count: 71 }, { name: "Pennsylvania", abbr: "PA", count: 138 },
+        { name: "Rhode Island", abbr: "RI", count: 24 }, { name: "South Carolina", abbr: "SC", count: 67 }, { name: "South Dakota", abbr: "SD", count: 18 },
+        { name: "Tennessee", abbr: "TN", count: 89 }, { name: "Texas", abbr: "TX", count: 194 }, { name: "Utah", abbr: "UT", count: 56 },
+        { name: "Vermont", abbr: "VT", count: 17 }, { name: "Virginia", abbr: "VA", count: 92 }, { name: "Washington", abbr: "WA", count: 108 },
+        { name: "West Virginia", abbr: "WV", count: 42 }, { name: "Wisconsin", abbr: "WI", count: 81 }, { name: "Wyoming", abbr: "WY", count: 12 }
     ];
 
     const statesGrid = document.getElementById('states-grid');
+    const popularStatesRow = document.getElementById('popular-states-row');
 
     function renderStates() {
         if (!statesGrid) return;
         statesGrid.innerHTML = '';
+        if (popularStatesRow) popularStatesRow.innerHTML = '';
+        
+        const popularAbbrs = ["CA", "TX", "FL", "NY", "IL"];
         
         states.forEach(state => {
-            const stateLink = document.createElement('a');
             const slug = state.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            
+            // Build the state list item
+            const stateLink = document.createElement('a');
             stateLink.href = `/${slug}/`;
             stateLink.className = 'state-link';
             stateLink.id = `state-link-${slug}`;
-            stateLink.textContent = state.name;
+            stateLink.innerHTML = `${state.name} <span class="state-count">(${state.count})</span>`;
             
             stateLink.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -338,6 +345,22 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             
             statesGrid.appendChild(stateLink);
+            
+            // Inject pill for popular state
+            if (popularAbbrs.includes(state.abbr) && popularStatesRow) {
+                const popularPill = document.createElement('a');
+                popularPill.href = `/${slug}/`;
+                popularPill.className = 'popular-state-pill';
+                popularPill.id = `popular-pill-${slug}`;
+                popularPill.innerHTML = `<i class="fa-solid fa-map-pin"></i> ${state.name} <span class="pill-count">${state.count}</span>`;
+                
+                popularPill.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert(`Navigating to the dedicated state directory page for ${state.name} (/${slug}/)`);
+                });
+                
+                popularStatesRow.appendChild(popularPill);
+            }
         });
     }
 

@@ -684,6 +684,20 @@ img {
     gap: 24px;
 }
 
+@media (max-width: 992px) {
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 compact cards per row on mobile */
+        gap: 12px;
+    }
+}
+
 .category-card {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -695,9 +709,16 @@ img {
     justify-content: center;
     cursor: pointer;
     box-shadow: var(--shadow-sm);
-    height: 110px; /* Reduced by ~20%, compact and premium */
+    height: 110px; /* Reduced height, compact and premium */
     transition: all var(--transition-normal);
     position: relative;
+}
+
+@media (max-width: 576px) {
+    .category-card {
+        height: 100px; /* Even more compact on mobile */
+        padding: 12px 14px;
+    }
 }
 
 .category-card:hover {
@@ -721,6 +742,14 @@ img {
     transition: all var(--transition-normal);
 }
 
+@media (max-width: 576px) {
+    .category-card::after {
+        right: 12px;
+        bottom: 12px;
+        font-size: 0.7rem;
+    }
+}
+
 .category-card:hover::after {
     opacity: 1;
     transform: translateX(0);
@@ -739,37 +768,168 @@ img {
     margin-bottom: 8px;
 }
 
+@media (max-width: 576px) {
+    .cat-icon-wrapper {
+        width: 32px;
+        height: 32px;
+        font-size: 0.95rem;
+        margin-bottom: 6px;
+    }
+}
+
 .cat-title {
     font-size: 0.9rem;
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: 0;
-    line-height: 1.35;
+    margin-bottom: 2px;
+    line-height: 1.3;
+}
+
+@media (max-width: 576px) {
+    .cat-title {
+        font-size: 0.82rem;
+    }
+}
+
+.cat-count {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    display: block;
+}
+
+@media (max-width: 576px) {
+    .cat-count {
+        font-size: 0.7rem;
+    }
 }
 
 /* --- Section 4: Browse Recovery Resources by State --- */
+.popular-states-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding: 16px 20px;
+    background-color: var(--bg-light-blue); /* #EDE8F5 */
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+@media (max-width: 576px) {
+    .popular-states-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 14px 16px;
+        margin-bottom: 24px;
+    }
+}
+
+.popular-states-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.popular-states-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.popular-state-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+}
+
+.popular-state-pill i {
+    color: var(--primary-color);
+    font-size: 0.75rem;
+}
+
+.popular-state-pill .pill-count {
+    background-color: var(--bg-light-blue);
+    color: var(--primary-color);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 4px;
+}
+
+.popular-state-pill:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
 .states-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 12px 24px;
+    gap: 14px 24px;
+}
+
+@media (max-width: 992px) {
+    .states-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px 18px;
+    }
+}
+
+@media (max-width: 576px) {
+    .states-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
+        gap: 10px 14px;
+    }
 }
 
 .state-link {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 500;
     text-decoration: none;
     transition: all var(--transition-fast);
-    padding: 2px 0;
-    display: inline-block;
-    border-left: 2px solid transparent;
-    padding-left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 12px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+}
+
+.state-link .state-count {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    font-weight: 600;
 }
 
 .state-link:hover {
     color: var(--primary-color);
-    padding-left: 6px;
-    border-left-color: var(--primary-color);
+    border-color: var(--support-border); /* #ADBBDA */
+    background-color: rgba(2, 128, 144, 0.01);
+    transform: translateX(2px);
+}
+
+.state-link:hover .state-count {
+    color: var(--primary-color);
 }
 
 /* --- Section 5: Why Use RecoveryOn + How It Works --- */
