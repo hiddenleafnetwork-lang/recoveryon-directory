@@ -264,8 +264,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.createElement('div');
             card.className = 'category-card';
             card.id = `cat-card-${cat.slug}`;
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('role', 'button');
+            card.setAttribute('aria-label', `Explore ${cat.name}`);
             
-            card.addEventListener('click', () => {
+            const selectCategory = () => {
                 const keywordInput = document.getElementById('search-keyword');
                 if (keywordInput) {
                     keywordInput.value = cat.name;
@@ -275,6 +278,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (searchSection) {
                         searchSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
+                }
+            };
+            
+            card.addEventListener('click', selectCategory);
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    selectCategory();
                 }
             });
             
