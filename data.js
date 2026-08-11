@@ -673,5 +673,161 @@ window.RECOVERY_RESOURCES = [
                 link: "#"
             }
         ]
+        ]
     }
 ];
+
+window.RECOVERY_BLOG_POSTS = [
+    {
+        title: "Instagram Algorithm 2026: What Actually Works",
+        slug: "instagram-algorithm-2026",
+        date: "August 11, 2026",
+        category: "Creator Tips",
+        author: "RenderCut",
+        image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=600&q=80",
+        excerpt: "Instagram runs 4 separate algorithms in 2026. DM shares are now #1 for Reels. Learn what Adam Mosseri confirmed about ranking signals, Trial Reels, and Watch Time changes.",
+        content: `
+            <p>Instagram does not run one algorithm. It runs four: one each for the Feed, Reels, Stories, and Explore. Each algorithm weighs signals differently, so a strategy that relies on Reels' DM shares, watch-time, or length ratios will not necessarily win in the Feed (saves, shares, clicks, or completion).</p>
+            <p>This matters because most growth advice treats Instagram as a single system. It is not. A creator who understands how each surface ranks content can build a strategy that performs across all four, rather than accidentally optimizing for one while undermining the others.</p>
+            <p>This guide covers the verified 2026 ranking signals for each Instagram surface, the major algorithm changes Adam Mosseri confirmed this year, what actually drives reach and engagement, and where captions fit into the system.</p>
+            
+            <h4 style="margin-top:24px; margin-bottom:12px; font-weight:700; color:var(--text-primary);">Who this guide covers:</h4>
+            <ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 24px; line-height: 1.6;">
+                <li>How each of Instagram's four algorithms works</li>
+                <li>The 2026 changes that matter most (DM shares, Trial Reels, Watch Time shift)</li>
+                <li>The ranking signals for Reels, Feed, Stories, and Explore</li>
+                <li>What Adam Mosseri has publicly confirmed about the 2026 algorithm</li>
+                <li>Where captions fit into algorithmic distribution</li>
+                <li>Tactics that work on each surface</li>
+            </ul>
+
+            <h3 style="margin-top:32px; margin-bottom:16px; font-weight:800; font-size:1.25rem; color:var(--text-primary);">1. The Four Instagram Algorithms in 2026</h3>
+            <h4 style="margin-top:16px; margin-bottom:8px; font-weight:700; color:var(--text-primary);">Reels Algorithm</h4>
+            <p>Reels is Instagram's primary discovery engine right now. The first two to three seconds determine whether your Reel gets pushed to a broader audience or quickly bracketed.</p>
+            
+            <h3 style="margin-top:32px; margin-bottom:16px; font-weight:800; font-size:1.25rem; color:var(--text-primary);">3. Ranking Signals by Surface</h3>
+            
+            <!-- Table Component -->
+            <div style="overflow-x: auto; margin-bottom: 24px;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; margin: 16px 0;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--border-color); background-color: var(--support-bg);">
+                            <th style="padding: 12px; font-weight: 700; color: var(--primary-color);">Surface</th>
+                            <th style="padding: 12px; font-weight: 700; color: var(--primary-color);">#1 Signal</th>
+                            <th style="padding: 12px; font-weight: 700; color: var(--primary-color);">Strong Signals</th>
+                            <th style="padding: 12px; font-weight: 700; color: var(--primary-color);">Weak Signals</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 12px; font-weight: 600;">Reels</td>
+                            <td style="padding: 12px;">DM shares</td>
+                            <td style="padding: 12px;">Watch time, replays, saves</td>
+                            <td style="padding: 12px;">Likes, follower count</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 12px; font-weight: 600;">Feed</td>
+                            <td style="padding: 12px;">Time spent on post</td>
+                            <td style="padding: 12px;">Saves, DM shares, comments</td>
+                            <td style="padding: 12px;">Likes</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 12px; font-weight: 600;">Stories</td>
+                            <td style="padding: 12px;">Consistent watches and replies</td>
+                            <td style="padding: 12px;">DM reactions, taps</td>
+                            <td style="padding: 12px;">Followers from Stories</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 12px; font-weight: 600;">Explore</td>
+                            <td style="padding: 12px;">Interest graph match</td>
+                            <td style="padding: 12px;">Watch time, saves</td>
+                            <td style="padding: 12px;">Likes, comments</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 style="margin-top:32px; margin-bottom:16px; font-weight:800; font-size:1.25rem; color:var(--text-primary);">4. Where Captions Fit Into the Algorithm</h3>
+            <p>Captions affect algorithmic distribution through two direct mechanisms.</p>
+            <p>First, captions improve watch-time ratio. Captions keep silent viewers engaged longer, directly increasing the watch-time-to-length ratio that drives Reels distribution. Between 60 and 80% of Reels are watched without sound. For that majority, captions are the only way to follow the content. Styled captions in short chunks, highlighted keywords, hook-first first lines increase watch-time more than default auto-generated text.</p>
+            <p>Second, Instagram reads caption text for content categorization. Instagram processes spoken words as searchable text. Keyword reinforcement occurs when audio, on-screen caption text, and written caption all mention the same topic, giving Instagram strong signals about what the Reel covers. This categorization determines which audience segments see your Reel in their discovery feed.</p>
+            
+            <!-- Highlight Box Component -->
+            <div style="background-color: var(--support-bg); border-left: 4px solid var(--primary-color); padding: 16px 20px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 24px 0;">
+                <p style="margin: 0; font-style: italic; font-weight: 500; color: var(--text-primary);">
+                    Styled captions are one of the most direct inputs into Instagram's watch-time signal, and one of the fastest to improve. RenderCut handles AI transcription, word-level highlights, and hooks first caption design in under 5 minutes per Reel. <a href="#" style="color: var(--primary-color); font-weight: 700; text-decoration: none;">Try RenderCut free</a> and give the algorithm the signals it needs to distribute your content further.
+                </p>
+            </div>
+
+            <h3 style="margin-top:32px; margin-bottom:16px; font-weight:800; font-size:1.25rem; color:var(--text-primary);">5. Tactics That Work on Each Surface in 2026</h3>
+            <h4 style="margin-top:16px; margin-bottom:8px; font-weight:700; color:var(--text-primary);">For Reels</h4>
+            <ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 24px; line-height: 1.6;">
+                <li><strong>Build shareability into the content design:</strong> Every Reel should contain one moment so useful, funny, surprising, or relatable that a viewer would DM it to a specific friend. If no such moment exists, the content is unlikely to earn DM shares regardless of quality.</li>
+                <li><strong>Use Trial Reels for hook testing:</strong> Test three different hook lines for the same content concept as Trial Reels before committing to posting to your followers.</li>
+                <li><strong>Keep Reels 15 to 45 seconds for high watch-time ratio:</strong> Longer Reels can work but require stronger retention mechanics throughout.</li>
+                <li><strong>Caption every Reel:</strong> Silent viewers are the majority. Styled captions capture their attention and hold it.</li>
+                <li><strong>Post within 30 minutes of your peak audience time:</strong> The first hour of engagement quality determines early algorithmic push.</li>
+            </ul>
+
+            <h4 style="margin-top:16px; margin-bottom:8px; font-weight:700; color:var(--text-primary);">For Feed</h4>
+            <ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 24px; line-height: 1.6;">
+                <li><strong>Post carousels for saves and time-on-post:</strong> Carousels keep viewers swiping through details, building time-on-post and saves.</li>
+            </ul>
+
+            <h3 style="margin-top:32px; margin-bottom:16px; font-weight:800; font-size:1.25rem; color:var(--text-primary);">References</h3>
+            <ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 24px; line-height: 1.6;">
+                <li><a href="#" style="color: var(--primary-color); text-decoration: none;">Blog - Instagram algorithm 2026: four ranking signals that matter. DM shares confirmed as top Reels signal</a></li>
+                <li><a href="#" style="color: var(--primary-color); text-decoration: none;">Lates - Instagram algorithm in 2026: Trial Reels, shares as top signal, 3-minute Reels eligible for capture</a></li>
+                <li><a href="#" style="color: var(--primary-color); text-decoration: none;">Orange Monkey - Instagram algorithm 2026: Mosseri-confirmed signals, inner circle stories ranking, partition system</a></li>
+                <li><a href="#" style="color: var(--primary-color); text-decoration: none;">DataSlayer - Instagram algorithm 2026: five ranking signals Mosseri confirmed. Watch Time shift. Your Algorithm dashboard</a></li>
+            </ul>
+        `
+    },
+    {
+        title: "How to Increase TikTok Watch Time in 2026",
+        slug: "tiktok-watch-time-2026",
+        date: "August 10, 2026",
+        category: "Creator Tips",
+        author: "RenderCut",
+        image: "https://images.unsplash.com/photo-1598128558393-70ff21433be0?auto=format&fit=crop&w=600&q=80",
+        excerpt: "TikTok watch time in 2026 is measured by completion rate, not seconds. Learn about Qualified Views, the tiered distribution system, and 8 tactics that move the numbers.",
+        content: `
+            <p>TikTok's algorithm prioritizes watch time completion rates and qualified views above all else in 2026. If users watch your video to completion, TikTok pushes it to the next tier of the For You Page (FYP).</p>
+            <p>To increase your watch time, focus on crafting strong visual hooks in the first 2 seconds, maintaining a fast pacing, using dynamic edits, and highlighting key concepts with on-screen text overlays.</p>
+            <h3 style="margin-top:32px; margin-bottom:16px; font-weight:800; font-size:1.25rem; color:var(--text-primary);">Key Retention Tactics</h3>
+            <ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 24px; line-height: 1.6;">
+                <li>Start with a clear payoff promise.</li>
+                <li>Remove dead air and pauses.</li>
+                <li>Use sound effects and visual transitions every 3-4 seconds.</li>
+                <li>Deliver value throughout instead of saving everything for the end.</li>
+            </ul>
+        `
+    },
+    {
+        title: "Free vs Paid Caption Tools: Is It Worth Paying in 2026?",
+        slug: "caption-tools-2026",
+        date: "August 7, 2026",
+        category: "Creator Tips",
+        author: "RenderCut",
+        image: "https://images.unsplash.com/photo-1616469829581-73993eb86b02?auto=format&fit=crop&w=600&q=80",
+        excerpt: "Free caption tools cost more than zero when you factor in watermarks, TOS risks, volume limits, and missing templates. Here's when free is enough and when paying makes sense.",
+        content: `
+            <p>While free tools are appealing, they often come with hidden costs like watermarks, lower transcription accuracy, and limited styling options. In 2026, premium tools offer advanced AI-driven features like automatic B-roll insertion, sound design integration, and dynamic eye-tracking corrections.</p>
+            <p>If you're a casual creator, free tools like CapCut or browser extensions are often enough. However, if you edit professionally or manage multiple channels, investing in a tool like RenderCut or Submagic will save hours of manual typing and dramatically boost viewer retention.</p>
+        `
+    },
+    {
+        title: "RenderCut vs Submagic: Which AI Caption Tool Is Better in 2026?",
+        slug: "rendercut-vs-submagic",
+        date: "August 1, 2026",
+        category: "Creator Tips",
+        author: "RenderCut",
+        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80",
+        excerpt: "RenderCut vs Submagic compared on pricing, caption quality, automation, and user reviews. See which tool fits for captions vs full video editing in 2026.",
+        content: `
+            <p>In this detailed comparison, we look at RenderCut and Submagic side-by-side. While Submagic excels in basic short-form caption styling, RenderCut provides a comprehensive video editing studio with custom templates, multi-language support, and B-roll automation capabilities.</p>
+            <p>Choose RenderCut if you want a complete workflow solution, and choose Submagic if you want a quick tool dedicated exclusively to short captions.</p>
+        `
+    }
+];
+

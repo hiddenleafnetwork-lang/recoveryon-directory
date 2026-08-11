@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post | RecoveryOn</title>
+    <meta name="description" content="Read detailed guide articles on creator tips, social media algorithms, and video editing platforms.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        /* Blog Detail Page Specific Styles */
+        .blog-detail-header {
+            max-width: 800px;
+            margin: 0 auto 32px auto;
+            text-align: center;
+        }
+        .blog-detail-category {
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+        .blog-detail-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.25;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+        .blog-author-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .blog-author-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: var(--support-bg);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.72rem;
+            overflow: hidden;
+        }
+        .blog-author-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .blog-featured-image-wrapper {
+            max-width: 800px;
+            margin: 0 auto 40px auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        .blog-featured-image-wrapper img {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+        }
+        .blog-body-content {
+            max-width: 800px;
+            margin: 0 auto 60px auto;
+            font-size: 1.05rem;
+            line-height: 1.75;
+            color: var(--text-body);
+        }
+        .blog-body-content p {
+            margin-bottom: 24px;
+        }
+        
+        /* Shared Blog Card Styles for Related Posts */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-top: 24px;
+        }
+        @media (max-width: 992px) {
+            .blog-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+            }
+        }
+        @media (max-width: 600px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+        .blog-card {
+            display: flex;
+            flex-direction: column;
+            background: none;
+            border: none;
+            box-shadow: none;
+            overflow: hidden;
+            transition: all var(--transition-fast);
+        }
+        .blog-img-wrapper {
+            width: 100%;
+            height: 180px;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 14px;
+            box-shadow: var(--shadow-sm);
+        }
+        .blog-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-normal);
+        }
+        .blog-card:hover .blog-img-wrapper img {
+            transform: scale(1.03);
+        }
+        .blog-meta-line {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .blog-category-tag {
+            color: var(--primary-color);
+            background-color: var(--support-bg);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            margin-left: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .blog-card-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.35;
+            letter-spacing: -0.01em;
+            text-decoration: none;
+        }
+        .blog-card-title:hover {
+            color: var(--primary-color);
+        }
+        .blog-card-desc {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .blog-readmore-link {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: gap var(--transition-fast);
+        }
+        .blog-readmore-link:hover {
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="main-header" id="main-header">
+        <div class="header-container">
+            <a href="../index.html" class="logo" id="logo-link">
+                <span class="logo-icon"><i class="fa-solid fa-circle-nodes"></i></span>
+                <span class="logo-text">Recovery<span>On</span></span>
+            </a>
+            
+            <!-- Navigation Menu -->
+            <nav class="nav-menu" id="nav-menu">
+                <ul>
+                    <li><a href="../index.html#directory" class="nav-link" id="nav-explore">Explore</a></li>
+                    <li><a href="../index.html#categories" class="nav-link" id="nav-categories">Categories</a></li>
+                    <li><a href="../resources/index.html" class="nav-link" id="nav-resources">Resources</a></li>
+                    <li><a href="../index.html#add-listing" class="btn btn-cta" id="nav-add-listing">Add a Listing</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation Menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Error State (Hidden by default) -->
+        <section class="section bg-light" id="error-section" style="display: none; min-height: 400px; display: flex; align-items: center; justify-content: center; text-align: center;">
+            <div class="container" style="max-width: 500px;">
+                <i class="fa-solid fa-triangle-exclamation" style="font-size: 3.5rem; color: #f59e0b; margin-bottom: 20px;"></i>
+                <h1 class="sidebar-title" style="font-size: 1.5rem; margin-bottom: 12px;">Article Not Found</h1>
+                <p style="color: var(--text-secondary); margin-bottom: 24px;">The blog post article you are looking for does not exist or has been removed from our testing dataset.</p>
+                <a href="index.html" class="btn btn-cta" style="background-color: var(--primary-color);">Return to Blog</a>
+            </div>
+        </section>
+
+        <!-- Article Container -->
+        <article class="section bg-white" id="article-section" style="padding-top: 32px; padding-bottom: 48px;">
+            <div class="container">
+                <!-- Breadcrumbs -->
+                <div class="breadcrumbs" style="margin-bottom: 24px; justify-content: flex-start;">
+                    <a href="../index.html">Home</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <a href="index.html">Blog</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span id="breadcrumb-article-title">Article</span>
+                </div>
+
+                <!-- Article Header -->
+                <header class="blog-detail-header">
+                    <span class="blog-detail-category" id="article-category">Category</span>
+                    <h1 class="blog-detail-title" id="article-title">Article Title</h1>
+                    
+                    <div class="blog-author-line">
+                        <div class="blog-author-avatar" id="article-avatar">R</div>
+                        <span id="article-author">Author</span>
+                        <span>•</span>
+                        <span id="article-date">Date</span>
+                    </div>
+                </header>
+
+                <!-- Featured Image -->
+                <div class="blog-featured-image-wrapper">
+                    <img src="" alt="" id="article-image">
+                </div>
+
+                <!-- Body Content -->
+                <div class="blog-body-content" id="article-content-body">
+                    <!-- HTML body injected dynamically -->
+                </div>
+
+                <!-- Related Posts section -->
+                <div class="detail-section" style="border-top: 1px solid var(--border-color); padding-top: 40px; margin-top: 40px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                    <h2 class="detail-section-title" style="margin-bottom: 8px;">Related posts</h2>
+                    <div class="blog-grid" id="related-posts-grid">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+            </div>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer" id="main-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Footer Brand Column -->
+                <div class="footer-brand-col">
+                    <a href="../index.html" class="logo footer-logo" id="footer-logo-link">
+                        <span class="logo-icon"><i class="fa-solid fa-circle-nodes"></i></span>
+                        <span class="logo-text">Recovery<span>On</span></span>
+                    </a>
+                    <p class="footer-tagline">Connecting individuals with trusted recovery, health, and holistic support ecosystems nationwide.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-btn" aria-label="Facebook" id="fb-link"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="social-btn" aria-label="Twitter" id="tw-link"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#" class="social-btn" aria-label="Instagram" id="ig-link"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="social-btn" aria-label="LinkedIn" id="li-link"><i class="fa-brands fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <!-- Footer Column 2: Quick Links -->
+                <div class="footer-col">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="../index.html" id="f-link-home">Home</a></li>
+                        <li><a href="../index.html#directory" id="f-link-explore">Explore Directory</a></li>
+                        <li><a href="../index.html#categories" id="f-link-categories">Categories</a></li>
+                        <li><a href="../categories/index.html?slug=treatment-centers" id="f-link-categories-page">Browse by Category</a></li>
+                        <li><a href="../states/index.html?slug=ca" id="f-link-states-page">Browse by State</a></li>
+                        <li><a href="../index.html#add-listing" id="f-link-add-listing">Add a Listing</a></li>
+                        <li><a href="../index.html#about" id="f-link-about">About Us</a></li>
+                        <li><a href="../index.html#contact" id="f-link-contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Footer Column 3: Resource Categories -->
+                <div class="footer-col">
+                    <h4 class="footer-heading">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html" id="f-link-blog">Blog & Articles</a></li>
+                        <li><a href="../index.html#faqs" id="f-link-faq">Frequently Asked Questions</a></li>
+                        <li><a href="#" id="f-link-support-helplines">Emergency Helplines</a></li>
+                        <li><a href="#" id="f-link-privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Footer Column 4: Newsletter -->
+                <div class="footer-col footer-newsletter">
+                    <h4 class="footer-heading">Subscribe</h4>
+                    <p class="newsletter-text">Stay updated with fresh recovery insights and support resources.</p>
+                    <form class="newsletter-form" id="newsletter-form" onsubmit="event.preventDefault();">
+                        <input type="email" placeholder="Your Email Address" required id="newsletter-email">
+                        <button type="submit" class="btn btn-subscribe" id="btn-subscribe">
+                            <i class="fa-regular fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 RecoveryOn Directory. All rights reserved.</p>
+                <p>Designed with care for support & wellness.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- App Scripts -->
+    <script src="../data.js"></script>
+    <script src="detail.js"></script>
+</body>
+</html>

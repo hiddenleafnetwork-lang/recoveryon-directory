@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recovery Resources Directory | RecoveryOn</title>
-    <meta name="description" content="Browse wellness centers, support groups, and recovery resources. Search by category or location across the United States.">
+    <title>Blog | RecoveryOn</title>
+    <meta name="description" content="Read the latest creator tips, video strategies, and growth guides from RenderCut on the RecoveryOn Blog.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,6 +13,143 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Stylesheet -->
     <link rel="stylesheet" href="../styles.css">
+    <style>
+        /* Blog Index Page Specific Styles */
+        .blog-search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 12px;
+        }
+        .blog-search-input {
+            width: 100%;
+            max-width: 480px;
+            padding: 10px 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            outline: none;
+            background-color: var(--bg-card);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-fast);
+        }
+        .blog-search-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+        }
+        .btn-blog-search {
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 10px 28px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .btn-blog-search:hover {
+            background-color: #333333;
+            transform: translateY(-1px);
+        }
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-bottom: 80px;
+        }
+        @media (max-width: 992px) {
+            .blog-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+            }
+        }
+        @media (max-width: 600px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+        .blog-card {
+            display: flex;
+            flex-direction: column;
+            background: none;
+            border: none;
+            box-shadow: none;
+            overflow: hidden;
+            transition: all var(--transition-fast);
+        }
+        .blog-img-wrapper {
+            width: 100%;
+            height: 200px;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 14px;
+            box-shadow: var(--shadow-sm);
+        }
+        .blog-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-normal);
+        }
+        .blog-card:hover .blog-img-wrapper img {
+            transform: scale(1.03);
+        }
+        .blog-meta-line {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .blog-category-tag {
+            color: var(--primary-color);
+            background-color: var(--support-bg);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            margin-left: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .blog-card-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.35;
+            letter-spacing: -0.01em;
+            text-decoration: none;
+        }
+        .blog-card-title:hover {
+            color: var(--primary-color);
+        }
+        .blog-card-desc {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .blog-readmore-link {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: gap var(--transition-fast);
+        }
+        .blog-readmore-link:hover {
+            gap: 8px;
+        }
+    </style>
 </head>
 <body>
     <!-- Top Header -->
@@ -28,7 +165,7 @@
                 <ul>
                     <li><a href="../index.html#directory" class="nav-link" id="nav-explore">Explore</a></li>
                     <li><a href="../index.html#categories" class="nav-link" id="nav-categories">Categories</a></li>
-                    <li><a href="index.html" class="nav-link active" id="nav-resources">Resources</a></li>
+                    <li><a href="../resources/index.html" class="nav-link" id="nav-resources">Resources</a></li>
                     <li><a href="../index.html#add-listing" class="btn btn-cta" id="nav-add-listing">Add a Listing</a></li>
                 </ul>
             </nav>
@@ -45,70 +182,32 @@
     <!-- Main Content -->
     <main class="main-content">
         <section class="section bg-light" style="padding-bottom: 24px;">
-            <div class="container">
-                <div class="breadcrumbs">
+            <div class="container" style="text-align: center;">
+                <!-- Breadcrumbs -->
+                <div class="breadcrumbs" id="blog-breadcrumbs" style="justify-content: center; margin-bottom: 20px;">
                     <a href="../index.html">Home</a>
-                    <span>/</span>
-                    <span>Resources Directory</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span>Blog</span>
                 </div>
                 
-                <h1 class="section-title" style="margin-bottom: 8px;">Recovery Resources Directory</h1>
-                <p class="section-desc" style="margin-bottom: 24px;">Search and filter nationwide recovery services, outpatient treatment, and support groups.</p>
+                <h1 class="section-title" style="margin-bottom: 8px; font-size: 2.2rem; font-weight: 800;">Blog</h1>
+                <p class="section-desc" style="margin-bottom: 32px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6; color: var(--text-secondary);">
+                    Caption strategy, video workflow, and short-form creator growth guides from RenderCut.
+                </p>
                 
-                <!-- Filter Bar -->
-                <div class="directory-filter-bar">
-                    <form class="filter-form" id="directory-filter-form">
-                        <div class="filter-input-group">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" placeholder="Search by name or services..." id="filter-keyword">
-                        </div>
-                        <div class="filter-input-group">
-                            <i class="fa-solid fa-location-dot"></i>
-                            <input type="text" placeholder="City, State or ZIP..." id="filter-location">
-                        </div>
-                        <div class="filter-input-group select-group">
-                            <i class="fa-solid fa-layer-group"></i>
-                            <select id="filter-category">
-                                <option value="">All Categories</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-search btn-filter-submit">
-                            <i class="fa-solid fa-filter"></i> Filter
-                        </button>
-                    </form>
-                </div>
+                <!-- Search Bar -->
+                <form class="blog-search-container" id="blog-search-form" onsubmit="event.preventDefault();">
+                    <input type="text" placeholder="Search blog" class="blog-search-input" id="blog-search-input">
+                    <button type="submit" class="btn-blog-search" id="btn-blog-search">Search</button>
+                </form>
             </div>
         </section>
 
-        <!-- Directory Grid Section -->
-        <section class="section bg-white directory-grid-section">
+        <!-- Blog Grid Section -->
+        <section class="section bg-white">
             <div class="container">
-                <!-- Results Metadata -->
-                <div class="directory-results-meta">
-                    <div>
-                        <strong>Verified Listings:</strong> <span id="verified-count">0</span>
-                    </div>
-                    <div style="font-size: 0.82rem; color: var(--text-muted); background: var(--support-bg); padding: 4px 10px; border-radius: var(--radius-sm); font-weight: 600;">
-                        <i class="fa-solid fa-circle-info"></i> Showing <span id="demo-count">0</span> Demo Listings for testing
-                    </div>
-                </div>
-
-                <!-- Empty State -->
-                <div id="directory-empty-state" style="display: none; text-align: center; padding: 48px 24px; border: 1px dashed var(--border-color); border-radius: var(--radius-md);">
-                    <i class="fa-solid fa-folder-open" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 16px;"></i>
-                    <h3 style="color: var(--text-primary); margin-bottom: 8px;">No Listings Match Your Criteria</h3>
-                    <p style="color: var(--text-secondary); max-width: 480px; margin: 0 auto 20px;">Try adjusting your keyword search, selecting a different category, or resetting your location filter.</p>
-                    <button class="btn btn-cta" id="btn-reset-filters" style="background-color: var(--primary-color);">Reset All Filters</button>
-                </div>
-
-                <!-- Results Grid -->
-                <div class="directory-grid" id="directory-grid">
-                    <!-- Dynamic cards will be injected here -->
-                </div>
-
-                <!-- Pagination -->
-                <div class="pagination-container" id="pagination-container">
-                    <!-- Dynamic pagination elements -->
+                <div class="blog-grid" id="blog-grid">
+                    <!-- Blog cards populated dynamically -->
                 </div>
             </div>
         </section>
@@ -152,7 +251,7 @@
                 <div class="footer-col">
                     <h4 class="footer-heading">Resources</h4>
                     <ul class="footer-links">
-                        <li><a href="../blog/index.html" id="f-link-blog">Blog & Articles</a></li>
+                        <li><a href="index.html" id="f-link-blog">Blog & Articles</a></li>
                         <li><a href="../index.html#faqs" id="f-link-faq">Frequently Asked Questions</a></li>
                         <li><a href="#" id="f-link-support-helplines">Emergency Helplines</a></li>
                         <li><a href="#" id="f-link-privacy">Privacy Policy</a></li>
@@ -181,6 +280,6 @@
 
     <!-- App Scripts -->
     <script src="../data.js"></script>
-    <script src="resources.js"></script>
+    <script src="blog.js"></script>
 </body>
 </html>
