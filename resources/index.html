@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recovery Resources Directory | RecoveryOn</title>
+    <meta name="description" content="Browse wellness centers, support groups, and recovery resources. Search by category or location across the United States.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="main-header" id="main-header">
+        <div class="header-container">
+            <a href="../index.html" class="logo" id="logo-link">
+                <span class="logo-icon"><i class="fa-solid fa-circle-nodes"></i></span>
+                <span class="logo-text">Recovery<span>On</span></span>
+            </a>
+            
+            <!-- Navigation Menu -->
+            <nav class="nav-menu" id="nav-menu">
+                <ul>
+                    <li><a href="../index.html#directory" class="nav-link">Explore</a></li>
+                    <li><a href="../index.html#categories" class="nav-link">Categories</a></li>
+                    <li><a href="index.html" class="nav-link active">Resources</a></li>
+                    <li><a href="../index.html#add-listing" class="btn btn-cta" id="nav-add-listing">Add a Listing</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation Menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <section class="section bg-light" style="padding-bottom: 24px;">
+            <div class="container">
+                <div class="breadcrumbs">
+                    <a href="../index.html">Home</a>
+                    <span>/</span>
+                    <span>Resources Directory</span>
+                </div>
+                
+                <h1 class="section-title" style="margin-bottom: 8px;">Recovery Resources Directory</h1>
+                <p class="section-desc" style="margin-bottom: 24px;">Search and filter nationwide recovery services, outpatient treatment, and support groups.</p>
+                
+                <!-- Filter Bar -->
+                <div class="directory-filter-bar">
+                    <form class="filter-form" id="directory-filter-form">
+                        <div class="filter-input-group">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" placeholder="Search by name or services..." id="filter-keyword">
+                        </div>
+                        <div class="filter-input-group">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <input type="text" placeholder="City, State or ZIP..." id="filter-location">
+                        </div>
+                        <div class="filter-input-group select-group">
+                            <i class="fa-solid fa-layer-group"></i>
+                            <select id="filter-category">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-search btn-filter-submit">
+                            <i class="fa-solid fa-filter"></i> Filter
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Directory Grid Section -->
+        <section class="section bg-white directory-grid-section">
+            <div class="container">
+                <!-- Results Metadata -->
+                <div class="directory-results-meta">
+                    <div>
+                        <strong>Verified Listings:</strong> <span id="verified-count">0</span>
+                    </div>
+                    <div style="font-size: 0.82rem; color: var(--text-muted); background: var(--support-bg); padding: 4px 10px; border-radius: var(--radius-sm); font-weight: 600;">
+                        <i class="fa-solid fa-circle-info"></i> Showing <span id="demo-count">0</span> Demo Listings for testing
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div id="directory-empty-state" style="display: none; text-align: center; padding: 48px 24px; border: 1px dashed var(--border-color); border-radius: var(--radius-md);">
+                    <i class="fa-solid fa-folder-open" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 16px;"></i>
+                    <h3 style="color: var(--text-primary); margin-bottom: 8px;">No Listings Match Your Criteria</h3>
+                    <p style="color: var(--text-secondary); max-width: 480px; margin: 0 auto 20px;">Try adjusting your keyword search, selecting a different category, or resetting your location filter.</p>
+                    <button class="btn btn-cta" id="btn-reset-filters" style="background-color: var(--primary-color);">Reset All Filters</button>
+                </div>
+
+                <!-- Results Grid -->
+                <div class="directory-grid" id="directory-grid">
+                    <!-- Dynamic cards will be injected here -->
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination-container" id="pagination-container">
+                    <!-- Dynamic pagination elements -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container footer-container">
+            <div class="footer-grid">
+                <div class="footer-col brand-col">
+                    <a href="../index.html" class="logo">
+                        <span class="logo-icon"><i class="fa-solid fa-circle-nodes"></i></span>
+                        <span class="logo-text">Recovery<span>On</span></span>
+                    </a>
+                    <p class="footer-about">Connecting individuals with verified US recovery services, detox clinics, sober homes, and support groups nationwide.</p>
+                </div>
+                
+                <div class="footer-col links-col">
+                    <h3 class="footer-title">Directory</h3>
+                    <ul>
+                        <li><a href="../index.html#directory">Explore Centers</a></li>
+                        <li><a href="../index.html#categories">Categories</a></li>
+                        <li><a href="index.html">Resources</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col links-col">
+                    <h3 class="footer-title">Support</h3>
+                    <ul>
+                        <li><a href="../index.html#faq">Frequently Asked Questions</a></li>
+                        <li><a href="#" class="btn-cta">Helpline Support</a></li>
+                        <li><a href="#" class="btn-cta">Provider Registration</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col newsletter-col">
+                    <h3 class="footer-title">Join Newsletter</h3>
+                    <p class="newsletter-text">Stay updated with fresh recovery insights and support resources.</p>
+                    <form class="newsletter-form" id="newsletter-form" onsubmit="event.preventDefault();">
+                        <input type="email" placeholder="Your Email Address" required id="newsletter-email">
+                        <button type="submit" class="btn btn-subscribe">
+                            <i class="fa-regular fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 RecoveryOn Directory. All rights reserved.</p>
+                <p>Designed with care for support & wellness.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- App Scripts -->
+    <script src="../data.js"></script>
+    <script src="resources.js"></script>
+</body>
+</html>

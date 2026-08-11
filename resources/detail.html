@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Details | RecoveryOn</title>
+    <meta name="description" content="View detailed information, services, contact details, and location maps for recovery resources on RecoveryOn.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet.js Maps CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="main-header" id="main-header">
+        <div class="header-container">
+            <a href="../index.html" class="logo" id="logo-link">
+                <span class="logo-icon"><i class="fa-solid fa-circle-nodes"></i></span>
+                <span class="logo-text">Recovery<span>On</span></span>
+            </a>
+            
+            <!-- Navigation Menu -->
+            <nav class="nav-menu" id="nav-menu">
+                <ul>
+                    <li><a href="../index.html#directory" class="nav-link">Explore</a></li>
+                    <li><a href="../index.html#categories" class="nav-link">Categories</a></li>
+                    <li><a href="index.html" class="nav-link">Resources</a></li>
+                    <li><a href="../index.html#add-listing" class="btn btn-cta" id="nav-add-listing">Add a Listing</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation Menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Error State (Hidden by default) -->
+        <section class="section bg-light" id="error-section" style="display: none; min-height: 400px; display: flex; align-items: center; justify-content: center; text-align: center;">
+            <div class="container" style="max-width: 500px;">
+                <i class="fa-solid fa-triangle-exclamation" style="font-size: 3.5rem; color: #f59e0b; margin-bottom: 20px;"></i>
+                <h1 class="sidebar-title" style="font-size: 1.5rem; margin-bottom: 12px;">Resource Not Found</h1>
+                <p style="color: var(--text-secondary); margin-bottom: 24px;">The recovery resource listing you are looking for does not exist or has been removed from our testing dataset.</p>
+                <a href="index.html" class="btn btn-cta" style="background-color: var(--primary-color);">Return to Directory</a>
+            </div>
+        </section>
+
+        <!-- Resource Profile Details (Loaded Dynamically) -->
+        <section class="section bg-light" id="profile-header-section" style="padding-bottom: 16px;">
+            <div class="container">
+                <!-- Breadcrumbs -->
+                <div class="breadcrumbs" id="detail-breadcrumbs">
+                    <!-- Dynamic breadcrumbs go here -->
+                </div>
+
+                <!-- Header Title block -->
+                <div class="detail-header" id="detail-header-block">
+                    <div class="detail-title-row">
+                        <div>
+                            <h1 class="hero-title" id="resource-name" style="font-size: 2.2rem; color: var(--text-primary); margin-bottom: 8px;">Resource Title</h1>
+                            <div class="detail-badge-row" id="resource-badges">
+                                <!-- Dynamic tags go here -->
+                            </div>
+                            <div class="detail-meta-line" id="resource-meta-line">
+                                <!-- Rating, category, insurance tags -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section class="section bg-white" style="padding: 24px 0 0 0;">
+            <div class="container">
+                <div class="detail-gallery" id="resource-gallery">
+                    <!-- Main image & supporting thumbnails generated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Body Content & Sidebar -->
+        <section class="section bg-white" style="padding-top: 24px;">
+            <div class="container">
+                <!-- Demo Disclaimer Banner -->
+                <div class="demo-disclaimer-banner">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <div>
+                        <strong>Demo / Test Content:</strong> This profile is part of a design validation dataset. Phone numbers, websites, services, and ratings displayed are mock samples for testing the interactive grid layout and design system.
+                    </div>
+                </div>
+
+                <div class="detail-grid">
+                    <!-- Left main info column -->
+                    <div class="detail-main-col" id="detail-main-content">
+                        <!-- About Glance -->
+                        <div class="detail-section">
+                            <span class="detail-badge" style="margin-bottom: 8px; display: inline-block;">At a Glance</span>
+                            <h2 class="detail-section-title">Center Overview</h2>
+                            <div class="glance-grid" id="glance-grid">
+                                <!-- Overview details populated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Detailed Description -->
+                        <div class="detail-section">
+                            <h2 class="detail-section-title" id="about-section-title">About the Center</h2>
+                            <p id="about-text" style="line-height: 1.6; color: var(--text-body);"></p>
+                        </div>
+
+                        <!-- Services List -->
+                        <div class="detail-section">
+                            <h2 class="detail-section-title">Services & Treatment Offered</h2>
+                            <div class="detail-list" id="services-list">
+                                <!-- Dynamic list items -->
+                            </div>
+                        </div>
+
+                        <!-- Amenities List -->
+                        <div class="detail-section" id="amenities-section">
+                            <h2 class="detail-section-title">Amenities & Specialties</h2>
+                            <div class="detail-list" id="amenities-list">
+                                <!-- Dynamic list items -->
+                            </div>
+                        </div>
+
+                        <!-- Insurance List -->
+                        <div class="detail-section" id="insurance-section">
+                            <h2 class="detail-section-title">Insurance Accepted</h2>
+                            <div class="detail-badge-row" id="insurance-list" style="margin-top: 0;">
+                                <!-- Dynamic badges -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right sticky sidebar column -->
+                    <aside class="detail-sidebar-col">
+                        <div class="sticky-sidebar" id="profile-sidebar">
+                            <!-- Sidebar content populated dynamically -->
+                        </div>
+                    </aside>
+                </div>
+
+                <!-- Map / Location Section -->
+                <div class="map-section" id="map-section">
+                    <h2 class="detail-section-title" style="margin-bottom: 16px;">Resource Location</h2>
+                    <div class="map-container" id="detail-map">
+                        <!-- Map injected dynamically by Leaflet -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container footer-container">
+            <div class="footer-grid">
+                <div class="footer-col brand-col">
+                    <a href="../index.html" class="logo">
+                        <span class="logo-icon"><i class="fa-solid fa-circle-nodes"></i></span>
+                        <span class="logo-text">Recovery<span>On</span></span>
+                    </a>
+                    <p class="footer-about">Connecting individuals with verified US recovery services, detox clinics, sober homes, and support groups nationwide.</p>
+                </div>
+                
+                <div class="footer-col links-col">
+                    <h3 class="footer-title">Directory</h3>
+                    <ul>
+                        <li><a href="../index.html#directory">Explore Centers</a></li>
+                        <li><a href="../index.html#categories">Categories</a></li>
+                        <li><a href="index.html">Resources</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col links-col">
+                    <h3 class="footer-title">Support</h3>
+                    <ul>
+                        <li><a href="../index.html#faq">Frequently Asked Questions</a></li>
+                        <li><a href="#" class="btn-cta">Helpline Support</a></li>
+                        <li><a href="#" class="btn-cta">Provider Registration</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col newsletter-col">
+                    <h3 class="footer-title">Join Newsletter</h3>
+                    <p class="newsletter-text">Stay updated with fresh recovery insights and support resources.</p>
+                    <form class="newsletter-form" id="newsletter-form" onsubmit="event.preventDefault();">
+                        <input type="email" placeholder="Your Email Address" required id="newsletter-email">
+                        <button type="submit" class="btn btn-subscribe">
+                            <i class="fa-regular fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 RecoveryOn Directory. All rights reserved.</p>
+                <p>Designed with care for support & wellness.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Leaflet.js Maps Script -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- App Scripts -->
+    <script src="../data.js"></script>
+    <script src="detail.js"></script>
+</body>
+</html>

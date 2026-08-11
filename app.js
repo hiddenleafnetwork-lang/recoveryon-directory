@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const keyword = document.getElementById('search-keyword').value;
             const location = document.getElementById('search-location').value;
-            alert(`Searching directory for "${keyword}" in "${location}"...\n(Backend integration coming soon!)`);
+            window.location.href = `resources/index.html?keyword=${encodeURIComponent(keyword)}&location=${encodeURIComponent(location)}`;
         });
     }
 
@@ -75,74 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 4. Resources Cards Data & Rendering
-    const resources = [
-        {
-            name: "Serene Path Wellness Center",
-            category: "Holistic Clinic",
-            image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80",
-            city: "Boulder",
-            state: "CO",
-            rating: 4.9,
-            reviewCount: 34,
-            slug: "serene-path-wellness",
-            statusText: "Verified Center"
-        },
-        {
-            name: "Hope & Unity Fellowship",
-            category: "Support Group",
-            image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80",
-            city: "Austin",
-            state: "TX",
-            rating: 4.8,
-            reviewCount: 19,
-            slug: "hope-unity-fellowship",
-            statusText: "Free Consultations"
-        },
-        {
-            name: "Apex Therapy Associates",
-            category: "Counseling",
-            image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=600&q=80",
-            city: "New York",
-            state: "NY",
-            rating: 5.0,
-            reviewCount: 42,
-            slug: "apex-therapy-associates",
-            statusText: "Insurance Accepted"
-        },
-        {
-            name: "Elysian Recovery Spa & Retreat",
-            category: "Treatment Center",
-            image: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=600&q=80",
-            city: "San Diego",
-            state: "CA",
-            rating: 4.7,
-            reviewCount: 28,
-            slug: "elysian-recovery-retreat",
-            statusText: "Starting at $150/day"
-        },
-        {
-            name: "North Star Counseling Group",
-            category: "Counseling",
-            image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80",
-            city: "Seattle",
-            state: "WA",
-            rating: 4.9,
-            reviewCount: 15,
-            slug: "north-star-counseling",
-            statusText: "Verified Center"
-        },
-        {
-            name: "Cascade Recovery Clinic",
-            category: "Treatment Center",
-            image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=600&q=80",
-            city: "Portland",
-            state: "OR",
-            rating: 4.6,
-            reviewCount: 22,
-            slug: "cascade-recovery-clinic",
-            statusText: "Insurance Accepted"
-        }
-    ];
+    const resources = window.RECOVERY_RESOURCES;
 
     const listingsGrid = document.getElementById('listings-grid');
 
@@ -165,13 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Link overlay to make entire card clickable
             const linkOverlay = document.createElement('a');
-            linkOverlay.href = `#details-${resource.slug}`;
+            linkOverlay.href = `resources/detail.html?slug=${resource.slug}`;
             linkOverlay.className = 'card-link-overlay';
             linkOverlay.ariaLabel = `View details for ${resource.name}`;
-            linkOverlay.addEventListener('click', (e) => {
-                e.preventDefault();
-                alert(`Viewing details for: ${resource.name} (${resource.category})\nLocation: ${resource.city}, ${resource.state}\nStatus: ${resource.statusText}`);
-            });
             card.appendChild(linkOverlay);
 
             // Visual container
@@ -243,16 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 5. Category Data & Rendering
-    const categories = [
-        { name: "Treatment Centers", icon: "fa-house-medical", slug: "treatment-centers", countText: "124 centers" },
-        { name: "Counseling & Therapy", icon: "fa-user-doctor", slug: "counseling-therapy", countText: "86 therapists" },
-        { name: "Detox Programs", icon: "fa-droplet", slug: "detox-programs", countText: "42 programs" },
-        { name: "Support Groups", icon: "fa-users", slug: "support-groups", countText: "153 groups" },
-        { name: "Sober Living", icon: "fa-bed", slug: "sober-living", countText: "65 homes" },
-        { name: "Mental Health Services", icon: "fa-brain", slug: "mental-health", countText: "110 services" },
-        { name: "Outpatient Treatment", icon: "fa-door-open", slug: "outpatient", countText: "95 clinics" },
-        { name: "Holistic Wellness", icon: "fa-leaf", slug: "holistic-wellness", countText: "58 centers" }
-    ];
+    const categories = window.RECOVERY_CATEGORIES;
 
     const categoriesGrid = document.getElementById('categories-grid');
 
@@ -299,25 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 6. States Data & Rendering
-    const states = [
-        { name: "Alabama", abbr: "AL", count: 48 }, { name: "Alaska", abbr: "AK", count: 18 }, { name: "Arizona", abbr: "AZ", count: 76 },
-        { name: "Arkansas", abbr: "AR", count: 32 }, { name: "California", abbr: "CA", count: 215 }, { name: "Colorado", abbr: "CO", count: 88 },
-        { name: "Connecticut", abbr: "CT", count: 45 }, { name: "Delaware", abbr: "DE", count: 22 }, { name: "District of Columbia", abbr: "DC", count: 19 },
-        { name: "Florida", abbr: "FL", count: 184 }, { name: "Georgia", abbr: "GA", count: 96 }, { name: "Hawaii", abbr: "HI", count: 25 },
-        { name: "Idaho", abbr: "ID", count: 29 }, { name: "Illinois", abbr: "IL", count: 132 }, { name: "Indiana", abbr: "IN", count: 74 },
-        { name: "Iowa", abbr: "IA", count: 41 }, { name: "Kansas", abbr: "KS", count: 38 }, { name: "Kentucky", abbr: "KY", count: 62 },
-        { name: "Louisiana", abbr: "LA", count: 54 }, { name: "Maine", abbr: "ME", count: 28 }, { name: "Maryland", abbr: "MD", count: 82 },
-        { name: "Massachusetts", abbr: "MA", count: 105 }, { name: "Michigan", abbr: "MI", count: 112 }, { name: "Minnesota", abbr: "MN", count: 78 },
-        { name: "Mississippi", abbr: "MS", count: 35 }, { name: "Missouri", abbr: "MO", count: 69 }, { name: "Montana", abbr: "MT", count: 21 },
-        { name: "Nebraska", abbr: "NE", count: 33 }, { name: "Nevada", abbr: "NV", count: 58 }, { name: "New Hampshire", abbr: "NH", count: 27 },
-        { name: "New Jersey", abbr: "NJ", count: 98 }, { name: "New Mexico", abbr: "NM", count: 39 }, { name: "New York", abbr: "NY", count: 176 },
-        { name: "North Carolina", abbr: "NC", count: 102 }, { name: "North Dakota", abbr: "ND", count: 15 }, { name: "Ohio", abbr: "OH", count: 124 },
-        { name: "Oklahoma", abbr: "OK", count: 52 }, { name: "Oregon", abbr: "OR", count: 71 }, { name: "Pennsylvania", abbr: "PA", count: 138 },
-        { name: "Rhode Island", abbr: "RI", count: 24 }, { name: "South Carolina", abbr: "SC", count: 67 }, { name: "South Dakota", abbr: "SD", count: 18 },
-        { name: "Tennessee", abbr: "TN", count: 89 }, { name: "Texas", abbr: "TX", count: 194 }, { name: "Utah", abbr: "UT", count: 56 },
-        { name: "Vermont", abbr: "VT", count: 17 }, { name: "Virginia", abbr: "VA", count: 92 }, { name: "Washington", abbr: "WA", count: 108 },
-        { name: "West Virginia", abbr: "WV", count: 42 }, { name: "Wisconsin", abbr: "WI", count: 81 }, { name: "Wyoming", abbr: "WY", count: 12 }
-    ];
+    const states = window.RECOVERY_STATES;
 
     const statesGrid = document.getElementById('states-grid');
     const popularStatesRow = document.getElementById('popular-states-row');
