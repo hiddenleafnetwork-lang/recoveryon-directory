@@ -673,7 +673,6 @@ window.RECOVERY_RESOURCES = [
                 link: "#"
             }
         ]
-        ]
     }
 ];
 
