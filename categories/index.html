@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Resources | RecoveryOn</title>
+    <meta name="description" content="Browse verified and demo resources by service category. Find detox centers, counselors, sober housing, and support services near you.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="main-header" id="main-header">
+        <div class="header-container">
+            <a href="../index.html" class="logo" id="logo-link">
+                <span class="logo-icon"><i class="fa-solid fa-circle-nodes"></i></span>
+                <span class="logo-text">Recovery<span>On</span></span>
+            </a>
+            
+            <!-- Navigation Menu -->
+            <nav class="nav-menu" id="nav-menu">
+                <ul>
+                    <li><a href="../index.html#directory" class="nav-link" id="nav-explore">Explore</a></li>
+                    <li><a href="../index.html#categories" class="nav-link" id="nav-categories">Categories</a></li>
+                    <li><a href="../resources/index.html" class="nav-link" id="nav-resources">Resources</a></li>
+                    <li><a href="../index.html#add-listing" class="btn btn-cta" id="nav-add-listing">Add a Listing</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation Menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Error State (Hidden by default) -->
+        <section class="section bg-light" id="error-section" style="display: none; min-height: 400px; display: flex; align-items: center; justify-content: center; text-align: center;">
+            <div class="container" style="max-width: 500px;">
+                <i class="fa-solid fa-triangle-exclamation" style="font-size: 3.5rem; color: #f59e0b; margin-bottom: 20px;"></i>
+                <h1 class="sidebar-title" style="font-size: 1.5rem; margin-bottom: 12px;">Category Not Found</h1>
+                <p style="color: var(--text-secondary); margin-bottom: 24px;">The directory category you are looking for does not exist or has been removed from our testing dataset.</p>
+                <a href="../index.html#categories" class="btn btn-cta" style="background-color: var(--primary-color);">Browse Categories</a>
+            </div>
+        </section>
+
+        <!-- Category Section (Loaded Dynamically) -->
+        <section class="section bg-light" id="category-header-section" style="padding-bottom: 24px;">
+            <div class="container">
+                <!-- Breadcrumbs -->
+                <div class="breadcrumbs" id="category-breadcrumbs">
+                    <!-- Breadcrumbs injected dynamically -->
+                </div>
+                
+                <h1 class="section-title" id="category-title" style="margin-bottom: 8px;">Category H1</h1>
+                <p class="section-desc" id="category-intro" style="margin-bottom: 24px; max-width: 800px; line-height: 1.6;"></p>
+                
+                <!-- Search Bar (Submitting redirects to directory page) -->
+                <div class="directory-filter-bar" style="margin-bottom: 0;">
+                    <form class="filter-form" id="category-search-form">
+                        <div class="filter-input-group">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" placeholder="Search within this category..." id="search-keyword">
+                        </div>
+                        <div class="filter-input-group">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <input type="text" placeholder="City, State or ZIP..." id="search-location">
+                        </div>
+                        <button type="submit" class="btn btn-search btn-filter-submit" style="grid-column: span 2;">
+                            <i class="fa-solid fa-magnifying-glass"></i> Search Directory
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Grid Section -->
+        <section class="section bg-white" id="results-section" style="padding-top: 32px;">
+            <div class="container">
+                <div class="directory-results-meta">
+                    <div>
+                        <strong>Verified Listings:</strong> <span id="verified-count">0</span>
+                    </div>
+                    <div style="font-size: 0.82rem; color: var(--text-muted); background: var(--support-bg); padding: 4px 10px; border-radius: var(--radius-sm); font-weight: 600;">
+                        <i class="fa-solid fa-circle-info"></i> Showing <span id="demo-count">0</span> Demo Listings for testing
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div id="results-empty-state" style="display: none; text-align: center; padding: 48px 24px; border: 1px dashed var(--border-color); border-radius: var(--radius-md); margin-bottom: 32px;">
+                    <i class="fa-solid fa-folder-open" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 16px;"></i>
+                    <h3 style="color: var(--text-primary); margin-bottom: 8px;">No Listings Match Your Location</h3>
+                    <p style="color: var(--text-secondary); max-width: 480px; margin: 0 auto;">No demo listings for this category exist in the specified location. Try resetting your search.</p>
+                </div>
+
+                <!-- Results Grid -->
+                <div class="directory-grid" id="category-results-grid" style="margin-bottom: 48px;">
+                    <!-- Card list injected here -->
+                </div>
+
+                <!-- Related Categories Grid -->
+                <div class="detail-section" style="border-bottom: 1px solid var(--border-color); padding-bottom: 32px; margin-bottom: 32px;">
+                    <h2 class="detail-section-title" style="margin-bottom: 16px;">Explore Other Services</h2>
+                    <div class="categories-grid" id="related-categories-grid">
+                        <!-- Category cards injected here -->
+                    </div>
+                </div>
+
+                <!-- States Availability Row -->
+                <div class="detail-section" style="border-bottom: 1px solid var(--border-color); padding-bottom: 32px; margin-bottom: 32px;">
+                    <h2 class="detail-section-title" style="margin-bottom: 16px;">Find Providers by State</h2>
+                    <div class="states-grid" id="category-states-grid" style="grid-template-columns: repeat(4, 1fr);">
+                        <!-- States buttons injected here -->
+                    </div>
+                </div>
+
+                <!-- SEO Content Block -->
+                <div class="detail-section" style="border-bottom: 1px solid var(--border-color); padding-bottom: 32px; margin-bottom: 32px;">
+                    <h2 class="detail-section-title" id="seo-title">Understanding This Service</h2>
+                    <p id="seo-text" style="line-height: 1.6; color: var(--text-body); max-width: 900px;"></p>
+                </div>
+
+                <!-- FAQs Section -->
+                <div class="detail-section" style="border-bottom: none; padding-bottom: 0;">
+                    <h2 class="detail-section-title" style="margin-bottom: 20px;">Frequently Asked Questions</h2>
+                    <div id="category-faq-accordion" class="faq-accordion" style="max-width: 100%;">
+                        <!-- FAQ accordion items injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer" id="main-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Footer Brand Column -->
+                <div class="footer-brand-col">
+                    <a href="../index.html" class="logo footer-logo" id="footer-logo-link">
+                        <span class="logo-icon"><i class="fa-solid fa-circle-nodes"></i></span>
+                        <span class="logo-text">Recovery<span>On</span></span>
+                    </a>
+                    <p class="footer-tagline">Connecting individuals with trusted recovery, health, and holistic support ecosystems nationwide.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-btn" aria-label="Facebook" id="fb-link"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="social-btn" aria-label="Twitter" id="tw-link"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#" class="social-btn" aria-label="Instagram" id="ig-link"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="social-btn" aria-label="LinkedIn" id="li-link"><i class="fa-brands fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <!-- Footer Column 2: Quick Links -->
+                <div class="footer-col">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="../index.html" id="f-link-home">Home</a></li>
+                        <li><a href="../index.html#directory" id="f-link-explore">Explore Directory</a></li>
+                        <li><a href="../index.html#categories" id="f-link-categories">Categories</a></li>
+                        <li><a href="../index.html#add-listing" id="f-link-add-listing">Add a Listing</a></li>
+                        <li><a href="../index.html#about" id="f-link-about">About Us</a></li>
+                        <li><a href="../index.html#contact" id="f-link-contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Footer Column 3: Resource Categories -->
+                <div class="footer-col">
+                    <h4 class="footer-heading">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" id="f-link-blog">Blog & Articles</a></li>
+                        <li><a href="../index.html#faqs" id="f-link-faq">Frequently Asked Questions</a></li>
+                        <li><a href="#" id="f-link-support-helplines">Emergency Helplines</a></li>
+                        <li><a href="#" id="f-link-privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Footer Column 4: Newsletter -->
+                <div class="footer-col footer-newsletter">
+                    <h4 class="footer-heading">Subscribe</h4>
+                    <p class="newsletter-text">Stay updated with fresh recovery insights and support resources.</p>
+                    <form class="newsletter-form" id="newsletter-form" onsubmit="event.preventDefault();">
+                        <input type="email" placeholder="Your Email Address" required id="newsletter-email">
+                        <button type="submit" class="btn btn-subscribe" id="btn-subscribe">
+                            <i class="fa-regular fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 RecoveryOn Directory. All rights reserved.</p>
+                <p>Designed with care for support & wellness.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- App Scripts -->
+    <script src="../data.js"></script>
+    <script src="categories.js"></script>
+</body>
+</html>

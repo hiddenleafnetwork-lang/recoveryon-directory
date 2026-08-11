@@ -4,34 +4,293 @@
  */
 
 window.RECOVERY_CATEGORIES = [
-    { name: "Treatment Centers", icon: "fa-house-medical", slug: "treatment-centers", countText: "0 centers" },
-    { name: "Counseling & Therapy", icon: "fa-user-doctor", slug: "counseling-therapy", countText: "0 therapists" },
-    { name: "Detox Programs", icon: "fa-droplet", slug: "detox-programs", countText: "0 programs" },
-    { name: "Support Groups", icon: "fa-users", slug: "support-groups", countText: "0 groups" },
-    { name: "Sober Living", icon: "fa-bed", slug: "sober-living", countText: "0 homes" },
-    { name: "Mental Health Services", icon: "fa-brain", slug: "mental-health", countText: "0 services" },
-    { name: "Outpatient Treatment", icon: "fa-door-open", slug: "outpatient", countText: "0 clinics" },
-    { name: "Holistic Wellness", icon: "fa-leaf", slug: "holistic-wellness", countText: "0 centers" }
+    { 
+        name: "Treatment Centers", 
+        icon: "fa-house-medical", 
+        slug: "treatment-centers", 
+        countText: "0 centers",
+        intro: "Inpatient and residential rehabilitation centers offering medical supervision, detoxification, and structured group therapy programs.",
+        seoText: "Choosing the right treatment center is a critical step in the recovery journey. These facilities provide round-the-clock clinical care, structured therapy formats, and stable environments to support long-term recovery goals. When browsing treatment centers, verify the specific levels of care offered, such as residential rehabilitation, partial hospitalization (PHP), or medical detox programs.",
+        faqs: [
+            { q: "What is a residential treatment center?", a: "Residential treatment centers are live-in facilities where patients receive structured, supervised care for substance use or mental health conditions, separating them from external triggers." },
+            { q: "How long does treatment center placement typically last?", a: "Placement durations vary depending on clinical needs, with standard programs ranging from 30 days to 90 days or longer for extended care." },
+            { q: "Do treatment centers accept insurance?", a: "Many private insurance plans cover a portion of residential treatment. It is recommended to contact the center's admissions office to verify your coverage." }
+        ]
+    },
+    { 
+        name: "Counseling & Therapy", 
+        icon: "fa-user-doctor", 
+        slug: "counseling-therapy", 
+        countText: "0 therapists",
+        intro: "Licensed psychologists, counselors, and psychotherapists providing individual, group, or family counseling sessions.",
+        seoText: "Therapeutic interventions help individuals uncover the root causes of addictive behaviors and develop healthier coping mechanisms. Licensed therapists utilize evidence-based modalities like Cognitive Behavioral Therapy (CBT), Dialectical Behavior Therapy (DBT), and trauma-informed counseling to help clients build long-term resilience.",
+        faqs: [
+            { q: "What is CBT (Cognitive Behavioral Therapy)?", a: "CBT is a goal-oriented talk therapy that helps individuals identify and change negative thought patterns and behaviors contributing to substance use or anxiety." },
+            { q: "What should I expect in my first therapy session?", a: "The first session, often called an intake session, involves discussing your background, current challenges, goals, and developing a preliminary treatment plan." },
+            { q: "Are virtual telehealth sessions effective?", a: "Yes, studies show that online video therapy is highly effective for individual counseling, providing convenient access without travel constraints." }
+        ]
+    },
+    { 
+        name: "Detox Programs", 
+        icon: "fa-droplet", 
+        slug: "detox-programs", 
+        countText: "0 programs",
+        intro: "Clinically monitored detoxification services designed to safely manage physical withdrawal symptoms from substances.",
+        seoText: "Detox programs provide the medical oversight necessary to cleanse substances from the body safely. Because withdrawal can be physically dangerous, professional detox clinics offer 24/7 medication management and emotional support to ensure client comfort and safety before transitioning to therapeutic rehabilitation.",
+        faqs: [
+            { q: "Why is medical detox important?", a: "Medical detox ensures safety by providing clinical supervision and medications to prevent severe or life-threatening withdrawal symptoms." },
+            { q: "Is detox the same as treatment?", a: "No. Detox cleanses the body of toxins and manages physical dependence, whereas treatment addresses the underlying psychological and behavioral causes of addiction." },
+            { q: "How long does detox take?", a: "A typical detox program lasts between 3 to 10 days, depending on the substance, duration of use, and individual health factors." }
+        ]
+    },
+    { 
+        name: "Support Groups", 
+        icon: "fa-users", 
+        slug: "support-groups", 
+        countText: "0 groups",
+        intro: "Community-driven peer recovery groups including 12-step programs, SMART Recovery, and family support circles.",
+        seoText: "Peer-led support groups offer a strong sense of community and shared experiences. Engaging with peers who are also on the recovery path reduces isolation and provides mutual accountability in a safe, non-clinical environment.",
+        faqs: [
+            { q: "Are support groups free to attend?", a: "Most community peer support groups, like Alcoholics Anonymous (AA) or SMART Recovery, are free and run on voluntary donations." },
+            { q: "What is the difference between AA and SMART Recovery?", a: "AA is a spiritually grounded 12-step program focusing on surrender to a higher power. SMART Recovery is a secular program focusing on cognitive-behavioral tools and self-empowerment." },
+            { q: "Can family members attend peer groups?", a: "Yes, specialized groups like Al-Anon or Nar-Anon are dedicated to supporting family members and loved ones of individuals in recovery." }
+        ]
+    },
+    { 
+        name: "Sober Living", 
+        icon: "fa-bed", 
+        slug: "sober-living", 
+        countText: "0 homes",
+        intro: "Structured, substance-free transitional housing designed to support individuals re-entering independent living.",
+        seoText: "Sober living homes bridge the gap between intensive rehabilitation and return to daily life. Residents live in a supportive community, adhere to house rules (such as curfews and drug testing), and practice real-world recovery skills in a structured setting.",
+        faqs: [
+            { q: "What are the rules in a sober living home?", a: "Standard rules include maintaining sobriety, participating in regular drug screenings, respecting curfews, attending house meetings, and contributing to chores." },
+            { q: "How long do people live in sober housing?", a: "Most residents stay between 3 to 12 months, although some homes allow longer placements based on individual transition progress." },
+            { q: "Do sober homes provide clinical treatment?", a: "Generally no. Sober living homes offer drug-free housing and peer support, but residents usually attend outpatient therapy or meetings off-site." }
+        ]
+    },
+    { 
+        name: "Mental Health Services", 
+        icon: "fa-brain", 
+        slug: "mental-health", 
+        countText: "0 services",
+        intro: "Comprehensive outpatient psychiatry, dual-diagnosis management, and mental wellness programs.",
+        seoText: "Addressing co-occurring mental health disorders (such as depression, anxiety, or PTSD) alongside addiction is crucial for sustainable recovery. Integrated mental health services provide dual-diagnosis care, blending psychiatric medication management with psychotherapeutic support.",
+        faqs: [
+            { q: "What is a dual diagnosis?", a: "A dual diagnosis occurs when an individual experiences both a mental health condition (like depression or anxiety) and a substance use disorder simultaneously." },
+            { q: "Why is treating co-occurring disorders together important?", a: "Treating both conditions simultaneously is essential because untreated mental health issues can trigger relapse, and active substance use can worsen psychiatric symptoms." },
+            { q: "What is the role of a psychiatrist in recovery?", a: "Psychiatrists are medical doctors who diagnose mental health conditions and can prescribe medications to manage psychiatric symptoms or reduce cravings." }
+        ]
+    },
+    { 
+        name: "Outpatient Treatment", 
+        icon: "fa-door-open", 
+        slug: "outpatient", 
+        countText: "0 clinics",
+        intro: "Flexible treatment programs, including Intensive Outpatient (IOP) and outpatient therapy, allowing clients to live at home.",
+        seoText: "Outpatient clinics provide intensive clinical therapy without requiring overnight stays. This structure is ideal for individuals transitioning from residential care or those whose work and family commitments require flexible recovery options.",
+        faqs: [
+            { q: "What is an Intensive Outpatient Program (IOP)?", a: "IOPs are structured outpatient programs that typically require 9 to 20 hours of therapy per week, split across multiple group sessions and individual counseling.",
+              q: "Can I work while attending outpatient treatment?", a: "Yes, many outpatient clinics offer evening or morning sessions specifically designed to accommodate school or work schedules." },
+            { q: "What is a Partial Hospitalization Program (PHP)?", a: "PHP is a highly intensive day program requiring 5 to 6 hours of clinical care daily, 5 days a week, while allowing patients to return home in the evenings." }
+        ]
+    },
+    { 
+        name: "Holistic Wellness", 
+        icon: "fa-leaf", 
+        slug: "holistic-wellness", 
+        countText: "0 centers",
+        intro: "Complementary wellness practices including yoga, meditation, acupuncture, sound healing, and nutritional counseling.",
+        seoText: "Integrating holistic wellness practices supports physical recovery and mental centering. Techniques such as mindfulness meditation, yoga, acupuncture, and sound therapy are often combined with traditional clinical treatments to reduce stress and improve overall emotional well-being.",
+        faqs: [
+            { q: "How does yoga support addiction recovery?", a: "Yoga combines physical postures with breathwork, helping individuals release physical tension, reduce anxiety, and reconnect with their bodies." },
+            { q: "What is sound healing?", a: "Sound healing utilizes vibrational frequencies from instruments like singing bowls or gongs to induce deep relaxation and reduce neurological stress levels." },
+            { q: "Are holistic wellness services covered by clinical insurance?", a: "Coverage varies. Some insurance providers cover acupuncture or nutritional counseling when integrated into a clinical treatment plan. Check with the provider for details." }
+        ]
+    }
 ];
 
 window.RECOVERY_STATES = [
-    { name: "Alabama", abbr: "AL", count: 0 }, { name: "Alaska", abbr: "AK", count: 0 }, { name: "Arizona", abbr: "AZ", count: 0 },
-    { name: "Arkansas", abbr: "AR", count: 0 }, { name: "California", abbr: "CA", count: 0 }, { name: "Colorado", abbr: "CO", count: 0 },
-    { name: "Connecticut", abbr: "CT", count: 0 }, { name: "Delaware", abbr: "DE", count: 0 }, { name: "District of Columbia", abbr: "DC", count: 0 },
-    { name: "Florida", abbr: "FL", count: 0 }, { name: "Georgia", abbr: "GA", count: 0 }, { name: "Hawaii", abbr: "HI", count: 0 },
-    { name: "Idaho", abbr: "ID", count: 0 }, { name: "Illinois", abbr: "IL", count: 0 }, { name: "Indiana", abbr: "IN", count: 0 },
-    { name: "Iowa", abbr: "IA", count: 0 }, { name: "Kansas", abbr: "KS", count: 0 }, { name: "Kentucky", abbr: "KY", count: 0 },
-    { name: "Louisiana", abbr: "LA", count: 0 }, { name: "Maine", abbr: "ME", count: 0 }, { name: "Maryland", abbr: "MD", count: 0 },
-    { name: "Massachusetts", abbr: "MA", count: 0 }, { name: "Michigan", abbr: "MI", count: 0 }, { name: "Minnesota", abbr: "MN", count: 0 },
-    { name: "Mississippi", abbr: "MS", count: 0 }, { name: "Missouri", abbr: "MO", count: 0 }, { name: "Montana", abbr: "MT", count: 0 },
-    { name: "Nebraska", abbr: "NE", count: 0 }, { name: "Nevada", abbr: "NV", count: 0 }, { name: "New Hampshire", abbr: "NH", count: 0 },
-    { name: "New Jersey", abbr: "NJ", count: 0 }, { name: "New Mexico", abbr: "NM", count: 0 }, { name: "New York", abbr: "NY", count: 0 },
-    { name: "North Carolina", abbr: "NC", count: 0 }, { name: "North Dakota", abbr: "ND", count: 0 }, { name: "Ohio", abbr: "OH", count: 0 },
-    { name: "Oklahoma", abbr: "OK", count: 0 }, { name: "Oregon", abbr: "OR", count: 0 }, { name: "Pennsylvania", abbr: "PA", count: 0 },
-    { name: "Rhode Island", abbr: "RI", count: 0 }, { name: "South Carolina", abbr: "SC", count: 0 }, { name: "South Dakota", abbr: "SD", count: 0 },
-    { name: "Tennessee", abbr: "TN", count: 0 }, { name: "Texas", abbr: "TX", count: 0 }, { name: "Utah", abbr: "UT", count: 0 },
-    { name: "Vermont", abbr: "VT", count: 0 }, { name: "Virginia", abbr: "VA", count: 0 }, { name: "Washington", abbr: "WA", count: 0 },
-    { name: "West Virginia", abbr: "WV", count: 0 }, { name: "Wisconsin", abbr: "WI", count: 0 }, { name: "Wyoming", abbr: "WY", count: 0 }
+    { 
+        name: "Alabama", abbr: "AL", count: 0,
+        intro: "Find local recovery resources, support groups, and clinical counseling services across the state of Alabama.",
+        cities: ["Birmingham", "Montgomery", "Mobile", "Huntsville", "Tuscaloosa"]
+    },
+    { 
+        name: "Alaska", abbr: "AK", count: 0,
+        intro: "Discover substance use treatment resources, inpatient centers, and support networks across Alaska.",
+        cities: ["Anchorage", "Fairbanks", "Juneau", "Sitka", "Ketchikan"]
+    },
+    { 
+        name: "Arizona", abbr: "AZ", count: 0,
+        intro: "Locate treatment centers, sobriety housing, and outpatient support groups in Arizona.",
+        cities: ["Phoenix", "Tucson", "Mesa", "Chandler", "Scottsdale"]
+    },
+    { 
+        name: "Arkansas", abbr: "AR", count: 0,
+        intro: "Browse recovery services, counselors, and community groups across Arkansas.",
+        cities: ["Little Rock", "Fort Smith", "Fayetteville", "Springdale", "Jonesboro"]
+    },
+    { 
+        name: "California", abbr: "CA", count: 0,
+        intro: "Access leading detox facilities, outpatient clinics, therapists, and sober living environments in California.",
+        cities: ["Los Angeles", "San Diego", "San Jose", "San Francisco", "Sacramento", "La Jolla"]
+    },
+    { 
+        name: "Colorado", abbr: "CO", count: 0,
+        intro: "Find holistic clinics, counselors, and inpatient treatment options throughout Colorado.",
+        cities: ["Denver", "Colorado Springs", "Aurora", "Fort Collins", "Boulder"]
+    },
+    { 
+        name: "Connecticut", abbr: "CT", count: 0,
+        intro: "Locate professional recovery networks, therapists, and detox clinics in Connecticut.",
+        cities: ["Bridgeport", "New Haven", "Hartford", "Stamford", "Waterbury"]
+    },
+    { 
+        name: "Delaware", abbr: "DE", count: 0,
+        intro: "Browse outpatient support, counseling, and transitional living facilities across Delaware.",
+        cities: ["Wilmington", "Dover", "Newark", "Middletown", "Milford"]
+    },
+    { 
+        name: "District of Columbia", abbr: "DC", count: 0,
+        intro: "Access community support groups, outpatient programs, and mental health assistance in Washington DC.",
+        cities: ["Washington"]
+    },
+    { 
+        name: "Florida", abbr: "FL", count: 0,
+        intro: "Explore leading rehabilitation centers, sober living transitional houses, and therapists in Florida.",
+        cities: ["Jacksonville", "Miami", "Tampa", "Orlando", "St. Petersburg"]
+    },
+    { 
+        name: "Georgia", abbr: "GA", count: 0,
+        intro: "Browse local treatment centers, peer support programs, and mental health clinics in Georgia.",
+        cities: ["Atlanta", "Augusta", "Columbus", "Savannah", "Athens"]
+    },
+    { 
+        name: "Hawaii", abbr: "HI", count: 0,
+        intro: "Locate outpatient programs, detox services, and wellness therapists across Hawaii.",
+        cities: ["Honolulu", "Hilo", "Kailua", "Kapolei", "Kahului"]
+    },
+    { 
+        name: "Idaho", abbr: "ID", count: 0,
+        intro: "Explore counseling, sober homes, and local support circles in Idaho.",
+        cities: ["Boise", "Meridian", "Nampa", "Idaho Falls", "Caldwell"]
+    },
+    { 
+        name: "Illinois", abbr: "IL", count: 0,
+        intro: "Browse substance use services, dual-diagnosis clinics, and local counselors in Illinois.",
+        cities: ["Chicago", "Aurora", "Naperville", "Joliet", "Rockford"]
+    },
+    { 
+        name: "Indiana", abbr: "IN", count: 0,
+        intro: "Find clinical recovery resources, therapists, and sober environments in Indiana.",
+        cities: ["Indianapolis", "Fort Wayne", "Evansville", "South Bend", "Carmel"]
+    },
+    { 
+        name: "Iowa", abbr: "IA", count: 0,
+        intro: "Locate outpatient therapy and support groups across Iowa.",
+        cities: ["Des Moines", "Cedar Rapids", "Davenport", "Sioux City", "Iowa City"]
+    },
+    { 
+        name: "Kansas", abbr: "KS", count: 0,
+        intro: "Explore addiction counselors, support networks, and detox clinics in Kansas.",
+        cities: ["Wichita", "Overland Park", "Kansas City", "Olathe", "Topeka"]
+    },
+    { 
+        name: "Kentucky", abbr: "KY", count: 0,
+        intro: "Browse peer-led groups, inpatient treatment, and sober living in Kentucky.",
+        cities: ["Louisville", "Lexington", "Bowling Green", "Owensboro", "Covington"]
+    },
+    { 
+        name: "Louisiana", abbr: "LA", count: 0,
+        intro: "Find local recovery help, counselors, and support environments in Louisiana.",
+        cities: ["New Orleans", "Baton Rouge", "Shreveport", "Lafayette", "Lake Charles"]
+    },
+    { 
+        name: "Maine", abbr: "ME", count: 0,
+        intro: "Discover transitional housing, counselors, and detox clinics in Maine.",
+        cities: ["Portland", "Lewiston", "Bangor", "South Portland", "Auburn"]
+    },
+    { 
+        name: "Maryland", abbr: "MD", count: 0,
+        intro: "Explore verified recovery services, clinics, and support networks across Maryland.",
+        cities: ["Baltimore", "Columbia", "Germantown", "Silver Spring", "Waldorf"]
+    },
+    { 
+        name: "Massachusetts", abbr: "MA", count: 0,
+        intro: "Find leading rehabilitation facilities, outpatient treatment, and support circles in Massachusetts.",
+        cities: ["Boston", "Worcester", "Springfield", "Cambridge", "Lowell"]
+    },
+    { 
+        name: "Michigan", abbr: "MI", count: 0,
+        intro: "Browse detox resources, dual-diagnosis treatment, and sober homes in Michigan.",
+        cities: ["Detroit", "Grand Rapids", "Warren", "Sterling Heights", "Ann Arbor"]
+    },
+    { 
+        name: "Minnesota", abbr: "MN", count: 0,
+        intro: "Access counseling, inpatient centers, and peer support networks throughout Minnesota.",
+        cities: ["Minneapolis", "St. Paul", "Rochester", "Duluth", "Bloomington"]
+    },
+    { 
+        name: "Mississippi", abbr: "MS", count: 0,
+        intro: "Locate outpatient therapy and support groups across Mississippi.",
+        cities: ["Jackson", "Gulfport", "Southaven", "Biloxi", "Hattiesburg"]
+    },
+    { 
+        name: "Missouri", abbr: "MO", count: 0,
+        intro: "Explore addiction recovery resources, counseling, and sober living in Missouri.",
+        cities: ["Kansas City", "St. Louis", "Springfield", "Columbia", "Independence"]
+    },
+    { 
+        name: "Montana", abbr: "MT", count: 0,
+        intro: "Find recovery support, counselors, and community clinics in Montana.",
+        cities: ["Billings", "Missoula", "Great Falls", "Bozeman", "Butte"]
+    },
+    { 
+        name: "Nebraska", abbr: "NE", count: 0,
+        intro: "Browse outpatient recovery networks and counseling services in Nebraska.",
+        cities: ["Omaha", "Lincoln", "Bellevue", "Grand Island", "Kearney"]
+    },
+    { 
+        name: "Nevada", abbr: "NV", count: 0,
+        intro: "Access detox clinics, sober transitional housing, and local therapists in Nevada.",
+        cities: ["Las Vegas", "Henderson", "Reno", "North Las Vegas", "Sparks"]
+    },
+    { 
+        name: "New Jersey", abbr: "NJ", count: 0,
+        intro: "Find substance use clinics, psychiatric services, and peer groups across New Jersey.",
+        cities: ["Newark", "Jersey City", "Paterson", "Elizabeth", "Clifton"]
+    },
+    { 
+        name: "New Mexico", abbr: "NM", count: 0,
+        intro: "Locate outpatient therapy and support groups in New Mexico.",
+        cities: ["Albuquerque", "Las Cruces", "Rio Rancho", "Santa Fe", "Roswell"]
+    },
+    { 
+        name: "New York", abbr: "NY", count: 0,
+        intro: "Access leading rehabilitation centers, therapists, and peer support groups in New York.",
+        cities: ["New York", "Buffalo", "Rochester", "Yonkers", "Syracuse"]
+    },
+    { 
+        name: "North Carolina", abbr: "NC", count: 0,
+        intro: "Browse clinical treatment, sober living, and outpatient support in North Carolina.",
+        cities: ["Charlotte", "Raleigh", "Greensboro", "Durham", "Winston-Salem"]
+    },
+    { 
+        name: "Oregon", abbr: "OR", count: 0,
+        intro: "Explore local outpatient treatment, counseling, and peer recovery circles in Oregon.",
+        cities: ["Portland", "Eugene", "Salem", "Gresham", "Hillsboro"]
+    },
+    { 
+        name: "Texas", abbr: "TX", count: 0,
+        intro: "Explore premier treatment clinics, sober homes, and support fellowships in Texas.",
+        cities: ["Houston", "San Antonio", "Dallas", "Austin", "Fort Worth"]
+    },
+    { 
+        name: "Washington", abbr: "WA", count: 0,
+        intro: "Find clinical counselors, outpatient clinics, and support networks across Washington state.",
+        cities: ["Seattle", "Spokane", "Tacoma", "Vancouver", "Bellevue"]
+    }
 ];
 
 window.RECOVERY_RESOURCES = [

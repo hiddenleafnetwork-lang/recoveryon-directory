@@ -189,16 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.setAttribute('aria-label', `Explore ${cat.name}`);
             
             const selectCategory = () => {
-                const keywordInput = document.getElementById('search-keyword');
-                if (keywordInput) {
-                    keywordInput.value = cat.name;
-                    keywordInput.focus();
-                    
-                    const searchSection = document.getElementById('search-box-container');
-                    if (searchSection) {
-                        searchSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                }
+                window.location.href = `categories/index.html?slug=${cat.slug}`;
             };
             
             card.addEventListener('click', selectCategory);
@@ -236,30 +227,20 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Build the state list item
             const stateLink = document.createElement('a');
-            stateLink.href = `/${slug}/`;
+            stateLink.href = `states/index.html?slug=${state.abbr.toLowerCase()}`;
             stateLink.className = 'state-link';
             stateLink.id = `state-link-${slug}`;
             stateLink.innerHTML = `${state.name} <span class="state-count">(${state.count})</span>`;
-            
-            stateLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                alert(`Navigating to the dedicated state directory page for ${state.name} (/${slug}/)`);
-            });
             
             statesGrid.appendChild(stateLink);
             
             // Inject pill for popular state
             if (popularAbbrs.includes(state.abbr) && popularStatesRow) {
                 const popularPill = document.createElement('a');
-                popularPill.href = `/${slug}/`;
+                popularPill.href = `states/index.html?slug=${state.abbr.toLowerCase()}`;
                 popularPill.className = 'popular-state-pill';
                 popularPill.id = `popular-pill-${slug}`;
                 popularPill.innerHTML = `<i class="fa-solid fa-map-pin"></i> ${state.name} <span class="pill-count">${state.count}</span>`;
-                
-                popularPill.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    alert(`Navigating to the dedicated state directory page for ${state.name} (/${slug}/)`);
-                });
                 
                 popularStatesRow.appendChild(popularPill);
             }

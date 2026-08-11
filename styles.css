@@ -2185,3 +2185,54 @@ img {
 .btn-load-more:hover {
     background-color: #e2e8f0;
 }
+
+/* State and City Filter Buttons */
+.state-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-family: var(--font-sans);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+}
+
+.state-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    background-color: rgba(2, 128, 144, 0.02);
+}
+
+.state-btn.active {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: #ffffff !important;
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 992px) {
+    #category-states-grid,
+    #popular-cities-grid,
+    #all-cities-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
+
+@media (max-width: 576px) {
+    #category-states-grid,
+    #popular-cities-grid,
+    #all-cities-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+}
