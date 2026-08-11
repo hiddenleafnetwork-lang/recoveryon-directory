@@ -828,6 +828,45 @@ window.RECOVERY_BLOG_POSTS = [
             <p>In this detailed comparison, we look at RenderCut and Submagic side-by-side. While Submagic excels in basic short-form caption styling, RenderCut provides a comprehensive video editing studio with custom templates, multi-language support, and B-roll automation capabilities.</p>
             <p>Choose RenderCut if you want a complete workflow solution, and choose Submagic if you want a quick tool dedicated exclusively to short captions.</p>
         `
+    },
+    {
+        title: "Navigating Your Wellness Journey",
+        slug: "navigating-wellness-journey",
+        date: "July 28, 2026",
+        category: "Wellness",
+        author: "RecoveryOn Team",
+        image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80",
+        excerpt: "Explore insights, tips, stories, and expert advice on your journey to recovery and wellness.",
+        content: `
+            <p>Entering recovery is a powerful milestone, but maintaining balance requires consistent attention to physical, emotional, and social health. This guide offers helpful tips to help you build positive daily habits, find supportive therapy options, and practice mindfulness.</p>
+            <p>Make sure to establish a clean schedule, set boundaries, and engage in local support networks to sustain your long-term success.</p>
+        `
+    },
+    {
+        title: "5 Steps to Mental Resilience",
+        slug: "five-steps-mental-resilience",
+        date: "July 20, 2026",
+        category: "Recovery Guide",
+        author: "RecoveryOn Team",
+        image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80",
+        excerpt: "Discover 5 simple, actionable steps to build mental resilience, manage stress, and support daily emotional health.",
+        content: `
+            <p>Mental resilience isn't something you're born with; it is built through daily practice. In times of transition, developing positive coping mechanisms is critical for mental wellness.</p>
+            <p>Follow these 5 proven steps: 1) Practice active gratitude, 2) Focus on what you can control, 3) Establish micro-goals, 4) Reframe negative self-talk, and 5) Reach out to your support network whenever things get heavy.</p>
+        `
+    },
+    {
+        title: "Building Strong Support Systems",
+        slug: "building-support-systems",
+        date: "July 15, 2026",
+        category: "Community",
+        author: "RecoveryOn Team",
+        image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80",
+        excerpt: "Building a supportive community is vital for recovery. Learn practical tips on finding local support groups and sober sponsors.",
+        content: `
+            <p>Isolation is one of the biggest challenges in recovery. Having a group of friends, peers, and professionals who understand your goals makes a world of difference.</p>
+            <p>Whether you find this support through 12-step groups, outpatient programs, or wellness circles, establishing reliable lines of communication is crucial for sustaining sobriety.</p>
+        `
     }
 ];
 
