@@ -226,12 +226,44 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Populate dynamic state filters based on available listings in this state
+    const categories = new Set();
+    const treatments = new Set();
+
+    stateResources.forEach(res => {
+        if (res.categories) res.categories.forEach(c => categories.add(c));
+        if (res.treatmentTypes) res.treatmentTypes.forEach(t => treatments.add(t));
+    });
+
+    const categoryFilter = document.getElementById('filter-category');
+    const treatmentFilter = document.getElementById('filter-treatment');
+
+    if (categoryFilter) {
+        categories.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = c;
+            categoryFilter.appendChild(opt);
+        });
+    }
+
+    if (treatmentFilter) {
+        treatments.forEach(t => {
+            const opt = document.createElement('option');
+            opt.value = t;
+            opt.textContent = t;
+            treatmentFilter.appendChild(opt);
+        });
+    }
+
     const keywordInput = document.getElementById('search-keyword');
     const cityInput = document.getElementById('search-city');
 
     function applyFilters() {
         const keyword = keywordInput ? keywordInput.value.toLowerCase().trim() : '';
         const citySearch = cityInput ? cityInput.value.toLowerCase().trim() : '';
+        const selectedCategory = categoryFilter ? categoryFilter.value : '';
+        const selectedTreatment = treatmentFilter ? treatmentFilter.value : '';
 
         const filtered = stateResources.filter(res => {
             const matchesKeyword = !keyword || 
@@ -251,7 +283,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                   res.address.toLowerCase().includes(citySearch);
             }
 
-            return matchesKeyword && matchesLocation;
+            const matchesCategory = !selectedCategory || 
+                res.categories.includes(selectedCategory);
+
+            const matchesTreatment = !selectedTreatment || 
+                res.treatmentTypes.includes(selectedTreatment);
+
+            return matchesKeyword && matchesLocation && matchesCategory && matchesTreatment;
         });
 
         renderResources(filtered);

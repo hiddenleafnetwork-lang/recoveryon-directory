@@ -149,6 +149,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Populate dynamic filter options based on available services and insurance inside this category
+    const treatments = new Set();
+    const insuranceList = new Set();
+    
+    categoryResources.forEach(res => {
+        if (res.treatmentTypes) res.treatmentTypes.forEach(t => treatments.add(t));
+        if (res.insuranceAccepted) res.insuranceAccepted.forEach(ins => insuranceList.add(ins));
+    });
+
+    const treatmentFilter = document.getElementById('filter-treatment');
+    const insuranceFilter = document.getElementById('filter-insurance');
+
+    if (treatmentFilter) {
+        treatments.forEach(t => {
+            const opt = document.createElement('option');
+            opt.value = t;
+            opt.textContent = t;
+            treatmentFilter.appendChild(opt);
+        });
+    }
+
+    if (insuranceFilter) {
+        insuranceList.forEach(ins => {
+            const opt = document.createElement('option');
+            opt.value = ins;
+            opt.textContent = ins;
+            insuranceFilter.appendChild(opt);
+        });
+    }
+
     // Initial load
     renderResources(categoryResources);
 
@@ -162,6 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const keyword = keywordInput.value.toLowerCase().trim();
             const location = locationInput.value.toLowerCase().trim();
+            const selectedTreatment = treatmentFilter ? treatmentFilter.value : '';
+            const selectedInsurance = insuranceFilter ? insuranceFilter.value : '';
 
             // Filter resources
             const filtered = categoryResources.filter(res => {
@@ -176,7 +208,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     res.county.toLowerCase().includes(location) ||
                     res.address.toLowerCase().includes(location);
 
-                return matchesKeyword && matchesLocation;
+                const matchesTreatment = !selectedTreatment || 
+                    res.treatmentTypes.includes(selectedTreatment);
+
+                const matchesInsurance = !selectedInsurance || 
+                    res.insuranceAccepted.includes(selectedInsurance);
+
+                return matchesKeyword && matchesLocation && matchesTreatment && matchesInsurance;
             });
 
             renderResources(filtered);

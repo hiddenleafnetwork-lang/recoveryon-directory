@@ -65,9 +65,9 @@
                 <h1 class="section-title" id="category-title" style="margin-bottom: 8px;">Category H1</h1>
                 <p class="section-desc" id="category-intro" style="margin-bottom: 24px; max-width: 800px; line-height: 1.6;"></p>
                 
-                <!-- Search Bar (Submitting redirects to directory page) -->
+                <!-- Search Bar (Submitting filters results dynamically) -->
                 <div class="directory-filter-bar" style="margin-bottom: 0;">
-                    <form class="filter-form" id="category-search-form">
+                    <form class="filter-form" id="category-search-form" style="grid-template-columns: 2fr 1.5fr 1.5fr 1.5fr 1fr;">
                         <div class="filter-input-group">
                             <i class="fa-solid fa-magnifying-glass"></i>
                             <input type="text" placeholder="Search within this category..." id="search-keyword">
@@ -76,8 +76,20 @@
                             <i class="fa-solid fa-location-dot"></i>
                             <input type="text" placeholder="City, State or ZIP..." id="search-location">
                         </div>
-                        <button type="submit" class="btn btn-search btn-filter-submit" style="grid-column: span 2;">
-                            <i class="fa-solid fa-magnifying-glass"></i> Search Directory
+                        <div class="filter-input-group select-group">
+                            <i class="fa-solid fa-briefcase-medical"></i>
+                            <select id="filter-treatment">
+                                <option value="">All Services</option>
+                            </select>
+                        </div>
+                        <div class="filter-input-group select-group">
+                            <i class="fa-solid fa-credit-card"></i>
+                            <select id="filter-insurance">
+                                <option value="">All Insurance</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-search btn-filter-submit" style="padding: 10px;">
+                            <i class="fa-solid fa-magnifying-glass"></i> Search
                         </button>
                     </form>
                 </div>

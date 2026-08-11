@@ -67,17 +67,29 @@
                 
                 <!-- Search Bar -->
                 <div class="directory-filter-bar" style="margin-bottom: 0;">
-                    <form class="filter-form" id="state-search-form">
-                        <div class="filter-input-group" style="grid-column: span 2;">
+                    <form class="filter-form" id="state-search-form" style="grid-template-columns: 2fr 1.5fr 1.5fr 1.5fr 1fr;">
+                        <div class="filter-input-group">
                             <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" placeholder="Search by provider name, treatment, or specialty..." id="search-keyword">
+                            <input type="text" placeholder="Search by name or keyword..." id="search-keyword">
                         </div>
-                        <div class="filter-input-group" style="grid-column: span 2;">
+                        <div class="filter-input-group">
                             <i class="fa-solid fa-city"></i>
-                            <input type="text" placeholder="Search specific city/area in state..." id="search-city">
+                            <input type="text" placeholder="City or ZIP code..." id="search-city">
                         </div>
-                        <button type="submit" class="btn btn-search btn-filter-submit" style="grid-column: span 2;">
-                            <i class="fa-solid fa-magnifying-glass"></i> Search State
+                        <div class="filter-input-group select-group">
+                            <i class="fa-solid fa-house-medical"></i>
+                            <select id="filter-category">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div>
+                        <div class="filter-input-group select-group">
+                            <i class="fa-solid fa-notes-medical"></i>
+                            <select id="filter-treatment">
+                                <option value="">All Treatments</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-search btn-filter-submit" style="padding: 10px;">
+                            <i class="fa-solid fa-magnifying-glass"></i> Search
                         </button>
                     </form>
                 </div>
