@@ -67,7 +67,63 @@ window.RECOVERY_RESOURCES = [
         aboutLong: "Serene Path Wellness Center provides a calm, supportive environment where individuals can engage in alternative recovery therapies. Our clinic features certified instructors and clinical practitioners who specialize in integrating physical movement with emotional healing. All services listed for this facility are part of a demonstration dataset for testing layout components.",
         services: ["Sound baths", "Group meditation", "Acupuncture", "Private yoga classes"],
         amenities: ["Outdoor Zen garden", "Herbal tea station", "Private therapy rooms"],
-        status: "Demo Data / Testing Only"
+        status: "Demo Data / Testing Only",
+        reviews: [
+            {
+                author: "Somporn Sonthiporn",
+                verified: true,
+                avatar: "",
+                timeText: "4 months ago on Google",
+                rating: 5,
+                text: "I recently had the opportunity to visit Serene Path Wellness Center in Boulder, and I came away incredibly impressed by the care-oriented staff. They provide a safe, nurturing environment for holistic healing.",
+                link: "#"
+            },
+            {
+                author: "Tok Kung (Tok)",
+                verified: true,
+                avatar: "",
+                timeText: "4 months ago on Google",
+                rating: 5,
+                text: "The Serene Path wellness programs truly take exceptional care of their clients. They provide a safe space and structured routines that make a huge difference in long-term wellness.",
+                link: "#"
+            },
+            {
+                author: "Fern A.J.",
+                verified: true,
+                avatar: "",
+                timeText: "5 months ago on Google",
+                rating: 5,
+                text: "I have a close association with Serene Path and its management and staff. I can vouch for their dedication, integrity, and clinical excellence. Highly recommended!",
+                link: "#"
+            },
+            {
+                author: "Thanachai Amathapr...",
+                verified: true,
+                avatar: "",
+                timeText: "5 months ago on Google",
+                rating: 5,
+                text: "Serene Path is an extremely effective wellness center. Their clinical staff are very supportive and help clients build healthy, sustainable habits.",
+                link: "#"
+            },
+            {
+                author: "Cecilia Chan",
+                verified: true,
+                avatar: "",
+                timeText: "6 months ago on Google",
+                rating: 5,
+                text: "This center has provided all rounded and customer services to our family. The staff went above and beyond to support my daughter through her wellness program.",
+                link: "#"
+            },
+            {
+                author: "Alvin LinThant",
+                verified: true,
+                avatar: "",
+                timeText: "6 months ago on Google",
+                rating: 5,
+                text: "Serene Path is a great place for clients looking for a stable environment for their recovery. The meditation and yoga classes are top notch.",
+                link: "#"
+            }
+        ]
     },
     {
         name: "Hope & Unity Fellowship",
@@ -100,7 +156,36 @@ window.RECOVERY_RESOURCES = [
         aboutLong: "Hope & Unity Fellowship is dedicated to providing community-driven support for individuals recovering from substance use disorders. We host weekly peer group discussions, family sessions, and sober socials. All listed details are sample data for layout design validation.",
         services: ["12-Step facilitation", "Weekly support circles", "Sober social gatherings", "Family education programs"],
         amenities: ["Spacious meeting hall", "Coffee bar", "Children play room"],
-        status: "Demo Data / Testing Only"
+        status: "Demo Data / Testing Only",
+        reviews: [
+            {
+                author: "Fern A.J.",
+                verified: true,
+                avatar: "",
+                timeText: "4 months ago on Google",
+                rating: 5,
+                text: "Hope & Unity Fellowship is a life-changing group. The peer support here is absolutely genuine and has helped me tremendously on my personal path.",
+                link: "#"
+            },
+            {
+                author: "Tok Kung (Tok)",
+                verified: true,
+                avatar: "",
+                timeText: "5 months ago on Google",
+                rating: 5,
+                text: "Fantastic support circles. Everyone is welcoming and the facilitators create a secure, judgment-free zone.",
+                link: "#"
+            },
+            {
+                author: "Somporn Sonthiporn",
+                verified: true,
+                avatar: "",
+                timeText: "5 months ago on Google",
+                rating: 5,
+                text: "Highly recommend Hope & Unity for family counseling. They really helped us heal together.",
+                link: "#"
+            }
+        ]
     },
     {
         name: "Apex Therapy Associates",
@@ -133,7 +218,36 @@ window.RECOVERY_RESOURCES = [
         aboutLong: "Apex Therapy Associates offers evidence-based cognitive behavioral therapy (CBT) and dialectical behavior therapy (DBT) sessions. Our certified therapists specialize in trauma, anxiety, and addiction recovery, helping clients build sustainable coping mechanisms. All elements shown represent mock layout structures.",
         services: ["Cognitive Behavioral Therapy", "Psychodynamic Therapy", "Trauma-Informed Counseling", "Stress Management"],
         amenities: ["Quiet consultation suites", "Virtual telehealth option", "ADA accessible offices"],
-        status: "Demo Data / Testing Only"
+        status: "Demo Data / Testing Only",
+        reviews: [
+            {
+                author: "Alvin LinThant",
+                verified: true,
+                avatar: "",
+                timeText: "2 months ago on Google",
+                rating: 5,
+                text: "Apex Therapy is top-tier. My sessions here have been incredibly helpful. The therapist is professional, insightful, and empathetic.",
+                link: "#"
+            },
+            {
+                author: "Cecilia Chan",
+                verified: true,
+                avatar: "",
+                timeText: "3 months ago on Google",
+                rating: 5,
+                text: "Clean, comfortable offices and an excellent online scheduling portal. Telehealth options make it very convenient.",
+                link: "#"
+            },
+            {
+                author: "Fern A.J.",
+                verified: true,
+                avatar: "",
+                timeText: "4 months ago on Google",
+                rating: 5,
+                text: "Highly recommended for individual CBT counseling. Truly professional support.",
+                link: "#"
+            }
+        ]
     },
     {
         name: "Elysian Recovery Spa & Retreat",
@@ -166,7 +280,36 @@ window.RECOVERY_RESOURCES = [
         aboutLong: "Elysian Recovery Spa & Retreat provides premium residential recovery programs combining clinical care with wellness therapies. Clients receive personalized recovery plans, gourmet meals, and access to therapeutic massage and spa amenities. All information listed is placeholder data for developer validation.",
         services: ["Medical detoxification", "Individual psychotherapy", "Family recovery workshops", "Relapse prevention training"],
         amenities: ["Oceanview rooms", "Full-service spa & pool", "Private chef & organic dining", "Fitness studio"],
-        status: "Demo Data / Testing Only"
+        status: "Demo Data / Testing Only",
+        reviews: [
+            {
+                author: "Somporn Sonthiporn",
+                verified: true,
+                avatar: "",
+                timeText: "4 months ago on Google",
+                rating: 5,
+                text: "Elysian Retreat is a beautiful, peaceful sanctuary. The ocean views and gourmet dining combined with top-tier recovery care make it one-of-a-kind.",
+                link: "#"
+            },
+            {
+                author: "Tok Kung (Tok)",
+                verified: true,
+                avatar: "",
+                timeText: "4 months ago on Google",
+                rating: 5,
+                text: "Incredible wellness spa and residential program. Safe space, professional staff, and therapeutic environments.",
+                link: "#"
+            },
+            {
+                author: "Fern A.J.",
+                verified: true,
+                avatar: "",
+                timeText: "5 months ago on Google",
+                rating: 5,
+                text: "Outstanding commitment to patient recovery. The facility is luxurious and highly effective.",
+                link: "#"
+            }
+        ]
     },
     {
         name: "North Star Counseling Group",
@@ -198,7 +341,27 @@ window.RECOVERY_RESOURCES = [
         aboutLong: "North Star Counseling Group is dedicated to helping Seattle residents overcome psychological challenges, anxiety, and chemical dependencies. We offer custom sessions for individuals, couples, and adolescents. All elements are structured mock samples.",
         services: ["Teen & adolescent therapy", "Couples counseling", "Addiction coping skills", "Grief and loss support"],
         amenities: ["Comfortable lounge area", "Online therapy portal", "Flexible evening scheduling"],
-        status: "Demo Data / Testing Only"
+        status: "Demo Data / Testing Only",
+        reviews: [
+            {
+                author: "Thanachai Amathapr...",
+                verified: true,
+                avatar: "",
+                timeText: "3 months ago on Google",
+                rating: 5,
+                text: "North Star therapists are warm and highly professional. Helped our family navigate through a tough transitional period.",
+                link: "#"
+            },
+            {
+                author: "Cecilia Chan",
+                verified: true,
+                avatar: "",
+                timeText: "4 months ago on Google",
+                rating: 5,
+                text: "Excellent adolescent counseling. They are very understanding and patient.",
+                link: "#"
+            }
+        ]
     },
     {
         name: "Cascade Recovery Clinic",
@@ -230,6 +393,26 @@ window.RECOVERY_RESOURCES = [
         aboutLong: "Cascade Recovery Clinic offers structured intensive outpatient programs (IOP) that allow clients to maintain their daily routines while receiving top-tier support. Our team emphasizes relational health and relapse prevention skills. All data displayed is mock content for interface design evaluation.",
         services: ["Intensive outpatient groups", "Sober companion coordination", "Medicated-assisted treatment consulting", "Nutrition and wellness guidance"],
         amenities: ["Modern facilities", "Transit-accessible location", "Sober lounge area"],
-        status: "Demo Data / Testing Only"
+        status: "Demo Data / Testing Only",
+        reviews: [
+            {
+                author: "Alvin LinThant",
+                verified: true,
+                avatar: "",
+                timeText: "4 months ago on Google",
+                rating: 5,
+                text: "The intensive outpatient program (IOP) here is very structured and helpful. Made it easy to keep working while getting professional care.",
+                link: "#"
+            },
+            {
+                author: "Somporn Sonthiporn",
+                verified: true,
+                avatar: "",
+                timeText: "5 months ago on Google",
+                rating: 5,
+                text: "Outstanding outpatient services. Portland's Pearl District location is highly transit-accessible and modern.",
+                link: "#"
+            }
+        ]
     }
 ];

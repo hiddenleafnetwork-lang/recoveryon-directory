@@ -336,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(map);
 
-                // Custom marker using simple font-awesome or styling if possible, or standard leaflet icon
+                // Custom marker using standard leaflet icon
                 const marker = L.marker([data.latitude, data.longitude]).addTo(map);
                 marker.bindPopup(`
                     <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem;">
@@ -350,6 +350,98 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             const mapSection = document.getElementById('map-section');
             if (mapSection) mapSection.style.display = 'none';
+        }
+
+        // 11. Google Reviews rendering
+        const reviewsSection = document.getElementById('reviews-section');
+        const reviewsGrid = document.getElementById('reviews-grid');
+        const loadMoreContainer = document.getElementById('load-more-container');
+        const loadMoreBtn = document.getElementById('btn-load-more');
+
+        if (reviewsSection && reviewsGrid && data.reviews && data.reviews.length > 0) {
+            reviewsSection.style.display = 'block';
+            reviewsGrid.innerHTML = '';
+            
+            let reviewsVisible = 3;
+            
+            function renderReviewsList() {
+                reviewsGrid.innerHTML = '';
+                const itemsToRender = data.reviews.slice(0, reviewsVisible);
+                
+                itemsToRender.forEach(rev => {
+                    const card = document.createElement('div');
+                    card.className = 'review-card';
+                    
+                    // Avatar calculation (Initials if no image)
+                    let avatarContent = '';
+                    if (rev.avatar) {
+                        avatarContent = `<img src="${rev.avatar}" alt="${rev.author}">`;
+                    } else {
+                        const nameParts = rev.author.split(' ');
+                        const initials = nameParts.map(p => p[0]).join('').substring(0, 2).toUpperCase();
+                        avatarContent = initials;
+                    }
+                    
+                    // Stars HTML
+                    let starsHTML = '';
+                    for (let i = 0; i < 5; i++) {
+                        starsHTML += `<i class="fa-solid fa-star"></i>`;
+                    }
+                    
+                    card.innerHTML = `
+                        <div>
+                            <div class="reviewer-info-row">
+                                <div class="reviewer-avatar">${avatarContent}</div>
+                                <div class="reviewer-details">
+                                    <span class="reviewer-name">${rev.author} <i class="fa-solid fa-circle-check verify-badge"></i></span>
+                                    <span class="review-time">${rev.timeText}</span>
+                                </div>
+                            </div>
+                            <div class="review-stars">${starsHTML}</div>
+                            <p class="review-text">${rev.text}</p>
+                        </div>
+                        <button class="btn-read-more">Read more</button>
+                    `;
+                    
+                    // Read More behavior
+                    const readMoreBtn = card.querySelector('.btn-read-more');
+                    const textEl = card.querySelector('.review-text');
+                    readMoreBtn.addEventListener('click', () => {
+                        if (textEl.style.display === 'block') {
+                            textEl.style.display = '';
+                            textEl.style.webkitLineClamp = '4';
+                            readMoreBtn.textContent = 'Read more';
+                        } else {
+                            textEl.style.display = 'block';
+                            textEl.style.webkitLineClamp = 'initial';
+                            readMoreBtn.textContent = 'Read less';
+                        }
+                    });
+                    
+                    reviewsGrid.appendChild(card);
+                });
+                
+                // Show/hide load more button
+                if (loadMoreContainer) {
+                    if (reviewsVisible >= data.reviews.length) {
+                        loadMoreContainer.style.display = 'none';
+                    } else {
+                        loadMoreContainer.style.display = 'flex';
+                    }
+                }
+            }
+            
+            // Initial render
+            renderReviewsList();
+            
+            if (loadMoreBtn) {
+                loadMoreBtn.addEventListener('click', () => {
+                    reviewsVisible += 3;
+                    renderReviewsList();
+                });
+            }
+        } else {
+            if (reviewsSection) reviewsSection.style.display = 'none';
         }
     }
 });

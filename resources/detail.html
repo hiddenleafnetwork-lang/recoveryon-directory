@@ -28,9 +28,9 @@
             <!-- Navigation Menu -->
             <nav class="nav-menu" id="nav-menu">
                 <ul>
-                    <li><a href="../index.html#directory" class="nav-link">Explore</a></li>
-                    <li><a href="../index.html#categories" class="nav-link">Categories</a></li>
-                    <li><a href="index.html" class="nav-link">Resources</a></li>
+                    <li><a href="../index.html#directory" class="nav-link" id="nav-explore">Explore</a></li>
+                    <li><a href="../index.html#categories" class="nav-link" id="nav-categories">Categories</a></li>
+                    <li><a href="index.html" class="nav-link" id="nav-resources">Resources</a></li>
                     <li><a href="../index.html#add-listing" class="btn btn-cta" id="nav-add-listing">Add a Listing</a></li>
                 </ul>
             </nav>
@@ -159,46 +159,71 @@
                         <!-- Map injected dynamically by Leaflet -->
                     </div>
                 </div>
+
+                <!-- Google Reviews Section -->
+                <div class="reviews-section" id="reviews-section" style="display: none;">
+                    <h2 class="detail-section-title" style="margin-bottom: 24px;">What People Are Saying (Google Reviews)</h2>
+                    <div class="reviews-grid" id="reviews-grid">
+                        <!-- Review cards populated dynamically -->
+                    </div>
+                    <div class="load-more-container" id="load-more-container">
+                        <button class="btn-load-more" id="btn-load-more">Load More</button>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
 
     <!-- Footer -->
-    <footer class="main-footer">
-        <div class="container footer-container">
+    <footer class="main-footer" id="main-footer">
+        <div class="footer-container">
             <div class="footer-grid">
-                <div class="footer-col brand-col">
-                    <a href="../index.html" class="logo">
+                <!-- Footer Brand Column -->
+                <div class="footer-brand-col">
+                    <a href="../index.html" class="logo footer-logo" id="footer-logo-link">
                         <span class="logo-icon"><i class="fa-solid fa-circle-nodes"></i></span>
                         <span class="logo-text">Recovery<span>On</span></span>
                     </a>
-                    <p class="footer-about">Connecting individuals with verified US recovery services, detox clinics, sober homes, and support groups nationwide.</p>
+                    <p class="footer-tagline">Connecting individuals with trusted recovery, health, and holistic support ecosystems nationwide.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-btn" aria-label="Facebook" id="fb-link"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="social-btn" aria-label="Twitter" id="tw-link"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#" class="social-btn" aria-label="Instagram" id="ig-link"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="social-btn" aria-label="LinkedIn" id="li-link"><i class="fa-brands fa-linkedin-in"></i></a>
+                    </div>
                 </div>
-                
-                <div class="footer-col links-col">
-                    <h3 class="footer-title">Directory</h3>
-                    <ul>
-                        <li><a href="../index.html#directory">Explore Centers</a></li>
-                        <li><a href="../index.html#categories">Categories</a></li>
-                        <li><a href="index.html">Resources</a></li>
+
+                <!-- Footer Column 2: Quick Links -->
+                <div class="footer-col">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="../index.html" id="f-link-home">Home</a></li>
+                        <li><a href="../index.html#directory" id="f-link-explore">Explore Directory</a></li>
+                        <li><a href="../index.html#categories" id="f-link-categories">Categories</a></li>
+                        <li><a href="../index.html#add-listing" id="f-link-add-listing">Add a Listing</a></li>
+                        <li><a href="../index.html#about" id="f-link-about">About Us</a></li>
+                        <li><a href="../index.html#contact" id="f-link-contact">Contact</a></li>
                     </ul>
                 </div>
-                
-                <div class="footer-col links-col">
-                    <h3 class="footer-title">Support</h3>
-                    <ul>
-                        <li><a href="../index.html#faq">Frequently Asked Questions</a></li>
-                        <li><a href="#" class="btn-cta">Helpline Support</a></li>
-                        <li><a href="#" class="btn-cta">Provider Registration</a></li>
+
+                <!-- Footer Column 3: Resource Categories -->
+                <div class="footer-col">
+                    <h4 class="footer-heading">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" id="f-link-blog">Blog & Articles</a></li>
+                        <li><a href="../index.html#faqs" id="f-link-faq">Frequently Asked Questions</a></li>
+                        <li><a href="#" id="f-link-support-helplines">Emergency Helplines</a></li>
+                        <li><a href="#" id="f-link-privacy">Privacy Policy</a></li>
                     </ul>
                 </div>
-                
-                <div class="footer-col newsletter-col">
-                    <h3 class="footer-title">Join Newsletter</h3>
+
+                <!-- Footer Column 4: Newsletter -->
+                <div class="footer-col footer-newsletter">
+                    <h4 class="footer-heading">Subscribe</h4>
                     <p class="newsletter-text">Stay updated with fresh recovery insights and support resources.</p>
                     <form class="newsletter-form" id="newsletter-form" onsubmit="event.preventDefault();">
                         <input type="email" placeholder="Your Email Address" required id="newsletter-email">
-                        <button type="submit" class="btn btn-subscribe">
+                        <button type="submit" class="btn btn-subscribe" id="btn-subscribe">
                             <i class="fa-regular fa-paper-plane"></i>
                         </button>
                     </form>
