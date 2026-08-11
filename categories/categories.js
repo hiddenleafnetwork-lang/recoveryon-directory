@@ -104,8 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (demoCountEl) demoCountEl.textContent = resourcesList.length.toString();
 
         resourcesList.forEach(res => {
-            const card = document.createElement('div');
-            card.className = 'resource-card';
+            const card = document.createElement('article');
+            card.className = 'listing-card';
             card.style.cursor = 'pointer';
             
             // Redirect card click to detailed view page
@@ -114,34 +114,27 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Card HTML structure
-            const verifiedBadge = res.statusText === 'Verified Center' 
-                ? `<span class="card-badge badge-primary"><i class="fa-solid fa-circle-check"></i> ${res.statusText}</span>` 
-                : `<span class="card-badge badge-secondary"><i class="fa-solid fa-clock"></i> ${res.statusText}</span>`;
+            const statusIcon = res.statusText.toLowerCase().includes('insurance') ? 'fa-file-invoice-dollar' :
+                               res.statusText.toLowerCase().includes('consult') || res.statusText.toLowerCase().includes('free') ? 'fa-comments' :
+                               res.statusText.toLowerCase().includes('start') || res.statusText.toLowerCase().includes('$') ? 'fa-tag' : 'fa-circle-check';
 
-            // Display category tags
-            let tagsHTML = '';
-            if (res.categories && res.categories.length > 0) {
-                res.categories.forEach(cat => {
-                    tagsHTML += `<span class="tag">${cat}</span>`;
-                });
-            }
+            // Dynamic Category badge (overlaid on top-left of image)
+            const badgeText = res.categories && res.categories.length > 0 ? res.categories[0] : category.name;
 
             card.innerHTML = `
-                <div class="card-image-container">
-                    <img src="${res.image}" alt="${res.name}" class="card-image">
-                    ${verifiedBadge}
+                <div class="listing-img-container">
+                    <img src="${res.image}" alt="${res.name}">
+                    <span class="listing-badge bg-teal">${badgeText}</span>
                 </div>
-                <div class="card-body">
-                    <div class="card-meta">
-                        <span class="card-location"><i class="fa-solid fa-location-dot"></i> ${res.city}, ${res.state}</span>
-                        <div class="card-rating">
-                            <i class="fa-solid fa-star"></i> <span>${res.rating.toFixed(1)}</span>
-                        </div>
+                <div class="listing-content">
+                    <p class="listing-location"><i class="fa-solid fa-location-dot"></i> ${res.city}, ${res.state}</p>
+                    <h3 class="listing-title" title="${res.name}">${res.name}</h3>
+                    <div class="listing-rating">
+                        <span class="rating-stars"><i class="fa-solid fa-star"></i> ${res.rating.toFixed(1)}</span>
+                        <span class="rating-count">(${res.reviewCount} reviews)</span>
                     </div>
-                    <h3 class="card-title">${res.name}</h3>
-                    <p class="card-desc">${res.aboutShort}</p>
-                    <div class="card-tags">
-                        ${tagsHTML}
+                    <div class="listing-status">
+                        <i class="fa-solid ${statusIcon}"></i> ${res.statusText}
                     </div>
                 </div>
             `;
