@@ -38,6 +38,9 @@ window.RECOVERY_RESOURCES = [
     {
         name: "Serene Path Wellness Center",
         slug: "serene-path-wellness",
+        category: "Holistic Clinic",
+        image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80",
+        statusText: "Verified Center",
         state: "CO",
         county: "Boulder County",
         city: "Boulder",
@@ -69,6 +72,9 @@ window.RECOVERY_RESOURCES = [
     {
         name: "Hope & Unity Fellowship",
         slug: "hope-unity-fellowship",
+        category: "Support Group",
+        image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80",
+        statusText: "Free Consultations",
         state: "TX",
         county: "Travis County",
         city: "Austin",
@@ -80,7 +86,7 @@ window.RECOVERY_RESOURCES = [
         treatmentTypes: ["12-Step Groups", "Peer Support", "Family Counseling"],
         rating: 4.8,
         reviewCount: 19,
-        insuranceAccepted: [], // Free Consultations / Peer program
+        insuranceAccepted: [],
         logo: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=150&h=150&q=80",
         gallery: [
             "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80",
@@ -99,6 +105,9 @@ window.RECOVERY_RESOURCES = [
     {
         name: "Apex Therapy Associates",
         slug: "apex-therapy-associates",
+        category: "Counseling",
+        image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=600&q=80",
+        statusText: "Insurance Accepted",
         state: "NY",
         county: "New York County",
         city: "New York",
@@ -129,6 +138,9 @@ window.RECOVERY_RESOURCES = [
     {
         name: "Elysian Recovery Spa & Retreat",
         slug: "elysian-recovery-retreat",
+        category: "Treatment Center",
+        image: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=600&q=80",
+        statusText: "Starting at $150/day",
         state: "CA",
         county: "San Diego County",
         city: "San Diego",
@@ -159,6 +171,9 @@ window.RECOVERY_RESOURCES = [
     {
         name: "North Star Counseling Group",
         slug: "north-star-counseling",
+        category: "Counseling",
+        image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80",
+        statusText: "Verified Center",
         state: "WA",
         county: "King County",
         city: "Seattle",
@@ -188,6 +203,9 @@ window.RECOVERY_RESOURCES = [
     {
         name: "Cascade Recovery Clinic",
         slug: "cascade-recovery-clinic",
+        category: "Treatment Center",
+        image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=600&q=80",
+        statusText: "Insurance Accepted",
         state: "OR",
         county: "Multnomah County",
         city: "Portland",
