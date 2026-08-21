@@ -56,10 +56,60 @@ document.addEventListener('DOMContentLoaded', () => {
     if (categorySelect) categorySelect.value = initialParams.category;
 
     // 4. Filtering Logic
-    function filterDirectory() {
+    async function filterDirectory() {
         const keyword = (keywordInput ? keywordInput.value : '').toLowerCase().trim();
         const location = (locationInput ? locationInput.value : '').toLowerCase().trim();
         const selectedCategory = categorySelect ? categorySelect.value : '';
+
+        const client = window.getSupabaseClient();
+        if (client) {
+            try {
+                let query = client.from('resources').select('*').eq('status', 'Published');
+                
+                if (keyword) {
+                    query = query.ilike('name', `%${keyword}%`);
+                }
+                
+                if (location) {
+                    if (location.length === 2) {
+                        query = query.eq('state', location.toUpperCase());
+                    } else {
+                        query = query.ilike('city', `%${location}%`);
+                    }
+                }
+
+                if (selectedCategory) {
+                    const { data: catRecord } = await client.from('categories').select('id').eq('name', selectedCategory).single();
+                    if (catRecord) {
+                        const { data: mappings } = await client.from('resource_categories').select('resource_id').eq('category_id', catRecord.id);
+                        const ids = (mappings || []).map(m => m.resource_id);
+                        query = query.in('id', ids.length > 0 ? ids : [-1]);
+                    }
+                }
+
+                const { data: dbRes, error } = await query;
+                if (!error && dbRes) {
+                    const { data: allMappings } = await client.from('resource_categories').select('resource_id, categories(name)');
+                    filteredResources = dbRes.map(r => {
+                        const matches = allMappings ? allMappings.filter(m => m.resource_id === r.id) : [];
+                        const categories = matches.map(m => m.categories.name);
+                        return {
+                            ...r,
+                            gallery: r.gallery || [],
+                            categories: categories.length > 0 ? categories : ['Support Service'],
+                            reviewCount: r.review_count,
+                            statusText: r.verification_status,
+                            insuranceAccepted: r.insurance_accepted || []
+                        };
+                    });
+                    currentPage = 1;
+                    renderFilteredResults();
+                    return;
+                }
+            } catch (e) {
+                console.warn("Database directory search failed, using static data:", e);
+            }
+        }
 
         if (!window.RECOVERY_RESOURCES) return;
 

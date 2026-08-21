@@ -23,21 +23,78 @@ document.addEventListener('DOMContentLoaded', () => {
     const gallerySection = document.querySelector('.section[style*="padding: 24px 0 0 0"]');
     const mainProfileSection = document.querySelector('.section[style*="padding-top: 24px"]');
 
-    if (!slug || !window.RECOVERY_RESOURCES) {
-        showErrorState();
-        return;
+    async function loadResourceDetail() {
+        if (!slug) {
+            showErrorState();
+            return;
+        }
+
+        const client = window.getSupabaseClient();
+        if (client) {
+            try {
+                const { data: dbRes, error } = await client.from('resources').select('*').eq('slug', slug).single();
+                
+                if (!error && dbRes) {
+                    const { data: mappings } = await client.from('resource_categories').select('categories(name)').eq('resource_id', dbRes.id);
+                    const categories = mappings ? mappings.map(m => m.categories.name).filter(Boolean) : [];
+
+                    const { data: terms } = await client.from('resource_taxonomy').select('taxonomy_terms(name, type)').eq('resource_id', dbRes.id);
+                    
+                    const treatmentTypes = [];
+                    const services = [];
+                    const amenities = [];
+
+                    if (terms) {
+                        terms.forEach(t => {
+                            const term = t.taxonomy_terms;
+                            if (term) {
+                                if (term.type === 'treatment_type' || term.type === 'level_of_care') {
+                                    treatmentTypes.push(term.name);
+                                } else if (term.type === 'condition' || term.type === 'therapy') {
+                                    services.push(term.name);
+                                } else if (term.type === 'amenity') {
+                                    amenities.push(term.name);
+                                }
+                            }
+                        });
+                    }
+
+                    const resourceObj = {
+                        ...dbRes,
+                        categories: categories.length > 0 ? categories : ['Support Service'],
+                        treatmentTypes: treatmentTypes.length > 0 ? treatmentTypes : ['Outpatient care'],
+                        services: services.length > 0 ? services : ['Personal counseling'],
+                        amenities: amenities.length > 0 ? amenities : ['Clean rooms'],
+                        insuranceAccepted: dbRes.insurance_accepted || [],
+                        paymentOptions: dbRes.payment_options || [],
+                        gallery: dbRes.gallery || [],
+                        reviewCount: dbRes.review_count,
+                        statusText: dbRes.verification_status,
+                        image: dbRes.featured_image || (dbRes.gallery && dbRes.gallery.length > 0 ? dbRes.gallery[0] : null)
+                    };
+
+                    populatePage(resourceObj);
+                    return;
+                }
+            } catch (e) {
+                console.warn("Database detail lookup failed, using static data:", e);
+            }
+        }
+
+        if (!window.RECOVERY_RESOURCES) {
+            showErrorState();
+            return;
+        }
+
+        const resource = window.RECOVERY_RESOURCES.find(r => r.slug === slug);
+        if (!resource) {
+            showErrorState();
+            return;
+        }
+        populatePage(resource);
     }
 
-    // Find the resource
-    const resource = window.RECOVERY_RESOURCES.find(r => r.slug === slug);
-
-    if (!resource) {
-        showErrorState();
-        return;
-    }
-
-    // Populate data
-    populatePage(resource);
+    loadResourceDetail();
 
     function showErrorState() {
         if (errorSection) errorSection.style.display = 'flex';

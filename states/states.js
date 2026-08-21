@@ -219,87 +219,130 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Populate dynamic state filters based on available listings in this state
-    const categories = new Set();
-    const treatments = new Set();
-
-    stateResources.forEach(res => {
-        if (res.categories) res.categories.forEach(c => categories.add(c));
-        if (res.treatmentTypes) res.treatmentTypes.forEach(t => treatments.add(t));
-    });
-
     const categoryFilter = document.getElementById('filter-category');
     const treatmentFilter = document.getElementById('filter-treatment');
 
-    if (categoryFilter) {
-        categories.forEach(c => {
-            const opt = document.createElement('option');
-            opt.value = c;
-            opt.textContent = c;
-            categoryFilter.appendChild(opt);
-        });
-    }
+    function populateFilters(list) {
+        const categories = new Set();
+        const treatments = new Set();
 
-    if (treatmentFilter) {
-        treatments.forEach(t => {
-            const opt = document.createElement('option');
-            opt.value = t;
-            opt.textContent = t;
-            treatmentFilter.appendChild(opt);
+        list.forEach(res => {
+            if (res.categories) res.categories.forEach(c => categories.add(c));
+            if (res.treatmentTypes) res.treatmentTypes.forEach(t => treatments.add(t));
         });
+
+        if (categoryFilter) {
+            categoryFilter.innerHTML = '<option value="">All Categories</option>';
+            categories.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c;
+                opt.textContent = c;
+                categoryFilter.appendChild(opt);
+            });
+        }
+
+        if (treatmentFilter) {
+            treatmentFilter.innerHTML = '<option value="">All Services</option>';
+            treatments.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t;
+                treatmentFilter.appendChild(opt);
+            });
+        }
     }
 
     const keywordInput = document.getElementById('search-keyword');
     const cityInput = document.getElementById('search-city');
 
-    function applyFilters() {
-        const keyword = keywordInput ? keywordInput.value.toLowerCase().trim() : '';
-        const citySearch = cityInput ? cityInput.value.toLowerCase().trim() : '';
-        const selectedCategory = categoryFilter ? categoryFilter.value : '';
-        const selectedTreatment = treatmentFilter ? treatmentFilter.value : '';
+    function bindStateSearch(list) {
+        const searchForm = document.getElementById('state-search-form');
+        if (searchForm) {
+            // Remove previous listeners by cloning
+            const newForm = searchForm.cloneNode(true);
+            searchForm.parentNode.replaceChild(newForm, searchForm);
 
-        const filtered = stateResources.filter(res => {
-            const matchesKeyword = !keyword || 
-                res.name.toLowerCase().includes(keyword) || 
-                res.aboutShort.toLowerCase().includes(keyword) ||
-                res.categories.some(c => c.toLowerCase().includes(keyword)) ||
-                res.treatmentTypes.some(t => t.toLowerCase().includes(keyword));
+            const freshKeywordInput = document.getElementById('search-keyword');
+            const freshCityInput = document.getElementById('search-city');
+            const freshCategoryFilter = document.getElementById('filter-category');
+            const freshTreatmentFilter = document.getElementById('filter-treatment');
 
-            // Location check combining specific click filter and search box input filter
-            let matchesLocation = true;
-            if (activeCityFilter) {
-                matchesLocation = res.city.toLowerCase() === activeCityFilter.toLowerCase();
+            newForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const keyword = freshKeywordInput ? freshKeywordInput.value.toLowerCase().trim() : '';
+                const citySearch = freshCityInput ? freshCityInput.value.toLowerCase().trim() : '';
+                const selectedCategory = freshCategoryFilter ? freshCategoryFilter.value : '';
+                const selectedTreatment = freshTreatmentFilter ? freshTreatmentFilter.value : '';
+
+                const filtered = list.filter(res => {
+                    const matchesKeyword = !keyword || 
+                        res.name.toLowerCase().includes(keyword) || 
+                        (res.aboutShort || '').toLowerCase().includes(keyword) ||
+                        (res.categories && res.categories.some(c => c.toLowerCase().includes(keyword))) ||
+                        (res.treatmentTypes && res.treatmentTypes.some(t => t.toLowerCase().includes(keyword)));
+
+                    let matchesLocation = true;
+                    if (activeCityFilter) {
+                        matchesLocation = res.city.toLowerCase() === activeCityFilter.toLowerCase();
+                    }
+                    if (matchesLocation && citySearch) {
+                        matchesLocation = res.city.toLowerCase().includes(citySearch) || 
+                                          (res.county || '').toLowerCase().includes(citySearch) ||
+                                          (res.address || '').toLowerCase().includes(citySearch);
+                    }
+
+                    const matchesCategory = !selectedCategory || 
+                        (res.categories && res.categories.includes(selectedCategory));
+
+                    const matchesTreatment = !selectedTreatment || 
+                        (res.treatmentTypes && res.treatmentTypes.includes(selectedTreatment));
+
+                    return matchesKeyword && matchesLocation && matchesCategory && matchesTreatment;
+                });
+
+                renderResources(filtered);
+            });
+        }
+    }
+
+    async function loadStateResources() {
+        const client = window.getSupabaseClient();
+        if (client) {
+            try {
+                const { data: dbRes, error } = await client.from('resources').select('*').eq('state', stateObj.abbr.toUpperCase()).eq('status', 'Published');
+                if (!error && dbRes) {
+                    const { data: allMappings } = await client.from('resource_categories').select('resource_id, categories(name)');
+                    const mapped = dbRes.map(r => {
+                        const matches = allMappings ? allMappings.filter(m => m.resource_id === r.id) : [];
+                        const categories = matches.map(m => m.categories.name);
+                        return {
+                            ...r,
+                            image: r.featured_image || (r.gallery && r.gallery.length > 0 ? r.gallery[0] : 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80'),
+                            categories: categories.length > 0 ? categories : ['Support Service'],
+                            reviewCount: r.review_count,
+                            statusText: r.verification_status,
+                            insuranceAccepted: r.insurance_accepted || [],
+                            treatmentTypes: r.treatment_types || []
+                        };
+                    });
+                    renderResources(mapped);
+                    populateFilters(mapped);
+                    bindStateSearch(mapped);
+                    return;
+                }
+            } catch (e) {
+                console.warn("Database state search failed, using static data:", e);
             }
-            if (matchesLocation && citySearch) {
-                matchesLocation = res.city.toLowerCase().includes(citySearch) || 
-                                  res.county.toLowerCase().includes(citySearch) ||
-                                  res.address.toLowerCase().includes(citySearch);
-            }
+        }
 
-            const matchesCategory = !selectedCategory || 
-                res.categories.includes(selectedCategory);
-
-            const matchesTreatment = !selectedTreatment || 
-                res.treatmentTypes.includes(selectedTreatment);
-
-            return matchesKeyword && matchesLocation && matchesCategory && matchesTreatment;
-        });
-
-        renderResources(filtered);
+        renderResources(stateResources);
+        populateFilters(stateResources);
+        bindStateSearch(stateResources);
     }
 
     // Initial render
     renderCitiesList();
-    renderResources(stateResources);
-
-    // 7. Search Form Submission Handler
-    const searchForm = document.getElementById('state-search-form');
-    if (searchForm) {
-        searchForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            applyFilters();
-        });
-    }
+    loadStateResources();
 
     // 8. Browse Categories Section
     const categoriesGrid = document.getElementById('state-categories-grid');

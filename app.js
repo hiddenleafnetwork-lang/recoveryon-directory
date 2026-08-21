@@ -88,11 +88,39 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'fa-heart-pulse';
     }
 
-    function renderCards() {
+    async function loadResources() {
+        const client = window.getSupabaseClient();
+        if (client) {
+            try {
+                const { data: dbRes, error } = await client.from('resources').select('*').eq('status', 'Published');
+                if (!error && dbRes && dbRes.length > 0) {
+                    const { data: mappings } = await client.from('resource_categories').select('resource_id, categories(name)');
+                    const mapped = dbRes.map(r => {
+                        const match = mappings ? mappings.find(m => m.resource_id === r.id) : null;
+                        const categoryName = match && match.categories ? match.categories.name : "Support Service";
+                        return {
+                            ...r,
+                            image: r.featured_image || (r.gallery && r.gallery.length > 0 ? r.gallery[0] : 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80'),
+                            category: categoryName,
+                            reviewCount: r.review_count,
+                            statusText: r.verification_status
+                        };
+                    });
+                    renderCardsList(mapped);
+                    return;
+                }
+            } catch (e) {
+                console.warn("Database query failed, using static data.js:", e);
+            }
+        }
+        renderCardsList(resources);
+    }
+
+    function renderCardsList(resourcesList) {
         if (!listingsGrid) return;
         listingsGrid.innerHTML = '';
         
-        resources.forEach(resource => {
+        resourcesList.forEach(resource => {
             const card = document.createElement('article');
             card.className = 'listing-card';
             
@@ -159,11 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
             statusContainer.className = 'listing-status';
             
             let statusIcon = 'fa-circle-check';
-            if (resource.statusText.toLowerCase().includes('insurance')) statusIcon = 'fa-file-invoice-dollar';
-            if (resource.statusText.toLowerCase().includes('consult') || resource.statusText.toLowerCase().includes('free')) statusIcon = 'fa-comments';
-            if (resource.statusText.toLowerCase().includes('start') || resource.statusText.toLowerCase().includes('$')) statusIcon = 'fa-tag';
+            if (resource.statusText && resource.statusText.toLowerCase().includes('insurance')) statusIcon = 'fa-file-invoice-dollar';
+            if (resource.statusText && (resource.statusText.toLowerCase().includes('consult') || resource.statusText.toLowerCase().includes('free'))) statusIcon = 'fa-comments';
+            if (resource.statusText && (resource.statusText.toLowerCase().includes('start') || resource.statusText.toLowerCase().includes('$'))) statusIcon = 'fa-tag';
             
-            statusContainer.innerHTML = `<i class="fa-solid ${statusIcon}"></i> ${resource.statusText}`;
+            statusContainer.innerHTML = `<i class="fa-solid ${statusIcon}"></i> ${resource.statusText || 'Demo Data'}`;
             content.appendChild(statusContainer);
 
             card.appendChild(content);
@@ -393,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Render all elements
-    renderCards();
+    loadResources();
     renderCategories();
     renderStates();
     renderFAQs();

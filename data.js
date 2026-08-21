@@ -865,7 +865,22 @@ window.RECOVERY_BLOG_POSTS = [
         content: `
             <p>Isolation is one of the biggest challenges in recovery. Having a group of friends, peers, and professionals who understand your goals makes a world of difference.</p>
             <p>Whether you find this support through 12-step groups, outpatient programs, or wellness circles, establishing reliable lines of communication is crucial for sustaining sobriety.</p>
-        `
     }
 ];
+
+// Supabase Database Connection Helper for Frontend Pages
+window.getSupabaseClient = function() {
+    const config = window.RECOVERYON_CONFIG || {};
+    const url = config.SUPABASE_URL || localStorage.getItem('RECOVERYON_SUPABASE_URL');
+    const key = config.SUPABASE_KEY || localStorage.getItem('RECOVERYON_SUPABASE_KEY');
+    if (url && key && window.supabase) {
+        try {
+            return window.supabase.createClient(url, key);
+        } catch (e) {
+            console.warn("Failed to initialize Supabase client", e);
+        }
+    }
+    return null;
+};
+
 

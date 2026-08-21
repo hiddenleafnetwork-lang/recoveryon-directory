@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internal Admin Panel | RecoveryOn</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+    <!-- Main Admin Shell Layout -->
+    <div class="admin-wrapper" id="admin-shell" style="display: none;">
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar">
+            <a href="../index.html" class="sidebar-brand">
+                <span class="logo-icon"><i class="fa-solid fa-circle-nodes"></i></span>
+                <span class="logo-text">Recovery<span>On</span></span>
+            </a>
+            
+            <ul class="sidebar-menu">
+                <li class="sidebar-item active" data-target="dashboard">
+                    <a href="#" class="sidebar-link"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                </li>
+                <li class="sidebar-item" data-target="resources">
+                    <a href="#" class="sidebar-link"><i class="fa-solid fa-folder-open"></i> Resources</a>
+                </li>
+                <li class="sidebar-item" data-target="import">
+                    <a href="#" class="sidebar-link"><i class="fa-solid fa-file-import"></i> Import Data</a>
+                </li>
+                <li class="sidebar-item" data-target="locations">
+                    <a href="#" class="sidebar-link"><i class="fa-solid fa-map-location-dot"></i> States & Locations</a>
+                </li>
+                <li class="sidebar-item" data-target="taxonomy">
+                    <a href="#" class="sidebar-link"><i class="fa-solid fa-tags"></i> Categories & Taxonomy</a>
+                </li>
+                <li class="sidebar-item" data-target="history">
+                    <a href="#" class="sidebar-link"><i class="fa-solid fa-clock-rotate-left"></i> Import History</a>
+                </li>
+                <li class="sidebar-item" data-target="settings">
+                    <a href="#" class="sidebar-link"><i class="fa-solid fa-gears"></i> Settings</a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                RecoveryOn Admin v1.0
+            </div>
+        </aside>
+
+        <!-- Main Workspace Area -->
+        <div class="main-area">
+            <!-- Top Header Banner -->
+            <header class="top-header">
+                <h1 class="page-title" id="page-title-label">Dashboard Overview</h1>
+                <div class="user-profile">
+                    <div class="user-info">
+                        <p class="user-name" id="admin-user-email">admin@recoveryon.org</p>
+                        <p class="user-role">System Administrator</p>
+                    </div>
+                    <button class="btn-logout" id="btn-logout-action">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dynamic Subsections Content Container -->
+            <main class="content-frame">
+                
+                <!-- ========================================================================= -->
+                <!-- SECTION 1: DASHBOARD OVERVIEW -->
+                <!-- ========================================================================= -->
+                <div class="dashboard-section" id="sec-dashboard">
+                    <!-- Stats cards container -->
+                    <div class="stats-grid" id="dashboard-stats-container">
+                        <!-- Dynamic stats content filled by JS -->
+                    </div>
+
+                    <!-- Layout splits -->
+                    <div class="dashboard-grid">
+                        <div class="dashboard-block">
+                            <h3 class="block-title">Resources by State</h3>
+                            <div class="table-wrapper">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>State</th>
+                                            <th>Resource Count</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dash-state-breakdown">
+                                        <tr><td colspan="2" style="text-align:center; color:var(--text-muted);">No records found.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-block">
+                            <h3 class="block-title">Resources by Category</h3>
+                            <div class="table-wrapper">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Resource Count</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dash-category-breakdown">
+                                        <tr><td colspan="2" style="text-align:center; color:var(--text-muted);">No records found.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-block" style="margin-bottom: 0;">
+                        <h3 class="block-title">Data Quality Issues</h3>
+                        <div class="table-wrapper">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Resource Name</th>
+                                        <th>Location</th>
+                                        <th>Issue Detected</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dash-quality-issues">
+                                    <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">All clear! No issues found.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================================================= -->
+                <!-- SECTION 2: RESOURCES LIST -->
+                <!-- ========================================================================= -->
+                <div class="dashboard-section" id="sec-resources" style="display: none;">
+                    <!-- Filter and Search Row -->
+                    <div class="filter-bar">
+                        <div class="search-input-wrapper">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="res-search" placeholder="Search by resource name or source ID...">
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">State</label>
+                            <select class="filter-input" id="res-filter-state">
+                                <option value="">All States</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Category</label>
+                            <select class="filter-input" id="res-filter-category">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Status</label>
+                            <select class="filter-input" id="res-filter-status">
+                                <option value="">All Statuses</option>
+                                <option value="Imported">Imported</option>
+                                <option value="Needs Review">Needs Review</option>
+                                <option value="Draft">Draft</option>
+                                <option value="Published">Published</option>
+                                <option value="Archived">Archived</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary btn-sm" id="btn-apply-filters">Apply</button>
+                        <button class="btn btn-secondary btn-sm" id="btn-reset-filters">Reset</button>
+                    </div>
+
+                    <!-- Bulk Actions Bar (Shown when items selected) -->
+                    <div class="bulk-bar" id="res-bulk-bar" style="display: none;">
+                        <div>
+                            <span id="res-selected-count">0</span> items selected
+                        </div>
+                        <div class="bulk-actions-group">
+                            <button class="btn-bulk" id="bulk-publish">Publish Selected</button>
+                            <button class="btn-bulk" id="bulk-unpublish">Unpublish (Draft)</button>
+                            <button class="btn-bulk btn-bulk-danger" id="bulk-delete">Delete Selected</button>
+                        </div>
+                    </div>
+
+                    <!-- Resources Table Container -->
+                    <div class="table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th width="40"><input type="checkbox" id="res-select-all"></th>
+                                    <th>Resource Name</th>
+                                    <th>Location</th>
+                                    <th>Category</th>
+                                    <th>Rating</th>
+                                    <th>Publish Status</th>
+                                    <th>Data Status</th>
+                                    <th>Last Updated</th>
+                                    <th width="120">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="res-table-body">
+                                <!-- Dynamic JS contents -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination Controls -->
+                    <div class="pagination-row">
+                        <div id="res-pagination-info">Showing 0-0 of 0 entries</div>
+                        <div class="pagination-controls" id="res-pagination-buttons">
+                            <!-- Dynamic pagination buttons -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================================================= -->
+                <!-- SECTION 3: EXCEL / CSV IMPORT SYSTEM -->
+                <!-- ========================================================================= -->
+                <div class="dashboard-section" id="sec-import" style="display: none;">
+                    <!-- Step Progress Tracker -->
+                    <div class="import-steps">
+                        <div class="import-step active" id="step-node-1"><span class="step-num">1</span> Upload File</div>
+                        <div class="import-step" id="step-node-2"><span class="step-num">2</span> Column Mapping</div>
+                        <div class="import-step" id="step-node-3"><span class="step-num">3</span> Data Validation</div>
+                        <div class="import-step" id="step-node-4"><span class="step-num">4</span> Duplicate Rules</div>
+                        <div class="import-step" id="step-node-5"><span class="step-num">5</span> Import Preview</div>
+                    </div>
+
+                    <!-- Step Panels -->
+                    <!-- Step 1 Pane: Upload -->
+                    <div class="import-panel" id="import-panel-1">
+                        <div class="upload-dropzone" id="upload-dropzone">
+                            <i class="fa-solid fa-file-excel upload-icon"></i>
+                            <h3 class="upload-title">Drag & Drop Excel/CSV File here</h3>
+                            <p class="upload-subtitle">Supports .xlsx, .xls, and .csv files. Maximum size 25MB.</p>
+                            <button class="btn btn-primary" onclick="document.getElementById('file-input').click();">Select File</button>
+                            <input type="file" id="file-input" style="display: none;" accept=".xlsx, .xls, .csv">
+                        </div>
+                        
+                        <!-- File meta card (Hidden initially) -->
+                        <div class="dashboard-block" id="upload-file-meta" style="display: none; margin-top: 24px;">
+                            <h3 class="block-title">File Details</h3>
+                            <div style="font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px;">
+                                <p><strong>File Name:</strong> <span id="meta-file-name">-</span></p>
+                                <p><strong>File Size:</strong> <span id="meta-file-size">-</span> KB</p>
+                                <p><strong>Total Rows Found:</strong> <span id="meta-row-count">-</span></p>
+                                <div class="form-field" id="sheet-select-wrapper" style="margin-top: 15px; display: none;">
+                                    <label class="form-label-bold">Select Active Sheet</label>
+                                    <select class="filter-input" id="sheet-select" style="max-width: 300px;"></select>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <button class="btn btn-primary" id="btn-next-step-1">Proceed to Mapping <i class="fa-solid fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 Pane: Column Mapping -->
+                    <div class="import-panel" id="import-panel-2" style="display: none;">
+                        <div class="utility-card">
+                            Map the columns in your file to RecoveryOn fields. Select <code>[ Ignore ]</code> for fields you don't wish to import.
+                        </div>
+
+                        <div class="dashboard-block" style="margin-bottom: 24px;">
+                            <h3 class="block-title">Map Spreadsheet Columns</h3>
+                            <div id="mapping-container">
+                                <!-- Mapping rows populated by JS -->
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between;">
+                            <button class="btn btn-secondary" id="btn-back-step-2"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                            <button class="btn btn-primary" id="btn-next-step-2">Validate Data <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 Pane: Validation -->
+                    <div class="import-panel" id="import-panel-3" style="display: none;">
+                        <div class="utility-card">
+                            Data validation is complete. Review validation stats, errors, and warnings before proceeding.
+                        </div>
+
+                        <div class="stats-grid" style="margin-bottom: 24px;">
+                            <div class="stat-card" style="border-left: 4px solid #10b981;">
+                                <div class="stat-label">Valid Rows</div>
+                                <div class="stat-value" id="val-valid-count">0</div>
+                            </div>
+                            <div class="stat-card" style="border-left: 4px solid #f59e0b;">
+                                <div class="stat-label">Warning Rows</div>
+                                <div class="stat-value" id="val-warning-count">0</div>
+                            </div>
+                            <div class="stat-card" style="border-left: 4px solid #ef4444;">
+                                <div class="stat-label">Invalid Rows (Errors)</div>
+                                <div class="stat-value" id="val-invalid-count">0</div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-block" style="margin-bottom: 24px;">
+                            <h3 class="block-title">
+                                Validation Issues Log
+                                <button class="btn btn-secondary btn-sm" id="btn-download-errors" style="display: none;">Download CSV Log</button>
+                            </h3>
+                            <div class="validation-list" id="validation-issues-list" style="max-height: 350px; overflow-y: auto;">
+                                <p style="color:var(--text-muted); text-align:center;">No validation run yet.</p>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between;">
+                            <button class="btn btn-secondary" id="btn-back-step-3"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                            <button class="btn btn-primary" id="btn-next-step-3">Configure Duplicate Rules <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 Pane: Duplicate Rules -->
+                    <div class="import-panel" id="import-panel-4" style="display: none;">
+                        <div class="utility-card">
+                            Select duplicate detection criteria and choose merge actions.
+                        </div>
+
+                        <div class="dashboard-block" style="margin-bottom: 24px;">
+                            <h3 class="block-title">Duplicate Detection Rules</h3>
+                            <div style="display: flex; flex-direction: column; gap: 16px;">
+                                <div class="form-field">
+                                    <label class="form-label-bold">Detection Key Criteria</label>
+                                    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 5px;">
+                                        <label><input type="checkbox" id="dup-rule-source" checked> Source ID / External ID</label>
+                                        <label><input type="checkbox" id="dup-rule-name-loc" checked> Resource Name + City + State</label>
+                                        <label><input type="checkbox" id="dup-rule-website"> Website URL Domain</label>
+                                        <label><input type="checkbox" id="dup-rule-phone"> Phone Number</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-field" style="margin-top: 15px;">
+                                    <label class="form-label-bold">Action on Duplicate Detected</label>
+                                    <div style="display: flex; gap: 20px; margin-top: 5px;">
+                                        <label><input type="radio" name="dup-action" value="skip" checked> Skip duplicate row</label>
+                                        <label><input type="radio" name="dup-action" value="update"> Update existing record with file data</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between;">
+                            <button class="btn btn-secondary" id="btn-back-step-4"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                            <button class="btn btn-primary" id="btn-next-step-4">Analyze Import Preview <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Step 5 Pane: Preview & Commit -->
+                    <div class="import-panel" id="import-panel-5" style="display: none;">
+                        <div class="utility-card">
+                            Verify the projected import statistics and preview sample records. Mapped rows will be loaded into the database as <code>Imported</code> status (unpublished draft).
+                        </div>
+
+                        <div class="stats-grid" style="margin-bottom: 24px;">
+                            <div class="stat-card">
+                                <div class="stat-label">Projected Insertions</div>
+                                <div class="stat-value" id="proj-new-count">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">Projected Updates</div>
+                                <div class="stat-value" id="proj-update-count">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">Ignored / Duplicates</div>
+                                <div class="stat-value" id="proj-skipped-count">0</div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-block" style="margin-bottom: 24px;">
+                            <h3 class="block-title">Preview Sample Records (First 5 Rows)</h3>
+                            <div class="table-wrapper" style="overflow-x: auto;">
+                                <table class="admin-table" style="min-width: 800px;">
+                                    <thead>
+                                        <tr id="preview-table-header">
+                                            <!-- Dynamic headers -->
+                                        </tr>
+                                    </thead>
+                                    <tbody id="preview-table-body">
+                                        <!-- Dynamic preview rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar (Shown during active batch importing) -->
+                        <div id="import-progress-wrapper" style="display: none; margin-bottom: 24px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 6px;">
+                                <span id="import-progress-status">Importing records in batches...</span>
+                                <span id="import-progress-percentage">0%</span>
+                            </div>
+                            <div style="background-color: var(--border-color); height: 8px; border-radius: 4px; overflow: hidden;">
+                                <div id="import-progress-bar" style="background-color: var(--primary-color); height: 100%; width: 0%; transition: width 0.1s linear;"></div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between;" id="import-preview-footer-actions">
+                            <button class="btn btn-secondary" id="btn-back-step-5"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                            <button class="btn btn-primary" id="btn-commit-import">Finalize & Import to Database <i class="fa-solid fa-circle-check"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================================================= -->
+                <!-- SECTION 4: STATES & LOCATIONS -->
+                <!-- ========================================================================= -->
+                <div class="dashboard-section" id="sec-locations" style="display: none;">
+                    <div class="filter-bar">
+                        <div class="search-input-wrapper">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="loc-search" placeholder="Search locations...">
+                        </div>
+                    </div>
+
+                    <div class="dashboard-block">
+                        <h3 class="block-title">US Locations Taxonomy Overview</h3>
+                        <div class="table-wrapper">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>State Code</th>
+                                        <th>State Name</th>
+                                        <th>Real Resources Count</th>
+                                        <th>Cities Listed</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="loc-table-body">
+                                    <!-- Dynamic rows from Supabase query -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================================================= -->
+                <!-- SECTION 5: CATEGORIES & TAXONOMY -->
+                <!-- ========================================================================= -->
+                <div class="dashboard-section" id="sec-taxonomy" style="display: none;">
+                    <div style="display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap;">
+                        
+                        <!-- Left Panel: Categories List -->
+                        <div class="dashboard-block" style="flex: 1; min-width: 480px;">
+                            <div class="block-title">
+                                <span>Directory Service Categories</span>
+                            </div>
+                            <div class="table-wrapper">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Display Order</th>
+                                            <th>Name</th>
+                                            <th>Icon</th>
+                                            <th>Active</th>
+                                            <th>Resource Count</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tax-categories-list">
+                                        <!-- Dynamic categories loaded from Supabase -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Taxonomy Terms (Treatment types, Levels of care) -->
+                        <div class="dashboard-block" style="width: 420px;">
+                            <div class="block-title">
+                                <span>Add Taxonomy Tag Term</span>
+                            </div>
+                            
+                            <form id="tax-term-form" style="display: flex; flex-direction: column; gap: 16px;">
+                                <div class="form-field">
+                                    <label class="form-label-bold">Vocabulary Type</label>
+                                    <select class="filter-input" id="tax-term-type" style="width: 100%;" required>
+                                        <option value="treatment_type">Treatment Type</option>
+                                        <option value="level_of_care">Level of Care</option>
+                                        <option value="condition">Condition Treated</option>
+                                        <option value="therapy">Therapy</option>
+                                        <option value="amenity">Amenity</option>
+                                        <option value="insurance_provider">Insurance Provider</option>
+                                        <option value="accreditation">Accreditation</option>
+                                    </select>
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label-bold">Term Name</label>
+                                    <input class="filter-input" type="text" id="tax-term-name" style="width: 100%;" placeholder="e.g. Cognitive Behavioral Therapy (CBT)" required>
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label-bold">Display Order</label>
+                                    <input class="filter-input" type="number" id="tax-term-order" style="width: 100%;" value="0" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Add Taxonomy Term <i class="fa-solid fa-plus"></i></button>
+                            </form>
+
+                            <div style="border-top: 1px solid var(--border-color); padding-top: 24px; margin-top: 24px;">
+                                <h4 class="form-label-bold" style="margin-bottom: 12px;">Active Taxonomy Terms Summary</h4>
+                                <div id="tax-terms-summary" style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                    <!-- Dynamic summaries -->
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ========================================================================= -->
+                <!-- SECTION 6: IMPORT HISTORY -->
+                <!-- ========================================================================= -->
+                <div class="dashboard-section" id="sec-history" style="display: none;">
+                    <div class="dashboard-block">
+                        <h3 class="block-title">Import History Log</h3>
+                        <div class="table-wrapper">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Batch ID</th>
+                                        <th>File Name</th>
+                                        <th>Date & Time</th>
+                                        <th>Uploaded By</th>
+                                        <th>New</th>
+                                        <th>Updated</th>
+                                        <th>Failed</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="history-table-body">
+                                    <!-- Dynamic logs -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================================================= -->
+                <!-- SECTION 7: SETTINGS -->
+                <!-- ========================================================================= -->
+                <div class="dashboard-section" id="sec-settings" style="display: none;">
+                    <div class="dashboard-block" style="max-width: 600px;">
+                        <h3 class="block-title">Supabase Database Connection Settings</h3>
+                        
+                        <form id="settings-db-form" style="display: flex; flex-direction: column; gap: 20px;">
+                            <div class="form-field">
+                                <label class="form-label-bold">Supabase Project URL</label>
+                                <input class="filter-input" type="url" id="settings-url" style="width: 100%;" placeholder="https://xxxxxxxx.supabase.co" required>
+                            </div>
+                            <div class="form-field">
+                                <label class="form-label-bold">Supabase Anon Key</label>
+                                <input class="filter-input" type="text" id="settings-key" style="width: 100%;" placeholder="eyJhbGciOiJIUzI1NiIsIn..." required>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary">Save Config Settings</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ========================================================================= -->
+                <!-- DYNAMIC EDIT SECTION (Shown during active editing) -->
+                <!-- ========================================================================= -->
+                <div class="dashboard-section" id="sec-editor" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <h2 class="page-title" id="editor-resource-name-header">Edit Resource Detail</h2>
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary" id="editor-cancel">Cancel</button>
+                            <button class="btn btn-secondary" id="editor-preview" style="display: none;">Preview Public Page</button>
+                            <button class="btn btn-primary" id="editor-save-draft">Save Draft</button>
+                            <button class="btn btn-primary" id="editor-publish" style="background-color:var(--secondary-color);">Publish</button>
+                        </div>
+                    </div>
+
+                    <!-- Editor Tabbed Form Container -->
+                    <div class="tabs-container">
+                        <div class="tabs-header">
+                            <button class="tab-btn active" data-tab="tab-basic">Basic Info</button>
+                            <button class="tab-btn" data-tab="tab-location">Location</button>
+                            <button class="tab-btn" data-tab="tab-contact">Contact</button>
+                            <button class="tab-btn" data-tab="tab-services">Treatment & Services</button>
+                            <button class="tab-btn" data-tab="tab-payment">Insurance & Payment</button>
+                            <button class="tab-btn" data-tab="tab-media">Media</button>
+                            <button class="tab-btn" data-tab="tab-org">Accreditation & Details</button>
+                            <button class="tab-btn" data-tab="tab-seo">SEO</button>
+                        </div>
+
+                        <div class="tabs-content">
+                            <!-- Tab 1: Basic Info -->
+                            <div class="tab-pane active" id="tab-basic">
+                                <div class="form-grid">
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Resource Name</label>
+                                        <input class="filter-input" type="text" id="ed-name" required>
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Slug (URL Keyword)</label>
+                                        <input class="filter-input" type="text" id="ed-slug" required>
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Source ID / External ID</label>
+                                        <input class="filter-input" type="text" id="ed-source-id">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Categories</label>
+                                        <div id="ed-categories-checks" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 5px;">
+                                            <!-- Populated dynamically -->
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Data Status</label>
+                                        <select class="filter-input" id="ed-status">
+                                            <option value="Imported">Imported</option>
+                                            <option value="Needs Review">Needs Review</option>
+                                            <option value="Draft">Draft</option>
+                                            <option value="Published">Published</option>
+                                            <option value="Archived">Archived</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Verification Badge Status</label>
+                                        <input class="filter-input" type="text" id="ed-verification-status">
+                                    </div>
+                                    <div class="form-field form-grid-full">
+                                        <label class="form-label-bold">Short Description</label>
+                                        <input class="filter-input" type="text" id="ed-about-short">
+                                    </div>
+                                    <div class="form-field form-grid-full">
+                                        <label class="form-label-bold">Long Description</label>
+                                        <textarea class="filter-input" id="ed-about-long" style="height: 140px; resize: vertical;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 2: Location -->
+                            <div class="tab-pane" id="tab-location">
+                                <div class="form-grid">
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Street Address</label>
+                                        <input class="filter-input" type="text" id="ed-address">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Address Line 2</label>
+                                        <input class="filter-input" type="text" id="ed-address2">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">City</label>
+                                        <input class="filter-input" type="text" id="ed-city" required>
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">County</label>
+                                        <input class="filter-input" type="text" id="ed-county">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">State Abbreviation</label>
+                                        <select class="filter-input" id="ed-state" required>
+                                            <!-- Populated dynamically -->
+                                        </select>
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">ZIP Code</label>
+                                        <input class="filter-input" type="text" id="ed-zip">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Latitude</label>
+                                        <input class="filter-input" type="number" step="any" id="ed-latitude">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Longitude</label>
+                                        <input class="filter-input" type="number" step="any" id="ed-longitude">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 3: Contact -->
+                            <div class="tab-pane" id="tab-contact">
+                                <div class="form-grid">
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Phone Number</label>
+                                        <input class="filter-input" type="tel" id="ed-phone">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Email Address</label>
+                                        <input class="filter-input" type="email" id="ed-email">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Website URL</label>
+                                        <input class="filter-input" type="url" id="ed-website">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Google Business Profile URL</label>
+                                        <input class="filter-input" type="url" id="ed-google-profile">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 4: Treatment & Services -->
+                            <div class="tab-pane" id="tab-services">
+                                <div class="form-grid">
+                                    <div class="form-field form-grid-full">
+                                        <label class="form-label-bold">Treatment Types & Specialized Care</label>
+                                        <div id="ed-terms-treatment-type" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 5px;">
+                                            <!-- Dynamic checkboxes -->
+                                        </div>
+                                    </div>
+                                    <div class="form-field form-grid-full" style="margin-top: 20px;">
+                                        <label class="form-label-bold">Levels of Care</label>
+                                        <div id="ed-terms-level-of-care" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 5px;">
+                                            <!-- Dynamic checkboxes -->
+                                        </div>
+                                    </div>
+                                    <div class="form-field form-grid-full" style="margin-top: 20px;">
+                                        <label class="form-label-bold">Conditions Treated</label>
+                                        <div id="ed-terms-condition" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 5px;">
+                                            <!-- Dynamic checkboxes -->
+                                        </div>
+                                    </div>
+                                    <div class="form-field form-grid-full" style="margin-top: 20px;">
+                                        <label class="form-label-bold">Therapies Provided</label>
+                                        <div id="ed-terms-therapy" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 5px;">
+                                            <!-- Dynamic checkboxes -->
+                                        </div>
+                                    </div>
+                                    <div class="form-field form-grid-full" style="margin-top: 20px;">
+                                        <label class="form-label-bold">Amenities Available</label>
+                                        <div id="ed-terms-amenity" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 5px;">
+                                            <!-- Dynamic checkboxes -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 5: Payment & Insurance -->
+                            <div class="tab-pane" id="tab-payment">
+                                <div class="form-grid">
+                                    <div class="form-field form-grid-full">
+                                        <label class="form-label-bold">Accepted Insurance Providers</label>
+                                        <div id="ed-terms-insurance-provider" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 5px;">
+                                            <!-- Dynamic checkboxes -->
+                                        </div>
+                                    </div>
+                                    <div class="form-field" style="margin-top: 20px;">
+                                        <label class="form-label-bold">Payment Methods (comma separated)</label>
+                                        <input class="filter-input" type="text" id="ed-payment-options" placeholder="e.g. Credit Card, Wire, Cash">
+                                    </div>
+                                    <div class="form-field" style="margin-top: 20px;">
+                                        <label class="form-label-bold">Insurance Status / Details</label>
+                                        <input class="filter-input" type="text" id="ed-insurance-accepted" placeholder="e.g. PPO Plans Accepted, Contact Admissions">
+                                    </div>
+                                    <div class="form-field">
+                                        <label><input type="checkbox" id="ed-private-pay"> Accepts Private Self-Pay</label>
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Financing & Scholarship Information</label>
+                                        <input class="filter-input" type="text" id="ed-financing">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 6: Media -->
+                            <div class="tab-pane" id="tab-media">
+                                <div class="form-grid">
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Logo URL</label>
+                                        <input class="filter-input" type="url" id="ed-logo">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Featured Image URL</label>
+                                        <input class="filter-input" type="url" id="ed-featured-image">
+                                    </div>
+                                    <div class="form-field form-grid-full">
+                                        <label class="form-label-bold">Gallery Image URLs (one URL per line)</label>
+                                        <textarea class="filter-input" id="ed-gallery" style="height: 100px; resize: vertical; font-family: monospace;"></textarea>
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Image Alt Accessibility Text</label>
+                                        <input class="filter-input" type="text" id="ed-image-alt">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 7: Org Details -->
+                            <div class="tab-pane" id="tab-org">
+                                <div class="form-grid">
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Year Founded</label>
+                                        <input class="filter-input" type="number" id="ed-founded">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Bed Count (Capacity)</label>
+                                        <input class="filter-input" type="number" id="ed-beds">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Accreditation (comma separated)</label>
+                                        <input class="filter-input" type="text" id="ed-accreditation" placeholder="e.g. CARF, Joint Commission">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Licensing Registry Info</label>
+                                        <input class="filter-input" type="text" id="ed-licensing">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Standard Program Duration</label>
+                                        <input class="filter-input" type="text" id="ed-program-length" placeholder="e.g. 30 Days, 90 Days">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Google Maps Rating</label>
+                                        <input class="filter-input" type="number" step="0.1" max="5" id="ed-google-rating">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Google Maps Review Count</label>
+                                        <input class="filter-input" type="number" id="ed-google-review-count">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 8: SEO -->
+                            <div class="tab-pane" id="tab-seo">
+                                <div class="form-grid">
+                                    <div class="form-field">
+                                        <label class="form-label-bold">SEO Title Meta Tag</label>
+                                        <input class="filter-input" type="text" id="ed-seo-title">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Meta Description</label>
+                                        <input class="filter-input" type="text" id="ed-seo-desc">
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label-bold">Canonical URL Slug</label>
+                                        <input class="filter-input" type="text" id="ed-canonical">
+                                    </div>
+                                    <div class="form-field">
+                                        <label><input type="checkbox" id="ed-index" checked> Allow search engine indexing (Index)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Fullscreen Loading Cover overlay -->
+    <div id="loading-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255,255,255,0.85); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 15px; z-index: 99999;">
+        <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 3rem; color: var(--primary-color);"></i>
+        <span style="font-weight: 700; color: var(--text-primary); font-size: 1.1rem;" id="loading-text">Verifying admin session...</span>
+    </div>
+
+    <!-- Confirm Modals -->
+    <div id="confirm-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="confirm-title">Confirm Action</span>
+                <button onclick="document.getElementById('confirm-modal').style.display='none';" style="background:none; border:none; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="confirm-body">
+                Are you sure you want to perform this operation?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary btn-sm" onclick="document.getElementById('confirm-modal').style.display='none';">Cancel</button>
+                <button class="btn btn-danger btn-sm" id="confirm-yes-btn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- External Script Dependencies -->
+    <!-- SheetJS Excel Library -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- Supabase Client SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Config parameters -->
+    <script src="../supabase-config.js"></script>
+    <!-- Core App Controller -->
+    <script src="dashboard.js"></script>
+</body>
+</html>

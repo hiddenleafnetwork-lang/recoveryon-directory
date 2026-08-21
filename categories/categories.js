@@ -142,77 +142,122 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Populate dynamic filter options based on available services and insurance inside this category
-    const treatments = new Set();
-    const insuranceList = new Set();
-    
-    categoryResources.forEach(res => {
-        if (res.treatmentTypes) res.treatmentTypes.forEach(t => treatments.add(t));
-        if (res.insuranceAccepted) res.insuranceAccepted.forEach(ins => insuranceList.add(ins));
-    });
-
     const treatmentFilter = document.getElementById('filter-treatment');
     const insuranceFilter = document.getElementById('filter-insurance');
 
-    if (treatmentFilter) {
-        treatments.forEach(t => {
-            const opt = document.createElement('option');
-            opt.value = t;
-            opt.textContent = t;
-            treatmentFilter.appendChild(opt);
+    function populateFilters(list) {
+        const treatments = new Set();
+        const insuranceList = new Set();
+        
+        list.forEach(res => {
+            if (res.treatmentTypes) res.treatmentTypes.forEach(t => treatments.add(t));
+            if (res.insuranceAccepted) res.insuranceAccepted.forEach(ins => insuranceList.add(ins));
         });
+
+        if (treatmentFilter) {
+            treatmentFilter.innerHTML = '<option value="">All Services</option>';
+            treatments.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t;
+                treatmentFilter.appendChild(opt);
+            });
+        }
+
+        if (insuranceFilter) {
+            insuranceFilter.innerHTML = '<option value="">All Insurance</option>';
+            insuranceList.forEach(ins => {
+                const opt = document.createElement('option');
+                opt.value = ins;
+                opt.textContent = ins;
+                insuranceFilter.appendChild(opt);
+            });
+        }
     }
 
-    if (insuranceFilter) {
-        insuranceList.forEach(ins => {
-            const opt = document.createElement('option');
-            opt.value = ins;
-            opt.textContent = ins;
-            insuranceFilter.appendChild(opt);
-        });
-    }
-
-    // Initial load
-    renderResources(categoryResources);
-
-    // 6. Search within Category Form Handler
     const searchForm = document.getElementById('category-search-form');
     const keywordInput = document.getElementById('search-keyword');
     const locationInput = document.getElementById('search-location');
 
-    if (searchForm) {
-        searchForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const keyword = keywordInput.value.toLowerCase().trim();
-            const location = locationInput.value.toLowerCase().trim();
-            const selectedTreatment = treatmentFilter ? treatmentFilter.value : '';
-            const selectedInsurance = insuranceFilter ? insuranceFilter.value : '';
+    function bindSearch(list) {
+        if (searchForm) {
+            // Remove previous listeners by cloning
+            const newForm = searchForm.cloneNode(true);
+            searchForm.parentNode.replaceChild(newForm, searchForm);
+            
+            const freshKeywordInput = document.getElementById('search-keyword');
+            const freshLocationInput = document.getElementById('search-location');
+            const freshTreatmentFilter = document.getElementById('filter-treatment');
+            const freshInsuranceFilter = document.getElementById('filter-insurance');
 
-            // Filter resources
-            const filtered = categoryResources.filter(res => {
-                const matchesKeyword = !keyword || 
-                    res.name.toLowerCase().includes(keyword) || 
-                    res.aboutShort.toLowerCase().includes(keyword) ||
-                    res.treatmentTypes.some(t => t.toLowerCase().includes(keyword));
+            newForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const keyword = freshKeywordInput.value.toLowerCase().trim();
+                const location = freshLocationInput.value.toLowerCase().trim();
+                const selectedTreatment = freshTreatmentFilter ? freshTreatmentFilter.value : '';
+                const selectedInsurance = freshInsuranceFilter ? freshInsuranceFilter.value : '';
 
-                const matchesLocation = !location || 
-                    res.city.toLowerCase().includes(location) || 
-                    res.state.toLowerCase().includes(location) || 
-                    res.county.toLowerCase().includes(location) ||
-                    res.address.toLowerCase().includes(location);
+                const filtered = list.filter(res => {
+                    const matchesKeyword = !keyword || 
+                        res.name.toLowerCase().includes(keyword) || 
+                        (res.aboutShort || '').toLowerCase().includes(keyword) ||
+                        (res.treatmentTypes && res.treatmentTypes.some(t => t.toLowerCase().includes(keyword)));
 
-                const matchesTreatment = !selectedTreatment || 
-                    res.treatmentTypes.includes(selectedTreatment);
+                    const matchesLocation = !location || 
+                        res.city.toLowerCase().includes(location) || 
+                        res.state.toLowerCase().includes(location) || 
+                        (res.county || '').toLowerCase().includes(location) ||
+                        (res.address || '').toLowerCase().includes(location);
 
-                const matchesInsurance = !selectedInsurance || 
-                    res.insuranceAccepted.includes(selectedInsurance);
+                    const matchesTreatment = !selectedTreatment || 
+                        (res.treatmentTypes && res.treatmentTypes.includes(selectedTreatment));
 
-                return matchesKeyword && matchesLocation && matchesTreatment && matchesInsurance;
+                    const matchesInsurance = !selectedInsurance || 
+                        (res.insuranceAccepted && res.insuranceAccepted.includes(selectedInsurance));
+
+                    return matchesKeyword && matchesLocation && matchesTreatment && matchesInsurance;
+                });
+
+                renderResources(filtered);
             });
-
-            renderResources(filtered);
-        });
+        }
     }
+
+    async function loadCategoryResources() {
+        const client = window.getSupabaseClient();
+        if (client) {
+            try {
+                const { data: mappings } = await client.from('resource_categories').select('resource_id').eq('category_id', category.id);
+                const ids = (mappings || []).map(m => m.resource_id);
+
+                if (ids.length > 0) {
+                    const { data: dbRes, error } = await client.from('resources').select('*').in('id', ids).eq('status', 'Published');
+                    if (!error && dbRes) {
+                        const mapped = dbRes.map(r => ({
+                            ...r,
+                            image: r.featured_image || (r.gallery && r.gallery.length > 0 ? r.gallery[0] : 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80'),
+                            categories: [category.name],
+                            reviewCount: r.review_count,
+                            statusText: r.verification_status,
+                            insuranceAccepted: r.insurance_accepted || []
+                        }));
+                        renderResources(mapped);
+                        populateFilters(mapped);
+                        bindSearch(mapped);
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.warn("Database category search failed, using static data:", e);
+            }
+        }
+        
+        renderResources(categoryResources);
+        populateFilters(categoryResources);
+        bindSearch(categoryResources);
+    }
+
+    loadCategoryResources();
 
     // 7. Related Categories Rendering
     const relatedGrid = document.getElementById('related-categories-grid');
