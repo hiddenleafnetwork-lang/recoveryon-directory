@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login | RecoveryOn</title>
+    <title>Admin Login | TreatmentLane</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -228,8 +228,8 @@
             const errorText = document.getElementById('error-text');
 
             // Load saved settings if any
-            const savedUrl = localStorage.getItem('RECOVERYON_SUPABASE_URL') || '';
-            const savedKey = localStorage.getItem('RECOVERYON_SUPABASE_KEY') || '';
+            const savedUrl = localStorage.getItem('TREATMENTLANE_SUPABASE_URL') || localStorage.getItem('TREATMENTLANE_SUPABASE_URL') || '';
+            const savedKey = localStorage.getItem('TREATMENTLANE_SUPABASE_KEY') || localStorage.getItem('TREATMENTLANE_SUPABASE_KEY') || '';
             document.getElementById('setup-url').value = savedUrl;
             document.getElementById('setup-key').value = savedKey;
 
@@ -245,8 +245,8 @@
                 e.preventDefault();
                 const url = document.getElementById('setup-url').value.trim();
                 const key = document.getElementById('setup-key').value.trim();
-                localStorage.setItem('RECOVERYON_SUPABASE_URL', url);
-                localStorage.setItem('RECOVERYON_SUPABASE_KEY', key);
+                localStorage.setItem('TREATMENTLANE_SUPABASE_URL', url);
+                localStorage.setItem('TREATMENTLANE_SUPABASE_KEY', key);
                 setupModal.style.display = 'none';
                 alert('Connection settings saved. You can now log in.');
             });
@@ -258,9 +258,9 @@
                 const email = document.getElementById('login-email').value.trim();
                 const password = document.getElementById('login-password').value;
 
-                const config = window.RECOVERYON_CONFIG || {};
-                let url = (config.SUPABASE_URL || localStorage.getItem('RECOVERYON_SUPABASE_URL') || '').trim();
-                let key = (config.SUPABASE_KEY || localStorage.getItem('RECOVERYON_SUPABASE_KEY') || '').trim();
+                const config = window.TREATMENTLANE_CONFIG || {};
+                let url = (config.SUPABASE_URL || localStorage.getItem('TREATMENTLANE_SUPABASE_URL') || localStorage.getItem('TREATMENTLANE_SUPABASE_URL') || '').trim();
+                let key = (config.SUPABASE_KEY || localStorage.getItem('TREATMENTLANE_SUPABASE_KEY') || localStorage.getItem('TREATMENTLANE_SUPABASE_KEY') || '').trim();
 
                 const isPlaceholder = url.includes('xxxxxxxx.supabase.co') || url.includes('your-project-id') || 
                                       (key.toLowerCase().includes('eyjhbgcioijiu3i1n') && key.length < 50);

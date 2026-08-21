@@ -1,5 +1,5 @@
 /**
- * RecoveryOn Directory - Frontend Interactions
+ * TreatmentLane Directory - Frontend Interactions
  * Controls mobile responsive menu, dynamic content rendering, and interactive UI behaviors.
  */
 
@@ -278,16 +278,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // 7. FAQs Data & Rendering
     const faqs = [
         {
-            question: "What is RecoveryOn?",
-            answer: "RecoveryOn is a comprehensive, nationwide directory designed to connect individuals with trusted local recovery centers, therapists, support groups, and wellness services. We are an informational platform and directory, not a direct treatment provider."
+            question: "What is TreatmentLane?",
+            answer: "TreatmentLane is a comprehensive, nationwide directory designed to connect individuals with trusted local recovery centers, therapists, support groups, and wellness services. We are an informational platform and directory, not a direct treatment provider."
         },
         {
             question: "How do I search for recovery resources near me?",
             answer: "You can use the search tool at the top of the page. Simply enter a keyword (such as a specialty, therapy, or center name) and input your city or ZIP code. Click 'Search Directory' to view localized listings matching your criteria."
         },
         {
-            question: "Does RecoveryOn directly provide medical treatment?",
-            answer: "No, RecoveryOn does not directly provide medical treatment, clinical advice, or emergency services. We host directory listings to help you discover third-party organizations. If you are experiencing a medical or mental health emergency, please call 911 or call/text the Suicide & Crisis Lifeline at 988 immediately."
+            question: "Does TreatmentLane directly provide medical treatment?",
+            answer: "No, TreatmentLane does not directly provide medical treatment, clinical advice, or emergency services. We host directory listings to help you discover third-party organizations. If you are experiencing a medical or mental health emergency, please call 911 or call/text the Suicide & Crisis Lifeline at 988 immediately."
         },
         {
             question: "How can I add my organization to the directory?",

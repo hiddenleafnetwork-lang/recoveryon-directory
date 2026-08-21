@@ -1,11 +1,11 @@
 /**
- * RecoveryOn Directory - Internal Admin Panel Controller (SPA Router & Engine)
+ * TreatmentLane Directory - Internal Admin Panel Controller (SPA Router & Engine)
  * Integrates client-side Supabase DB connection, SheetJS Excel parser, mapping, validation, duplicate prevention, and editor.
  */
 
-const config = window.RECOVERYON_CONFIG || {};
-let supabaseUrl = config.SUPABASE_URL || localStorage.getItem('RECOVERYON_SUPABASE_URL');
-let supabaseKey = config.SUPABASE_KEY || localStorage.getItem('RECOVERYON_SUPABASE_KEY');
+const config = window.TREATMENTLANE_CONFIG || {};
+let supabaseUrl = config.SUPABASE_URL || localStorage.getItem('TREATMENTLANE_SUPABASE_URL') || localStorage.getItem('TREATMENTLANE_SUPABASE_URL');
+let supabaseKey = config.SUPABASE_KEY || localStorage.getItem('TREATMENTLANE_SUPABASE_KEY') || localStorage.getItem('TREATMENTLANE_SUPABASE_KEY');
 let supabase = null;
 let currentUser = null;
 
@@ -1741,8 +1741,8 @@ function loadSettingsSection() {
         const url = document.getElementById('settings-url').value.trim();
         const key = document.getElementById('settings-key').value.trim();
 
-        localStorage.setItem('RECOVERYON_SUPABASE_URL', url);
-        localStorage.setItem('RECOVERYON_SUPABASE_KEY', key);
+        localStorage.setItem('TREATMENTLANE_SUPABASE_URL', url);
+        localStorage.setItem('TREATMENTLANE_SUPABASE_KEY', key);
         
         supabaseUrl = url;
         supabaseKey = key;

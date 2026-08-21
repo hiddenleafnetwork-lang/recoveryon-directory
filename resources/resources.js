@@ -1,5 +1,5 @@
 /**
- * RecoveryOn Directory - Resources Directory Page Logic
+ * TreatmentLane Directory - Resources Directory Page Logic
  */
 
 document.addEventListener('DOMContentLoaded', () => {

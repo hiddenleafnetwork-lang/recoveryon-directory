@@ -1,12 +1,12 @@
-# RecoveryOn Directory — Admin Dashboard Guide
+# TreatmentLane Directory — Admin Dashboard Guide
 
-This comprehensive guide covers the design, architecture, database schemas, security configurations, and operations for RecoveryOn’s internal management interface.
+This comprehensive guide covers the design, architecture, database schemas, security configurations, and operations for TreatmentLane’s internal management interface.
 
 ---
 
 ## 1. Directory System Architecture
 
-The RecoveryOn Directory is architected as a hybrid static/dynamic application:
+The TreatmentLane Directory is architected as a hybrid static/dynamic application:
 1. **Public Frontend (Jamstack-compatible):** Reads resource directory files dynamically via an API client overlay. If Supabase keys are not found in browser storage, it gracefully falls back to the static `data.js` array to maintain 100% offline & GitHub Pages compatibility.
 2. **Admin Management Dashboard (SPA Shell):** Located under `/admin/index.html`. Connects directly to the Supabase PostgreSQL backend using the client SDK, providing database operations without backend server relays.
 
@@ -117,6 +117,6 @@ Admins can select key criteria to identify duplicate records:
 To activate dynamic database operations:
 1. Open the [Supabase Console](https://supabase.com).
 2. Execute the migrations script found in [`database.sql`](file:///d:/Antigravity%20Projects/RecoveryOn%20Directory/database.sql) using the SQL Editor.
-3. Open the directory admin login at `/admin/index.html` and click **Connection Parameters**. Enter your Supabase Project URL and Anon API key.
+3. Open the directory admin login at `/admin/index.html` and configure the connection parameters.
 4. Sign up/log in using Supabase Auth.
 5. Enter the **Import Data** section to upload and stage your resource spreadsheets.

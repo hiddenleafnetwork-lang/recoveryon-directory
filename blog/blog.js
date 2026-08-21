@@ -1,5 +1,5 @@
 /**
- * RecoveryOn Directory - Blog Index Controller
+ * TreatmentLane Directory - Blog Index Controller
  */
 
 document.addEventListener('DOMContentLoaded', () => {

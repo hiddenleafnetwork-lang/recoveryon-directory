@@ -1,12 +1,12 @@
 /* 
-   RecoveryOn Directory CSS
+   TreatmentLane Directory CSS
    Author: Antigravity
    Aesthetics: Modern Premium, Minimal, Trustworthy, Soothing Teal/Navy Palette
 */
 
 /* --- Design Tokens --- */
 :root {
-    --primary-color: #028090; /* RecoveryOn Teal */
+    --primary-color: #028090; /* TreatmentLane Teal */
     --primary-glow: rgba(2, 128, 144, 0.08);
     --secondary-color: #012a4a; /* Dark Navy */
     --accent-color: #02c39a; /* Light Accent Teal */
@@ -932,7 +932,7 @@ img {
     color: var(--primary-color);
 }
 
-/* --- Section 5: Why Use RecoveryOn + How It Works --- */
+/* --- Section 5: Why Use TreatmentLane + How It Works --- */
 .trust-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;

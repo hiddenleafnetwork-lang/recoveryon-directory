@@ -1,5 +1,5 @@
 /**
- * RecoveryOn Directory - Blog Detail Page Controller
+ * TreatmentLane Directory - Blog Detail Page Controller
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 3. Populate Page Meta
-    document.title = `${post.title} | RecoveryOn Blog`;
+    document.title = `${post.title} | TreatmentLane Blog`;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
         metaDesc.setAttribute('content', post.excerpt);

@@ -1,5 +1,5 @@
 /**
- * RecoveryOn Directory - Category Page Controller
+ * TreatmentLane Directory - Category Page Controller
  * Handles dynamic content fetching, listing rendering, and interactions.
  */
 
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Populate Page Meta
-    document.title = `${category.name} | RecoveryOn Directory`;
+    document.title = `${category.name} | TreatmentLane Directory`;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
         metaDesc.setAttribute('content', `Find local ${category.name.toLowerCase()} resources. Browse verified and demo services in your area.`);

@@ -1,16 +1,16 @@
-# RecoveryOn Directory — Brand Guidelines & Design System
+# TreatmentLane Directory — Brand Guidelines & Design System
 
-This document outlines the official brand identity, color systems, typography rules, component specifications, and layout structures for the **RecoveryOn Directory** platform. All future page developments, subpages, digital assets, and social media creatives must adhere to these guidelines to maintain a premium, trustworthy, and minimal visual language.
+This document outlines the official brand identity, color systems, typography rules, component specifications, and layout structures for the **TreatmentLane Directory** platform. All future page developments, subpages, digital assets, and social media creatives must adhere to these guidelines to maintain a premium, trustworthy, and minimal visual language.
 
 ---
 
 ## 1. Brand Essence & Voice
 
-RecoveryOn is a nationwide US recovery resource directory designed to connect individuals with trusted local treatment centers, counseling, detox programs, support groups, and wellness services.
+TreatmentLane is a nationwide US recovery resource directory designed to connect individuals with trusted local treatment centers, counseling, detox programs, support groups, and wellness services.
 
 * **Trust & Integrity:** The design must feel clean, clinical, and professional. Avoid loud, cheap-looking gradients or flashy animations.
 * **Clarity & Simplicity:** Information hierarchy should prioritize fast scanning. Spaces should feel open and calm.
-* **Warm & Compassionate:** Accent colors (such as RecoveryOn Teal) should guide users softly to actions without feeling aggressive or overly corporate.
+* **Warm & Compassionate:** Accent colors (such as TreatmentLane Teal) should guide users softly to actions without feeling aggressive or overly corporate.
 
 ---
 
@@ -23,8 +23,8 @@ These are the primary pillars of the interface. Use them for headings, buttons, 
 
 | Color | Hex Value | Primary Role |
 | :--- | :--- | :--- |
-| **RecoveryOn Navy** | `#012a4a` | Primary headings, dark section fills, brand signatures, and header text. |
-| **RecoveryOn Teal** | `#028090` | Primary CTA backgrounds, key interactive accents, links, and important status badges. |
+| **TreatmentLane Navy** | `#012a4a` | Primary headings, dark section fills, brand signatures, and header text. |
+| **TreatmentLane Teal** | `#028090` | Primary CTA backgrounds, key interactive accents, links, and important status badges. |
 
 ### B. Secondary Support Palette
 These colors (derived from our support palette) are used **only** as secondary accents for backgrounds, muted borders, subtle hover tints, or tag variations. They must not compete with primary teal/navy CTAs.
@@ -48,7 +48,7 @@ These colors (derived from our support palette) are used **only** as secondary a
 | **Default Border** | `#e2e8f0` | Resting dividers, thin container borders (Slate-200). |
 
 ### D. Palette Usage Constraints
-1. **CTA Rule:** All major action buttons (e.g. "Search", "Get Listed") must use **RecoveryOn Teal** (`#028090`). Do not use Support Navy (`#3D52A0`) or Support Blue (`#7091E6`) for CTAs.
+1. **CTA Rule:** All major action buttons (e.g. "Search", "Get Listed") must use **TreatmentLane Teal** (`#028090`). Do not use Support Navy (`#3D52A0`) or Support Blue (`#7091E6`) for CTAs.
 2. **Text Rule:** Never use light teal or support blue on a light background for body text. All body copy must remain in **Body Slate** (`#334155`) or **Secondary Slate** (`#475569`).
 3. **Contrast Integrity:** Avoid mixing too many strong blue and teal tones in the same component. Use `#EDE8F5` as a soft backdrop to separate colored icons or tags.
 
@@ -90,7 +90,7 @@ To enforce a block-width content design across all subpages:
 
 ### A. Featured Resource Cards
 * **Dimensions:** Width is flexible based on grid columns, but image aspect ratio is locked using `object-fit: cover` with a height of `190px`.
-* **Tag Overlay:** Positioned absolute on the top-left of the image. Must use a solid **RecoveryOn Teal** (`#028090`) background and white text.
+* **Tag Overlay:** Positioned absolute on the top-left of the image. Must use a solid **TreatmentLane Teal** (`#028090`) background and white text.
 * **Body Elements:** Location (Teal icon + uppercase state slug text), Name (Bold, H3, max 2 lines), Rating & Reviews (Yellow star + review count in parentheses), Status/Pricing info line.
 * **Borders & Radii:** Rounded to `8px` (`--radius-md`), with a thin `1px solid #e2e8f0` border.
 * **Hover Effect:** Translate up by `3px` (`translateY(-3.0px)`) with a transition speed of `0.4s` using `cubic-bezier(0.16, 1, 0.3, 1)`. The border shifts to `#ADBBDA`.
@@ -117,12 +117,12 @@ When creating social graphics (e.g., for Instagram, Facebook, or LinkedIn cards 
 
 ### A. Visual Layout Rules
 1. **The Grid:** Use 50/50 splits: one half for a high-quality landscape image (similar to the website listings), and the other half for clear text on a solid surface.
-2. **Surface Fills:** Use `#EDE8F5` or white as the text surface color. Do not use dark fills for social text cards unless it's a major announcement, which should use **RecoveryOn Navy** (`#012a4a`).
-3. **Logo Placement:** The RecoveryOn logo must always sit in the top-left or bottom-right corner, surrounded by clear negative space equal to the height of the logo text.
+2. **Surface Fills:** Use `#EDE8F5` or white as the text surface color. Do not use dark fills for social text cards unless it's a major announcement, which should use **TreatmentLane Navy** (`#012a4a`).
+3. **Logo Placement:** The TreatmentLane logo must always sit in the top-left or bottom-right corner, surrounded by clear negative space equal to the height of the logo text.
 
 ### B. Typography Pairings (Social Graphics)
 * **Title/Headline:** Large **Plus Jakarta Sans** (Extra Bold, Navy).
-* **Location/Sub-text:** RecoveryOn Teal (`#028090`) all-caps with light tracking (`0.05em`).
+* **Location/Sub-text:** TreatmentLane Teal (`#028090`) all-caps with light tracking (`0.05em`).
 
 ### C. Graphic Templates (Example Matrix)
 * **Instagram (1080x1080):** High-contrast background overlay video loop or image frame. Use a `12px` rounded white box containing the state name and top categories overlaid on the bottom center.

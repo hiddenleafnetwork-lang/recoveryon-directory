@@ -1,5 +1,5 @@
 /**
- * RecoveryOn Directory - State Page Controller
+ * TreatmentLane Directory - State Page Controller
  * Handles dynamic content rendering, location filtering, and state-first routing.
  */
 
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Populate Page Meta
-    document.title = `Recovery Resources in ${stateObj.name} | RecoveryOn Directory`;
+    document.title = `Recovery Resources in ${stateObj.name} | TreatmentLane Directory`;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
         metaDesc.setAttribute('content', `Browse local recovery services, detox programs, counselors, and support groups in ${stateObj.name}.`);

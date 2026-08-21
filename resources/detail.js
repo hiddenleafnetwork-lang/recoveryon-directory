@@ -1,5 +1,5 @@
 /**
- * RecoveryOn Directory - Resource Detail Page Logic
+ * TreatmentLane Directory - Resource Detail Page Logic
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function populatePage(data) {
         // Update browser tab title
-        document.title = `${data.name} | RecoveryOn Directory`;
+        document.title = `${data.name} | TreatmentLane Directory`;
 
         // 1. Breadcrumbs
         const breadcrumbsEl = document.getElementById('detail-breadcrumbs');

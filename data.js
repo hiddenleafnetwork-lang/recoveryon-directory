@@ -1,5 +1,5 @@
 /**
- * RecoveryOn Directory - Shared Data Model
+ * TreatmentLane Directory - Shared Data Model
  * Exposes categories, states, and demo resources.
  */
 
@@ -833,7 +833,7 @@ window.RECOVERY_BLOG_POSTS = [
         slug: "navigating-wellness-journey",
         date: "July 28, 2026",
         category: "Wellness",
-        author: "RecoveryOn Team",
+        author: "TreatmentLane Team",
         image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80",
         excerpt: "Explore insights, tips, stories, and expert advice on your journey to recovery and wellness.",
         content: `
@@ -846,7 +846,7 @@ window.RECOVERY_BLOG_POSTS = [
         slug: "five-steps-mental-resilience",
         date: "July 20, 2026",
         category: "Recovery Guide",
-        author: "RecoveryOn Team",
+        author: "TreatmentLane Team",
         image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80",
         excerpt: "Discover 5 simple, actionable steps to build mental resilience, manage stress, and support daily emotional health.",
         content: `
@@ -859,7 +859,7 @@ window.RECOVERY_BLOG_POSTS = [
         slug: "building-support-systems",
         date: "July 15, 2026",
         category: "Community",
-        author: "RecoveryOn Team",
+        author: "TreatmentLane Team",
         image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80",
         excerpt: "Building a supportive community is vital for recovery. Learn practical tips on finding local support groups and sober sponsors.",
         content: `
@@ -870,9 +870,9 @@ window.RECOVERY_BLOG_POSTS = [
 
 // Supabase Database Connection Helper for Frontend Pages
 window.getSupabaseClient = function() {
-    const config = window.RECOVERYON_CONFIG || {};
-    const url = config.SUPABASE_URL || localStorage.getItem('RECOVERYON_SUPABASE_URL');
-    const key = config.SUPABASE_KEY || localStorage.getItem('RECOVERYON_SUPABASE_KEY');
+    const config = window.TREATMENTLANE_CONFIG || {};
+    const url = config.SUPABASE_URL || localStorage.getItem('TREATMENTLANE_SUPABASE_URL') || localStorage.getItem('TREATMENTLANE_SUPABASE_URL');
+    const key = config.SUPABASE_KEY || localStorage.getItem('TREATMENTLANE_SUPABASE_KEY') || localStorage.getItem('TREATMENTLANE_SUPABASE_KEY');
     if (url && key && window.supabase) {
         try {
             return window.supabase.createClient(url, key);

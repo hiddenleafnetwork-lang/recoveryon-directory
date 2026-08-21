@@ -1,4 +1,4 @@
--- RecoveryOn Directory Database Schema & Migrations
+-- TreatmentLane Directory Database Schema & Migrations
 -- Target Database: PostgreSQL / Supabase
 
 -- Enable necessary extensions
