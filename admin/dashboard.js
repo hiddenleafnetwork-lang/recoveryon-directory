@@ -55,9 +55,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // Check Authenticated Session
-    const { data: { session }, error } = await supabase.auth.getSession();
-    if (error || !session) {
+    // Check Authenticated Session with Timeout
+    let session = null;
+    let sessionError = null;
+
+    try {
+        const sessionPromise = supabase.auth.getSession();
+        const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error("Database connection timed out. Please check your network and configuration.")), 6000)
+        );
+
+        const result = await Promise.race([sessionPromise, timeoutPromise]);
+        session = result.data ? result.data.session : null;
+        sessionError = result.error;
+    } catch (e) {
+        console.error("Session verification failed", e);
+        showConnectionError(e.message || "Failed to reach the database server. Verify your settings.");
+        return;
+    }
+
+    if (sessionError || !session) {
         redirectToLogin();
         return;
     }
@@ -81,21 +98,62 @@ document.addEventListener('DOMContentLoaded', async () => {
    ========================================================================= */
 
 function verifyConnectionSettings() {
-    return supabaseUrl && supabaseKey;
+    if (!supabaseUrl || !supabaseKey) return false;
+    let url = supabaseUrl.toLowerCase().trim();
+    let key = supabaseKey.trim();
+    if (url.includes('xxxxxxxx.supabase.co') || url.includes('your-project-id') || url === "") return false;
+    if (key.toLowerCase().includes('eyjhbgcioijiu3i1n') && key.length < 50) return false;
+    return true;
 }
 
 function redirectToLogin() {
     hideLoading();
-    window.location.href = 'login.html';
+    let pathname = window.location.pathname;
+    let adminIndex = pathname.indexOf('/admin');
+    if (adminIndex !== -1) {
+        let basePath = pathname.substring(0, adminIndex);
+        window.location.href = window.location.origin + basePath + '/admin/login.html';
+    } else {
+        window.location.href = 'login.html';
+    }
+}
+
+function showConnectionError(message) {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) {
+        overlay.style.backgroundColor = '#ffffff';
+        overlay.innerHTML = `
+            <div style="text-align: center; max-width: 450px; padding: 32px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid #ef4444; background-color: #fef2f2; font-family: 'Plus Jakarta Sans', sans-serif;">
+                <i class="fa-solid fa-circle-exclamation" style="font-size: 3.5rem; color: #ef4444; margin-bottom: 20px; display: block;"></i>
+                <h2 style="font-size: 1.3rem; color: #991b1b; margin-bottom: 12px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; border:none; padding:0; background:none;">Database Connection Error</h2>
+                <p style="color: #7f1d1d; font-size: 0.92rem; line-height: 1.6; margin-bottom: 24px; font-family: 'Plus Jakarta Sans', sans-serif;">${message}</p>
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button onclick="window.location.reload();" style="padding: 8px 16px; border: 1px solid var(--border-color); background: white; border-radius: 6px; cursor: pointer; font-weight:600; font-family: 'Plus Jakarta Sans', sans-serif;">Retry</button>
+                    <button onclick="redirectToLogin();" style="padding: 8px 16px; background: var(--primary-color); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight:600; font-family: 'Plus Jakarta Sans', sans-serif;">Configure / Sign In</button>
+                </div>
+            </div>
+        `;
+    }
 }
 
 function setupLogout() {
     document.getElementById('btn-logout-action').addEventListener('click', async (e) => {
         e.preventDefault();
         showLoading("Signing out...");
-        await supabase.auth.signOut();
-        localStorage.removeItem('sb-' + supabaseUrl.split('//')[1].split('.')[0] + '-auth-token');
-        window.location.href = 'login.html';
+        try {
+            await supabase.auth.signOut();
+        } catch (err) {
+            console.warn("Signout request failed", err);
+        }
+        
+        try {
+            let projectRef = supabaseUrl.split('//')[1].split('.')[0];
+            localStorage.removeItem('sb-' + projectRef + '-auth-token');
+        } catch (err) {
+            console.warn("Unable to parse supabaseUrl for auth token key removal", err);
+        }
+        
+        redirectToLogin();
     });
 }
 

@@ -259,11 +259,14 @@
                 const password = document.getElementById('login-password').value;
 
                 const config = window.RECOVERYON_CONFIG || {};
-                const url = config.SUPABASE_URL || localStorage.getItem('RECOVERYON_SUPABASE_URL');
-                const key = config.SUPABASE_KEY || localStorage.getItem('RECOVERYON_SUPABASE_KEY');
+                let url = (config.SUPABASE_URL || localStorage.getItem('RECOVERYON_SUPABASE_URL') || '').trim();
+                let key = (config.SUPABASE_KEY || localStorage.getItem('RECOVERYON_SUPABASE_KEY') || '').trim();
 
-                if (!url || !key) {
-                    errorText.textContent = "Supabase Connection is not configured. Please fill in supabase-config.js in the project root folder.";
+                const isPlaceholder = url.includes('xxxxxxxx.supabase.co') || url.includes('your-project-id') || 
+                                      (key.toLowerCase().includes('eyjhbgcioijiu3i1n') && key.length < 50);
+
+                if (!url || !key || isPlaceholder) {
+                    errorText.textContent = "Supabase Connection is not configured properly. Please edit supabase-config.js in the project root folder with valid credentials.";
                     errorBox.style.display = 'flex';
                     return;
                 }
@@ -279,7 +282,14 @@
                     }
 
                     // Successful login: redirect to dashboard index
-                    window.location.href = 'index.html';
+                    let pathname = window.location.pathname;
+                    let adminIndex = pathname.indexOf('/admin');
+                    if (adminIndex !== -1) {
+                        let basePath = pathname.substring(0, adminIndex);
+                        window.location.href = window.location.origin + basePath + '/admin/index.html';
+                    } else {
+                        window.location.href = 'index.html';
+                    }
                 } catch (err) {
                     errorText.textContent = "Unable to connect to Supabase: " + err.message;
                     errorBox.style.display = 'flex';
