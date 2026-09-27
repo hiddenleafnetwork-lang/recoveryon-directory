@@ -4,7 +4,7 @@ import { getDirectoryFacets, getSitemapProviders } from "@/lib/providers";
 import { absoluteUrl } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticPages = ["", "/care", "/locations", "/guides", "/about", "/how-we-verify", "/emergency-help", "/providers/apply", "/corrections", "/contact", "/privacy", "/terms"];
+  const staticPages = ["", "/directory", "/care", "/locations", "/guides", "/about", "/how-we-verify", "/emergency-help", "/providers/apply", "/corrections", "/contact", "/privacy", "/terms"];
   const [facets, providers] = await Promise.all([getDirectoryFacets(), getSitemapProviders()]);
   const now = new Date();
   const populatedCategories = careCategories.filter((item) => facets.categories.includes(item.name));
