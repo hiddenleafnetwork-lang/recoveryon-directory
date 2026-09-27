@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { getDatabase } from "@/lib/db";
 import type { Provider } from "@/lib/types";
 
 type ProviderRow = {
@@ -25,13 +25,6 @@ type ProviderRow = {
   verification_status: Provider["verificationStatus"];
   is_sponsored: boolean;
 };
-
-function publicClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key) return null;
-  return createClient(url, key, { auth: { persistSession: false } });
-}
 
 function toProvider(row: ProviderRow): Provider {
   return {
@@ -58,15 +51,17 @@ function toProvider(row: ProviderRow): Provider {
 }
 
 export const getProviders = cache(async (): Promise<Provider[]> => {
-  const client = publicClient();
-  if (!client) return [];
-  const { data, error } = await client
-    .from("providers")
-    .select("id,name,slug,description,address,city,state,postal_code,phone,website,categories,levels_of_care,insurance,license_summary,accreditation,last_verified_at,verification_status,is_sponsored,updated_at")
-    .eq("publication_status", "published")
-    .order("name");
-  if (error || !data) return [];
-  return (data as ProviderRow[]).map(toProvider);
+  const sql = getDatabase();
+  if (!sql) return [];
+  try {
+    const data = await sql`select id, name, slug, description, address, city, state, postal_code, phone, website,
+      categories, levels_of_care, insurance, license_summary, accreditation, last_verified_at,
+      verification_status, is_sponsored, updated_at
+      from providers where publication_status = 'published' order by name`;
+    return (data as ProviderRow[]).map(toProvider);
+  } catch {
+    return [];
+  }
 });
 
 export const getProviderBySlug = cache(async (slug: string): Promise<Provider | null> => {

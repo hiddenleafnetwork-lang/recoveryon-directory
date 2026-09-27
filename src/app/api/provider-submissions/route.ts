@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createProviderSubmission } from "@/lib/db";
 
 const schema = z.object({
   organizationName: z.string().trim().min(2).max(160),
@@ -19,21 +19,13 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   const parsed = schema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ message: "Please check the form and try again." }, { status: 400 });
-  const client = createAdminClient();
-  if (!client) return NextResponse.json({ message: "Applications are temporarily unavailable. Please email hello@treatmentlane.com." }, { status: 503 });
   if (parsed.data.companyFax) return NextResponse.json({ ok: true }, { status: 201 });
   const data = parsed.data;
-  const { error } = await client.from("provider_submissions").insert({
-    organization_name: data.organizationName,
-    contact_name: data.contactName,
-    work_email: data.workEmail,
-    phone: data.phone || null,
-    website: data.website || null,
-    city: data.city,
-    state: data.state.toUpperCase(),
-    relationship: data.relationship,
-    notes: data.notes || null,
-  });
-  if (error) return NextResponse.json({ message: "We could not save the application. Please try again." }, { status: 500 });
+  try {
+    const saved = await createProviderSubmission(data);
+    if (!saved) return NextResponse.json({ message: "Applications are temporarily unavailable. Please email hello@treatmentlane.com." }, { status: 503 });
+  } catch {
+    return NextResponse.json({ message: "We could not save the application. Please try again." }, { status: 500 });
+  }
   return NextResponse.json({ ok: true }, { status: 201 });
 }

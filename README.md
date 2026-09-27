@@ -1,6 +1,6 @@
 # TreatmentLane
 
-TreatmentLane is a transparent U.S. directory for addiction treatment, recovery, and mental health resources. The production site uses Next.js, TypeScript, and Supabase.
+TreatmentLane is a transparent U.S. directory for addiction treatment, recovery, and mental health resources. The production site uses Next.js, TypeScript, and Neon Postgres on Vercel.
 
 ## Local development
 
@@ -10,18 +10,18 @@ cp .env.example .env.local
 npm run dev
 ```
 
-The site works without Supabase credentials, but the directory will be empty and submission forms will return a clear temporary-unavailable message.
+The site works without a database connection, but the directory will be empty and submission forms will return a clear temporary-unavailable message.
 
 ## Production setup
 
-1. Create a Supabase project and run `supabase/schema.sql` in its SQL editor.
+1. Create or connect a Neon Postgres database and run `database/schema.sql` in its SQL editor.
 2. Copy `.env.example` to `.env.local` for local work.
-3. Add the four variables from `.env.example` to the hosting environment.
+3. Add the variables from `.env.example` to the hosting environment.
 4. Deploy to Vercel and verify the preview URL.
 5. Add `treatmentlane.com` and `www.treatmentlane.com` to the Vercel project.
 6. Point Cloudflare DNS to the records Vercel provides, then verify both hosts redirect to the preferred HTTPS address.
 
-Never expose `SUPABASE_SERVICE_ROLE_KEY` in browser code or commit `.env.local`.
+Never expose `DATABASE_URL` in browser code or commit `.env.local`.
 
 ## Quality checks
 
