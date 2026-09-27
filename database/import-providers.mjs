@@ -17,10 +17,25 @@ const US_REGIONS = new Set([
   "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA",
   "WV", "WI", "WY", "AS", "GU", "MP", "PR", "VI",
 ]);
+const STATE_NAMES = new Map(Object.entries({
+  Alabama: "AL", Alaska: "AK", Arizona: "AZ", Arkansas: "AR", California: "CA", Colorado: "CO", Connecticut: "CT",
+  Delaware: "DE", "District of Columbia": "DC", Florida: "FL", Georgia: "GA", Hawaii: "HI", Idaho: "ID", Illinois: "IL",
+  Indiana: "IN", Iowa: "IA", Kansas: "KS", Kentucky: "KY", Louisiana: "LA", Maine: "ME", Maryland: "MD", Massachusetts: "MA",
+  Michigan: "MI", Minnesota: "MN", Mississippi: "MS", Missouri: "MO", Montana: "MT", Nebraska: "NE", Nevada: "NV",
+  "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM", "New York": "NY", "North Carolina": "NC",
+  "North Dakota": "ND", Ohio: "OH", Oklahoma: "OK", Oregon: "OR", Pennsylvania: "PA", "Rhode Island": "RI",
+  "South Carolina": "SC", "South Dakota": "SD", Tennessee: "TN", Texas: "TX", Utah: "UT", Vermont: "VT", Virginia: "VA",
+  Washington: "WA", "West Virginia": "WV", Wisconsin: "WI", Wyoming: "WY", "American Samoa": "AS", Guam: "GU",
+  "Northern Mariana Islands": "MP", "Puerto Rico": "PR", "U.S. Virgin Islands": "VI",
+}).map(([name, code]) => [name.toLowerCase(), code]));
 
 const clean = (value) => String(value || "").trim();
 const normalized = (value) => clean(value).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const zip5 = (value) => clean(value).match(/\b\d{5}\b/)?.[0] || "";
+const recoveryZip = (value) => {
+  const digits = clean(value).replace(/\D/g, "");
+  return digits.length === 4 ? `0${digits}` : digits.slice(0, 5);
+};
 const phoneDigits = (value) => clean(value).replace(/\D/g, "").slice(-10);
 const hash = (value) => createHash("sha256").update(value).digest("hex");
 const unique = (values) => [...new Set(values.filter(Boolean))];
@@ -36,6 +51,38 @@ function safeUrl(value) {
     const url = new URL(clean(value));
     return ["http:", "https:"].includes(url.protocol) ? url.toString() : null;
   } catch { return null; }
+}
+
+function recoveryLocation(row) {
+  const address = clean(row.street_address);
+  const fieldState = clean(row.state);
+  let state = US_REGIONS.has(fieldState.toUpperCase()) ? fieldState.toUpperCase() : STATE_NAMES.get(fieldState.toLowerCase()) || "";
+  const postalCode = recoveryZip(row.zip_code) || address.match(/\b\d{5}\b/)?.[0] || "";
+  const zipMatch = postalCode ? zipcodes.lookup(postalCode) : null;
+  if (!state && zipMatch && US_REGIONS.has(zipMatch.state)) state = zipMatch.state;
+  if (!state) {
+    const codeMatch = address.toUpperCase().match(/(?:,|\s)\s*(AL|AK|AZ|AR|CA|CO|CT|DE|DC|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY|AS|GU|MP|PR|VI)(?:\s+\d{4,5})?\s*$/);
+    state = codeMatch?.[1] || "";
+  }
+  if (!state) {
+    for (const [name, code] of STATE_NAMES) if (address.toLowerCase().includes(name)) { state = code; break; }
+  }
+  const country = clean(row.country).toUpperCase();
+  const isUS = country === "US" || Boolean(state) || /\bunited states\b/i.test(address) || Boolean(zipMatch?.country === "US");
+  const city = clean(row.city) || clean(zipMatch?.city);
+  return { isUS, state, city, postalCode, address };
+}
+
+function recoveryCategories(row) {
+  const text = [row.name, row.treatment_type, row.levels_of_care, row.listing_url].join(" ").toLowerCase();
+  const values = [];
+  if (/residential|inpatient|treatment.center|rehab/.test(text)) values.push("Treatment Centers");
+  if (/detox|withdrawal/.test(text)) values.push("Medical Detox");
+  if (/outpatient|day.treatment|partial.hospital|virtual|telehealth/.test(text)) values.push("Outpatient Programs");
+  if (/therap|counsel/.test(text)) values.push("Counseling & Therapy");
+  if (/sober.living|recovery.home/.test(text)) values.push("Sober Living");
+  if (/mental.health|psychiatr/.test(text)) values.push("Mental Health Services");
+  return unique(values);
 }
 
 function inferredState(row, recoveryByUrl, stateMaps) {
@@ -188,8 +235,54 @@ for (const [identity, items] of groups) {
   });
 }
 
-const duplicateGroups = [...groups.values()].filter((group) => group.length > 1);
 const recoveryUrlsInMaster = new Set(masterRows.map((row) => clean(row["Listing Url"]).replace(/\/$/, "")).filter(Boolean));
+const supplementalCandidates = recoveryRows.filter((row) => !recoveryUrlsInMaster.has(clean(row.listing_url).replace(/\/$/, "")));
+const namePhoneKeys = new Set(providers.filter((item) => phoneDigits(item.phone)).map((item) => `${normalized(item.name)}|${phoneDigits(item.phone)}`));
+const namePlaceKeys = new Set(providers.map((item) => `${normalized(item.name)}|${normalized(item.city)}|${item.state}`));
+const addressKeys = new Set(providers.filter((item) => item.address).map((item) => `${normalized(item.address)}|${normalized(item.city)}|${item.state}`));
+let supplementalNonUs = 0;
+let supplementalIncomplete = 0;
+let supplementalDuplicates = 0;
+
+for (let index = 0; index < supplementalCandidates.length; index += 1) {
+  const row = supplementalCandidates[index];
+  const location = recoveryLocation(row);
+  if (!location.isUS) { supplementalNonUs += 1; continue; }
+  const name = clean(row.name);
+  if (!name || !location.city || !location.state) { supplementalIncomplete += 1; continue; }
+  const phone = clean(row.phone) || null;
+  const namePhoneKey = `${normalized(name)}|${phoneDigits(phone)}`;
+  const namePlaceKey = `${normalized(name)}|${normalized(location.city)}|${location.state}`;
+  const addressKey = `${normalized(location.address)}|${normalized(location.city)}|${location.state}`;
+  if ((phoneDigits(phone) && namePhoneKeys.has(namePhoneKey)) || namePlaceKeys.has(namePlaceKey) || (location.address && addressKeys.has(addressKey))) {
+    supplementalDuplicates += 1;
+    continue;
+  }
+  const sourceUrl = safeUrl(row.listing_url);
+  const identity = sourceUrl || [normalized(name), normalized(location.address), normalized(location.city), location.state, location.postalCode, phoneDigits(phone)].join("|");
+  const sourceKey = `recovery-supplement:${hash(identity).slice(0, 32)}`;
+  const baseSlug = slugify(`${name} ${location.city} ${location.state}`);
+  let slug = baseSlug;
+  if (usedSlugs.has(slug) && usedSlugs.get(slug) !== sourceKey) slug = slugify(`${baseSlug}-${location.postalCode || hash(identity).slice(0, 7)}`);
+  if (usedSlugs.has(slug) && usedSlugs.get(slug) !== sourceKey) slug = `${slug.slice(0, 91)}-${hash(identity).slice(0, 7)}`;
+  usedSlugs.set(slug, sourceKey);
+  namePhoneKeys.add(namePhoneKey);
+  namePlaceKeys.add(namePlaceKey);
+  if (location.address) addressKeys.add(addressKey);
+  const rawRow = { sheetRow: recoveryRows.indexOf(row) + 2, ...row };
+  providers.push({
+    sourceKey, name, slug,
+    description: `${name} is listed as a behavioral health, treatment, or recovery resource in ${location.city}, ${location.state}. Contact the organization directly to confirm services, eligibility, availability, cost, and licensing.`,
+    address: location.address || null, city: location.city, state: location.state, postalCode: location.postalCode || null,
+    phone, website: null, categories: recoveryCategories(row), levels: [], insurance: [], licenseSummary: null,
+    accreditation: [], sourceUrl,
+    sourceNotes: "Imported from the recovery_centers_usa source sheet as a U.S. location not already represented in the canonical Master sheet. Contact and service details have not been independently verified by TreatmentLane.",
+    intakePhone: null, latitude: Number(row.latitude) || null, longitude: Number(row.longitude) || null,
+    sourceData: { recoveryRow: rawRow }, fingerprint: hash(JSON.stringify(rawRow)),
+  });
+}
+
+const duplicateGroups = [...groups.values()].filter((group) => group.length > 1);
 const summary = {
   masterRows: masterRows.length,
   recoveryReferenceRows: recoveryRows.length,
@@ -197,6 +290,11 @@ const summary = {
   recoveryRowsExcludedFromCanonicalMaster: [...recoveryByUrl.keys()].filter((url) => !recoveryUrlsInMaster.has(url)).length,
   exactDuplicateGroupsMerged: duplicateGroups.length,
   exactDuplicateRowsMerged: duplicateGroups.reduce((sum, group) => sum + group.length - 1, 0),
+  supplementalRecoveryCandidates: supplementalCandidates.length,
+  supplementalNonUsExcluded: supplementalNonUs,
+  supplementalIncompleteExcluded: supplementalIncomplete,
+  supplementalDuplicatesExcluded: supplementalDuplicates,
+  supplementalUsProvidersAdded: providers.filter((item) => item.sourceKey.startsWith("recovery-supplement:" )).length,
   publishableProviders: providers.length,
   rejectedRows: rejected.length,
   inferredStateRows: prepared.filter((item) => !US_REGIONS.has(clean(item.row.State).toUpperCase())).length,
