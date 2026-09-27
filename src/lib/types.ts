@@ -1,0 +1,21 @@
+export type Provider = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  address: string | null;
+  city: string;
+  state: string;
+  postalCode: string | null;
+  phone: string | null;
+  website: string | null;
+  categories: string[];
+  levelsOfCare: string[];
+  insurance: string[];
+  licenseSummary: string | null;
+  accreditation: string[];
+  lastVerifiedAt: string | null;
+  updatedAt: string;
+  verificationStatus: "listed" | "provider-confirmed" | "independently-reviewed";
+  isSponsored: boolean;
+};
