@@ -14,6 +14,7 @@ export type Provider = {
   insurance: string[];
   licenseSummary: string | null;
   accreditation: string[];
+  sourceUrl: string | null;
   lastVerifiedAt: string | null;
   updatedAt: string;
   verificationStatus: "listed" | "provider-confirmed" | "independently-reviewed";

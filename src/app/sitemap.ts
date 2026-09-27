@@ -1,14 +1,14 @@
 import type { MetadataRoute } from "next";
 import { careCategories, guides, states } from "@/lib/content";
-import { getProviders } from "@/lib/providers";
+import { getDirectoryFacets, getSitemapProviders } from "@/lib/providers";
 import { absoluteUrl } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages = ["", "/care", "/locations", "/guides", "/about", "/how-we-verify", "/emergency-help", "/providers/apply", "/corrections", "/contact", "/privacy", "/terms"];
-  const providers = await getProviders();
+  const [facets, providers] = await Promise.all([getDirectoryFacets(), getSitemapProviders()]);
   const now = new Date();
-  const populatedCategories = careCategories.filter((item) => providers.some((provider) => provider.categories.includes(item.name)));
-  const populatedStates = states.filter((state) => providers.some((provider) => provider.state === state.code));
+  const populatedCategories = careCategories.filter((item) => facets.categories.includes(item.name));
+  const populatedStates = states.filter((state) => facets.states.includes(state.code));
   return [
     ...staticPages.map((path) => ({ url: absoluteUrl(path || "/"), lastModified: now, changeFrequency: path === "" ? "weekly" as const : "monthly" as const, priority: path === "" ? 1 : .7 })),
     ...populatedCategories.map((item) => ({ url: absoluteUrl(`/care/${item.slug}`), lastModified: now, changeFrequency: "weekly" as const, priority: .7 })),

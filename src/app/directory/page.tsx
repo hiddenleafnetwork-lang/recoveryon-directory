@@ -1,31 +1,33 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SearchX } from "lucide-react";
+import { Pagination } from "@/components/pagination";
 import { ProviderCard } from "@/components/provider-card";
 import { careCategories, states } from "@/lib/content";
-import { getProviders } from "@/lib/providers";
-
-export const metadata: Metadata = {
-  title: "Recovery resource directory",
-  description: "Search published treatment, recovery, and mental health resource listings by service and location.",
-  robots: { index: false, follow: true },
-  alternates: { canonical: "/directory" },
-};
+import { searchProviders } from "@/lib/providers";
 
 function single(value: string | string[] | undefined) { return Array.isArray(value) ? value[0] || "" : value || ""; }
 
+export async function generateMetadata({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }): Promise<Metadata> {
+  const params = await searchParams;
+  const filtered = ["keyword", "location", "category", "state", "page"].some((key) => Boolean(single(params[key])));
+  return {
+    title: "Recovery resource directory",
+    description: "Search treatment, recovery, and mental health resource listings by service and location.",
+    robots: { index: !filtered, follow: true },
+    alternates: { canonical: "/directory" },
+  };
+}
+
 export default async function DirectoryPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const params = await searchParams;
-  const keyword = single(params.keyword).toLowerCase().trim();
-  const location = single(params.location).toLowerCase().trim();
+  const keyword = single(params.keyword).trim();
+  const location = single(params.location).trim();
   const category = single(params.category).trim();
   const state = single(params.state).trim().toUpperCase();
-  const providers = await getProviders();
-  const filtered = providers.filter((provider) => {
-    const keywordText = [provider.name, provider.description, ...provider.categories, ...provider.levelsOfCare].filter(Boolean).join(" ").toLowerCase();
-    const locationText = [provider.city, provider.state, provider.postalCode, provider.address].filter(Boolean).join(" ").toLowerCase();
-    return (!keyword || keywordText.includes(keyword)) && (!location || locationText.includes(location)) && (!category || provider.categories.includes(category)) && (!state || provider.state === state);
-  });
+  const requestedPage = Math.max(Number.parseInt(single(params.page), 10) || 1, 1);
+  const result = await searchProviders({ keyword, location, category, state, page: requestedPage });
+  const paginationParams = Object.fromEntries(Object.entries({ keyword, location, category, state }).filter(([, value]) => value));
 
   return (
     <>
@@ -40,8 +42,8 @@ export default async function DirectoryPage({ searchParams }: { searchParams: Pr
           <button className="button" type="submit">Apply filters</button>
         </form>
         <section>
-          <div className="results-heading"><div><h1>{filtered.length ? `${filtered.length} published ${filtered.length === 1 ? "listing" : "listings"}` : "Published listings"}</h1><p>Only listings that pass publication review appear here.</p></div></div>
-          {filtered.length ? <div className="provider-list">{filtered.map((provider) => <ProviderCard key={provider.id} provider={provider} />)}</div> : <div className="empty-state"><SearchX size={36} /><h2>No matching reviewed listings yet</h2><p>We are building the directory carefully instead of publishing unverified placeholder records. Try another search or suggest an organization for review.</p><Link className="button" href="/providers/apply">Suggest an organization</Link></div>}
+          <div className="results-heading"><div><h1>{result.total ? `${result.total.toLocaleString()} published ${result.total === 1 ? "listing" : "listings"}` : "Published listings"}</h1><p>Listings are sourced from public directory data and clearly labeled until independently confirmed.</p></div></div>
+          {result.providers.length ? <><div className="provider-list">{result.providers.map((provider) => <ProviderCard key={provider.id} provider={provider} />)}</div><Pagination pathname="/directory" params={paginationParams} page={result.page} totalPages={result.totalPages} /></> : <div className="empty-state"><SearchX size={36} /><h2>No matching listings</h2><p>Try another search or suggest an organization for review.</p><Link className="button" href="/providers/apply">Suggest an organization</Link></div>}
         </section>
       </div>
     </>

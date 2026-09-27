@@ -1,4 +1,5 @@
 create extension if not exists pgcrypto;
+create extension if not exists pg_trgm;
 
 create table if not exists providers (
   id uuid primary key default gen_random_uuid(),
@@ -27,6 +28,14 @@ create table if not exists providers (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table providers add column if not exists source_key text;
+alter table providers add column if not exists email text;
+alter table providers add column if not exists intake_phone text;
+alter table providers add column if not exists latitude double precision;
+alter table providers add column if not exists longitude double precision;
+alter table providers add column if not exists source_data jsonb not null default '{}'::jsonb;
+alter table providers add column if not exists import_fingerprint text;
 
 create table if not exists provider_submissions (
   id uuid primary key default gen_random_uuid(),
@@ -71,6 +80,10 @@ create table if not exists contact_inquiries (
 create index if not exists providers_publication_idx on providers(publication_status);
 create index if not exists providers_state_city_idx on providers(state, city);
 create index if not exists providers_categories_gin on providers using gin(categories);
+create unique index if not exists providers_source_key_unique on providers(source_key) where source_key is not null;
+create index if not exists providers_name_trgm on providers using gin(name gin_trgm_ops);
+create index if not exists providers_city_trgm on providers using gin(city gin_trgm_ops);
+create index if not exists providers_address_trgm on providers using gin(address gin_trgm_ops);
 create index if not exists provider_submissions_created_idx on provider_submissions(created_at desc);
 create index if not exists correction_requests_created_idx on correction_requests(created_at desc);
 create index if not exists contact_inquiries_created_idx on contact_inquiries(created_at desc);

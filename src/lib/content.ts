@@ -79,6 +79,8 @@ const stateRows = [
   ["SC", "South Carolina"], ["SD", "South Dakota"], ["TN", "Tennessee"], ["TX", "Texas"],
   ["UT", "Utah"], ["VT", "Vermont"], ["VA", "Virginia"], ["WA", "Washington"],
   ["WV", "West Virginia"], ["WI", "Wisconsin"], ["WY", "Wyoming"],
+  ["AS", "American Samoa"], ["GU", "Guam"], ["MP", "Northern Mariana Islands"],
+  ["PR", "Puerto Rico"], ["VI", "U.S. Virgin Islands"],
 ] as const;
 
 export type State = { code: string; name: string; slug: string };

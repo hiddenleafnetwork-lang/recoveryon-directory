@@ -157,6 +157,10 @@ p { color: var(--ink-soft); }
 .results-heading h1 { font-size: 2.25rem; margin-bottom: 6px; }
 .results-heading p { margin: 0; }
 .provider-list { display: grid; gap: 15px; }
+.pagination { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 30px; }
+.pagination a, .pagination span { border: 1px solid var(--line); border-radius: 999px; padding: 9px 15px; background: var(--surface); }
+.pagination a { color: var(--ink); font-weight: 700; text-decoration: none; }
+.pagination span[aria-disabled="true"] { opacity: .45; }
 .provider-card { position: relative; display: grid; grid-template-columns: 70px 1fr; gap: 18px; padding: 22px; border: 1px solid var(--line); border-radius: 16px; }
 .provider-card-icon { width: 58px; height: 58px; display: grid; place-items: center; border-radius: 13px; color: var(--teal); background: var(--aqua); }
 .provider-card h2 { font-size: 1.25rem; margin: 7px 0 8px; }
