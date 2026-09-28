@@ -8,19 +8,27 @@ type ProviderRow = {
   id: string; name: string; slug: string; description: string | null; address: string | null;
   city: string; state: string; postal_code: string | null; phone: string | null; website: string | null;
   categories: string[] | null; levels_of_care: string[] | null; insurance: string[] | null;
+  insurance_details: string | null; treatment_types: string[] | null; therapies: string[] | null;
+  amenities: string[] | null; specialties: string[] | null; featured_image_url: string | null; image_urls: string[] | null;
+  price_range: string | null; treatment_duration: string | null; source_rating_value: number | string | null; source_rating_count: number | null;
   license_summary: string | null; accreditation: string[] | null; last_verified_at: string | null;
   source_url: string | null; updated_at: string; verification_status: Provider["verificationStatus"]; is_sponsored: boolean;
 };
 
 const providerColumns = `id, name, slug, description, address, city, state, postal_code, phone, website,
   categories, levels_of_care, insurance, license_summary, accreditation, last_verified_at,
-  verification_status, is_sponsored, source_url, updated_at`;
+  verification_status, is_sponsored, source_url, updated_at, featured_image_url, image_urls, treatment_types,
+  therapies, amenities, specialties, insurance_details, price_range, treatment_duration, source_rating_value, source_rating_count`;
 
 function toProvider(row: ProviderRow): Provider {
   return {
     id: row.id, name: row.name, slug: row.slug, description: row.description, address: row.address,
     city: row.city, state: row.state, postalCode: row.postal_code, phone: row.phone, website: row.website,
     categories: row.categories || [], levelsOfCare: row.levels_of_care || [], insurance: row.insurance || [],
+    insuranceDetails: row.insurance_details, treatmentTypes: row.treatment_types || [], therapies: row.therapies || [],
+    amenities: row.amenities || [], specialties: row.specialties || [], featuredImageUrl: row.featured_image_url,
+    imageUrls: row.image_urls || [], priceRange: row.price_range, treatmentDuration: row.treatment_duration,
+    sourceRatingValue: row.source_rating_value === null ? null : Number(row.source_rating_value), sourceRatingCount: row.source_rating_count,
     licenseSummary: row.license_summary, accreditation: row.accreditation || [], sourceUrl: row.source_url, lastVerifiedAt: row.last_verified_at,
     updatedAt: row.updated_at, verificationStatus: row.verification_status, isSponsored: row.is_sponsored,
   };
@@ -41,7 +49,7 @@ export async function searchProviders(input: ProviderSearch = {}): Promise<Provi
   const add = (value: unknown) => { params.push(value); return `$${params.length}`; };
   if (input.keyword?.trim()) {
     const term = add(`%${input.keyword.trim()}%`);
-    clauses.push(`(name ilike ${term} or description ilike ${term} or array_to_string(categories, ' ') ilike ${term} or array_to_string(levels_of_care, ' ') ilike ${term})`);
+    clauses.push(`(name ilike ${term} or description ilike ${term} or array_to_string(categories, ' ') ilike ${term} or array_to_string(levels_of_care, ' ') ilike ${term} or array_to_string(treatment_types, ' ') ilike ${term} or array_to_string(therapies, ' ') ilike ${term} or array_to_string(specialties, ' ') ilike ${term})`);
   }
   if (input.location?.trim()) {
     const term = add(`%${input.location.trim()}%`);

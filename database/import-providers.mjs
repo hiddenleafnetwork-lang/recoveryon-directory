@@ -85,6 +85,142 @@ function recoveryCategories(row) {
   return unique(values);
 }
 
+const TITLE_REPLACEMENTS = new Map([
+  ["1 on 1 counseling", "Individual counseling"], ["mat", "Medication-assisted treatment (MAT)"],
+  ["iop", "Intensive outpatient program (IOP)"], ["php", "Partial hospitalization program (PHP)"],
+]);
+
+function titleLabel(value) {
+  const label = clean(value).replaceAll("_", " ").replaceAll("-", " ").replace(/\s+/g, " ")
+    .replace(/\b\w/g, (character) => character.toUpperCase());
+  return TITLE_REPLACEMENTS.get(label.toLowerCase()) || label;
+}
+
+function parseListSentence(value, prefixPattern) {
+  let text = clean(value).replace(prefixPattern, "").replace(/[.]$/, "");
+  text = text.replace(/\s+(?:and\s+)?more$/i, "");
+  return unique(text.split(/\s*,\s*|\s+and\s+/i).map(titleLabel).filter((item) => item && item.toLowerCase() !== "more"));
+}
+
+function recoveryTypes(row) {
+  const types = [];
+  const direct = clean(row.treatment_type);
+  if (direct) types.push(titleLabel(direct));
+  types.push(...parseListSentence(row.levels_of_care, /^.*?\bprovides\s+/i));
+  return unique(types);
+}
+
+function recoveryTherapies(row) {
+  return parseListSentence(row.therapies, /^the following therapies are included:\s*/i);
+}
+
+const INSURANCE_PATTERNS = [
+  ["Blue Cross Blue Shield", /blue cross|blue shield|\bbcbs\b/i], ["UnitedHealthcare", /united\s*health|unitedhealthcare|\buhc\b/i],
+  ["Aetna", /\baetna\b/i], ["Anthem", /\banthem\b/i], ["Cigna", /\bcigna\b/i], ["Humana", /\bhumana\b/i],
+  ["Kaiser Permanente", /\bkaiser\b/i], ["Molina Healthcare", /\bmolina\b/i], ["WellCare", /\bwellcare\b/i],
+  ["CareSource", /\bcaresource\b/i], ["Amerigroup", /\bamerigroup\b/i], ["Optum", /\boptum\b/i],
+  ["Magellan", /\bmagellan\b/i], ["Beacon Health Options", /\bbeacon\b/i], ["Health Net", /\bhealth\s*net\b/i],
+  ["Highmark", /\bhighmark\b/i], ["Ambetter", /\bambetter\b/i], ["Oscar Health", /\boscar\b/i],
+  ["Oxford Health", /\boxford\b/i], ["UMR", /\bumr\b/i], ["GEHA", /\bgeha\b/i], ["ComPsych", /\bcompsych\b/i],
+  ["EmblemHealth", /\bemblem/i], ["Fidelis Care", /\bfidelis\b/i], ["Passport Health Plan", /\bpassport\b/i],
+  ["Medicare", /\bmedicare\b/i], ["Medicaid", /\bmedicaid\b/i], ["Medi-Cal", /\bmedi[ -]?cal\b/i],
+  ["TRICARE", /\btricare\b/i], ["VA Community Care", /\bva\s+(?:ccn|community care)\b/i],
+  ["Private insurance", /private|commercial insurance|major insurance/i], ["Cash or self-pay", /cash|self[- ]pay/i],
+];
+
+function recoveryInsurance(row) {
+  const text = clean(row.insurance);
+  return unique(INSURANCE_PATTERNS.filter(([, pattern]) => pattern.test(text)).map(([label]) => label));
+}
+
+function usefulInsuranceDetails(row) {
+  const text = clean(row.insurance);
+  if (!text || /admissions team will work with you to explore|please (?:call|contact).*insurance|we accept insurance\.?$/i.test(text)) return null;
+  return recoveryInsurance(row).length ? text : null;
+}
+
+const AMENITY_PATTERNS = [
+  ["Private rooms", /private (?:room|suite|accommodation)/i], ["Semi-private rooms", /semi[- ]private/i],
+  ["Luxury accommodations", /luxury|hotel[- ](?:style|like)|upscale/i], ["Swimming pool", /\bpool\b|swimming/i],
+  ["Fitness center", /fitness (?:center|facility)|\bgym\b/i], ["Spa", /\bspa\b/i], ["Sauna", /\bsauna\b/i],
+  ["Chef-prepared meals", /chef[- ]prepared|private chef|gourmet meal/i],
+  ["Outdoor spaces", /outdoor (?:space|area)|gardens?|walking trails?|nature setting/i],
+  ["Beach or waterfront access", /beach|oceanfront|waterfront/i], ["Pet friendly", /pet[- ]friendly|pets allowed/i],
+  ["Transportation assistance", /transportation (?:assistance|services?)|airport (?:pickup|transfer)/i],
+];
+
+function recoveryAmenities(row) {
+  const text = clean(row.description);
+  return AMENITY_PATTERNS.filter(([, pattern]) => pattern.test(text)).map(([label]) => label);
+}
+
+function cleanImages(row) {
+  const candidates = [row.featured_image, ...clean(row.all_images).split(/\s*\|\s*/)].map((value) => clean(value).replace(/\\$/, ""));
+  const used = new Set();
+  const images = [];
+  for (const candidate of candidates) {
+    if (!candidate.startsWith("https://res.cloudinary.com/rehabpath/image/upload/")) continue;
+    if (/\.svg(?:\?|$)|h_48,w_48|e_trim:10/i.test(candidate)) continue;
+    const assetKey = candidate.split("?")[0].split("/").at(-1)?.replace(/\.[^.]+$/, "");
+    if (!assetKey || used.has(assetKey)) continue;
+    used.add(assetKey);
+    images.push(candidate);
+    if (images.length === 8) break;
+  }
+  return images;
+}
+
+const SPECIALTY_LABELS = new Map([
+  ["dual diagnosis", "Co-occurring mental health and substance use"], ["detox focused", "Detox-focused"],
+  ["mental health treatment", "Mental health treatment"], ["substance use treatment", "Substance use treatment"],
+  ["mat capable", "Medication-assisted treatment"], ["telehealth friendly", "Telehealth available"],
+  ["adolescent", "Adolescents"], ["teen", "Teens"], ["veteran", "Veterans"], ["luxury", "Luxury setting"],
+]);
+
+function specialtiesFor(masterRow, recoveryRow) {
+  const tags = [clean(masterRow?.["Service Specialty Tags"]), clean(masterRow?.["Best For Tags Str"])].join("|")
+    .split("|").map(normalized).filter(Boolean);
+  const recoveryText = [recoveryRow?.description, recoveryRow?.levels_of_care].join(" ").toLowerCase();
+  if (/co-occurring|dual diagnosis/.test(recoveryText)) tags.push("dual diagnosis");
+  if (/adolescen|\bteen/.test(recoveryText)) tags.push("adolescent");
+  return unique(tags.map((tag) => SPECIALTY_LABELS.get(tag) || titleLabel(tag))).slice(0, 16);
+}
+
+function samhsaTherapies(row) {
+  const text = clean(row["Samhsa Service Codes Named"]);
+  const mappings = [
+    ["Cognitive behavioral therapy (CBT)", /\bCBT\b|cognitive behavioral/i], ["Dialectical behavior therapy (DBT)", /\bDBT\b|dialectical behavior/i],
+    ["Family therapy / psychoeducation", /family psychoeducation|family therap/i], ["Group therapy", /\bGT\b|group therap/i],
+    ["Individual counseling", /individual counsel/i], ["Motivational interviewing", /motivational interviewing/i],
+    ["Trauma-focused care", /trauma|\bPTSD\b/i], ["EMDR", /\bEMDR\b/i], ["Peer support", /\bPEER\b|peer support/i],
+    ["Medication-assisted treatment (MAT)", /buprenorphine|methadone|naltrexone|medication-assisted/i],
+  ];
+  return mappings.filter(([, pattern]) => pattern.test(text)).map(([label]) => label);
+}
+
+function detailsFromRecovery(row) {
+  const images = row ? cleanImages(row) : [];
+  const duration = clean(row?.treatment_duration).replace(/^the typical length is\s*/i, "").replace(/[.]$/, "");
+  const ratingValue = Number.parseFloat(clean(row?.rating_value));
+  const ratingCount = Number.parseInt(clean(row?.rating_count), 10);
+  return {
+    images, treatmentTypes: row ? recoveryTypes(row) : [], therapies: row ? recoveryTherapies(row) : [],
+    amenities: row ? recoveryAmenities(row) : [], insurance: row ? recoveryInsurance(row) : [],
+    insuranceDetails: row ? usefulInsuranceDetails(row) : null, priceRange: clean(row?.price_range) || null,
+    treatmentDuration: duration && duration.toLowerCase() !== "various" ? duration : null,
+    ratingValue: Number.isFinite(ratingValue) ? ratingValue : null, ratingCount: Number.isFinite(ratingCount) ? ratingCount : null,
+  };
+}
+
+function publicDescription(name, city, state, treatmentTypes, levels, therapies) {
+  const typeText = treatmentTypes.slice(0, 2).join(" and ").toLowerCase();
+  const levelText = levels.slice(0, 3).join(", ").toLowerCase();
+  const therapyText = therapies.slice(0, 2).join(" and ").toLowerCase();
+  return `${name} is listed in ${city}, ${state}${typeText ? ` as a ${typeText} resource` : " as a behavioral health, treatment, or recovery resource"}.` +
+    `${levelText ? ` Source data includes ${levelText}.` : ""}${therapyText ? ` Mentioned approaches include ${therapyText}.` : ""}` +
+    " Contact the organization directly to confirm current services, eligibility, availability, cost, and licensing.";
+}
+
 function inferredState(row, recoveryByUrl, stateMaps) {
   const direct = clean(row.State).toUpperCase();
   if (US_REGIONS.has(direct)) return direct;
@@ -152,6 +288,7 @@ const [masterText, recoveryText] = await Promise.all([readFile(masterPath, "utf8
 const masterRows = parse(masterText, { columns: true, bom: true, skip_empty_lines: true, relax_column_count: true });
 const recoveryRows = parse(recoveryText, { columns: true, bom: true, skip_empty_lines: true, relax_column_count: true });
 const recoveryByUrl = new Map(recoveryRows.map((row) => [clean(row.listing_url).replace(/\/$/, ""), row]).filter(([url]) => url));
+const recoveryRowNumberByUrl = new Map(recoveryRows.map((row, index) => [clean(row.listing_url).replace(/\/$/, ""), index + 2]).filter(([url]) => url));
 
 const zipSets = new Map();
 const prefixSets = new Map();
@@ -217,21 +354,34 @@ for (const [identity, items] of groups) {
   if (usedSlugs.has(slug) && usedSlugs.get(slug) !== sourceKey) slug = slugify(`${baseSlug}-${first.postalCode || hash(identity).slice(0, 7)}`);
   if (usedSlugs.has(slug) && usedSlugs.get(slug) !== sourceKey) slug = `${slug.slice(0, 91)}-${hash(identity).slice(0, 7)}`;
   usedSlugs.set(slug, sourceKey);
+  const recoveryKey = clean(row["Listing Url"]).replace(/\/$/, "");
+  const recoveryRow = recoveryKey ? recoveryByUrl.get(recoveryKey) : null;
+  const details = detailsFromRecovery(recoveryRow);
   const categories = categoriesFor(row);
-  const levels = levelsFor(row);
-  const insurance = insuranceFor(row);
+  const levels = unique([...levelsFor(row), ...details.treatmentTypes.filter((type) => !["Residential", "Outpatient", "Hospital", "Detox", "Virtual", "Sober Living", "Recovery Coach", "Interventionist"].includes(type))]);
+  const treatmentTypes = unique([...details.treatmentTypes, ...levelsFor(row)]);
+  const therapies = unique([...details.therapies, ...samhsaTherapies(row)]);
+  const insurance = unique([...insuranceFor(row), ...details.insurance]);
+  const amenities = details.amenities;
+  const specialties = specialtiesFor(row, recoveryRow);
   const sourceCount = clean(row["Source Count"]);
   const sourceNames = [clean(row["Samhsa In Su"]) === "Y" || clean(row["Samhsa In Mh"]) === "Y" ? "SAMHSA" : "", first.listingUrl ? "Recovery.com" : ""].filter(Boolean);
-  const description = `${first.name} is listed as a behavioral health, treatment, or recovery resource in ${first.city}, ${first.state}. Contact the organization directly to confirm services, eligibility, availability, cost, and licensing.`;
+  const description = publicDescription(first.name, first.city, first.state, treatmentTypes, levels, therapies);
   const sourceNotes = `Imported from ATC USA Master v2. Sources represented: ${sourceNames.join(" and ") || "public directory data"}. Match classification: ${clean(row["Match Confidence"]) || "not recorded"}; source count: ${sourceCount || "not recorded"}. Contact and service details have not been independently verified by TreatmentLane.`;
   const rawRows = items.map((item) => ({ sheetRow: item.rowNumber, ...item.row }));
-  const fingerprint = hash(JSON.stringify(rawRows));
+  const rawRecoveryRow = recoveryRow ? { sheetRow: recoveryRowNumberByUrl.get(recoveryKey), ...recoveryRow } : null;
+  const sourceData = { masterRows: rawRows, ...(rawRecoveryRow ? { recoveryRow: rawRecoveryRow } : {}) };
+  const fingerprint = hash(JSON.stringify(sourceData));
   providers.push({
     sourceKey, name: first.name, slug, description, address: first.address || null, city: first.city, state: first.state,
     postalCode: first.postalCode || null, phone: clean(row["Phone E164"] || row.Phone) || null, website: null,
-    categories, levels, insurance, licenseSummary: null, accreditation: [], sourceUrl: first.listingUrl,
+    categories, levels, insurance, treatmentTypes, therapies, amenities, specialties,
+    featuredImageUrl: details.images[0] || null, imageUrls: details.images, insuranceDetails: details.insuranceDetails,
+    priceRange: details.priceRange, treatmentDuration: details.treatmentDuration,
+    ratingValue: details.ratingValue, ratingCount: details.ratingCount,
+    licenseSummary: null, accreditation: [], sourceUrl: first.listingUrl,
     sourceNotes, intakePhone: clean(row["Intake Phone"]) || null, latitude: Number(row.Latitude) || null,
-    longitude: Number(row.Longitude) || null, sourceData: { masterRows: rawRows }, fingerprint,
+    longitude: Number(row.Longitude) || null, sourceData, fingerprint,
   });
 }
 
@@ -269,12 +419,20 @@ for (let index = 0; index < supplementalCandidates.length; index += 1) {
   namePhoneKeys.add(namePhoneKey);
   namePlaceKeys.add(namePlaceKey);
   if (location.address) addressKeys.add(addressKey);
-  const rawRow = { sheetRow: recoveryRows.indexOf(row) + 2, ...row };
+  const rawRow = { sheetRow: recoveryRowNumberByUrl.get(clean(row.listing_url).replace(/\/$/, "")), ...row };
+  const details = detailsFromRecovery(row);
+  const treatmentTypes = details.treatmentTypes;
+  const levels = treatmentTypes.filter((type) => !["Residential", "Outpatient", "Hospital", "Detox", "Virtual", "Sober Living", "Recovery Coach", "Interventionist"].includes(type));
+  const therapies = details.therapies;
   providers.push({
     sourceKey, name, slug,
-    description: `${name} is listed as a behavioral health, treatment, or recovery resource in ${location.city}, ${location.state}. Contact the organization directly to confirm services, eligibility, availability, cost, and licensing.`,
+    description: publicDescription(name, location.city, location.state, treatmentTypes, levels, therapies),
     address: location.address || null, city: location.city, state: location.state, postalCode: location.postalCode || null,
-    phone, website: null, categories: recoveryCategories(row), levels: [], insurance: [], licenseSummary: null,
+    phone, website: null, categories: recoveryCategories(row), levels, insurance: details.insurance,
+    treatmentTypes, therapies, amenities: details.amenities, specialties: specialtiesFor(null, row),
+    featuredImageUrl: details.images[0] || null, imageUrls: details.images, insuranceDetails: details.insuranceDetails,
+    priceRange: details.priceRange, treatmentDuration: details.treatmentDuration,
+    ratingValue: details.ratingValue, ratingCount: details.ratingCount, licenseSummary: null,
     accreditation: [], sourceUrl,
     sourceNotes: "Imported from the recovery_centers_usa source sheet as a U.S. location not already represented in the canonical Master sheet. Contact and service details have not been independently verified by TreatmentLane.",
     intakePhone: null, latitude: Number(row.latitude) || null, longitude: Number(row.longitude) || null,
@@ -296,6 +454,14 @@ const summary = {
   supplementalDuplicatesExcluded: supplementalDuplicates,
   supplementalUsProvidersAdded: providers.filter((item) => item.sourceKey.startsWith("recovery-supplement:" )).length,
   publishableProviders: providers.length,
+  listingsWithImages: providers.filter((item) => item.featuredImageUrl).length,
+  listingsWithInsurance: providers.filter((item) => item.insurance.length || item.insuranceDetails).length,
+  listingsWithTreatmentTypes: providers.filter((item) => item.treatmentTypes.length).length,
+  listingsWithTherapies: providers.filter((item) => item.therapies.length).length,
+  listingsWithAmenities: providers.filter((item) => item.amenities.length).length,
+  listingsWithPrices: providers.filter((item) => item.priceRange).length,
+  listingsWithDurations: providers.filter((item) => item.treatmentDuration).length,
+  listingsWithRatings: providers.filter((item) => item.ratingValue !== null).length,
   rejectedRows: rejected.length,
   inferredStateRows: prepared.filter((item) => !US_REGIONS.has(clean(item.row.State).toUpperCase())).length,
 };
@@ -313,6 +479,8 @@ const columns = [
   "name", "slug", "description", "address", "city", "state", "postal_code", "phone", "website", "categories",
   "levels_of_care", "insurance", "license_summary", "accreditation", "source_url", "source_notes", "verification_status",
   "publication_status", "is_sponsored", "source_key", "intake_phone", "latitude", "longitude", "source_data", "import_fingerprint",
+  "featured_image_url", "image_urls", "treatment_types", "therapies", "amenities", "specialties", "insurance_details",
+  "price_range", "treatment_duration", "source_rating_value", "source_rating_count",
 ];
 
 for (let offset = 0; offset < providers.length; offset += batchSize) {
@@ -324,6 +492,9 @@ for (let offset = 0; offset < providers.length; offset += batchSize) {
       provider.phone, provider.website, pgArray(provider.categories), pgArray(provider.levels), pgArray(provider.insurance),
       provider.licenseSummary, pgArray(provider.accreditation), provider.sourceUrl, provider.sourceNotes, "listed", "published", false,
       provider.sourceKey, provider.intakePhone, provider.latitude, provider.longitude, JSON.stringify(provider.sourceData), provider.fingerprint,
+      provider.featuredImageUrl, pgArray(provider.imageUrls), pgArray(provider.treatmentTypes), pgArray(provider.therapies),
+      pgArray(provider.amenities), pgArray(provider.specialties), provider.insuranceDetails, provider.priceRange,
+      provider.treatmentDuration, provider.ratingValue, provider.ratingCount,
     ];
     const start = params.length;
     params.push(...values);

@@ -36,6 +36,17 @@ alter table providers add column if not exists latitude double precision;
 alter table providers add column if not exists longitude double precision;
 alter table providers add column if not exists source_data jsonb not null default '{}'::jsonb;
 alter table providers add column if not exists import_fingerprint text;
+alter table providers add column if not exists featured_image_url text;
+alter table providers add column if not exists image_urls text[] not null default '{}';
+alter table providers add column if not exists treatment_types text[] not null default '{}';
+alter table providers add column if not exists therapies text[] not null default '{}';
+alter table providers add column if not exists amenities text[] not null default '{}';
+alter table providers add column if not exists specialties text[] not null default '{}';
+alter table providers add column if not exists insurance_details text;
+alter table providers add column if not exists price_range text;
+alter table providers add column if not exists treatment_duration text;
+alter table providers add column if not exists source_rating_value numeric(4, 2);
+alter table providers add column if not exists source_rating_count integer;
 
 create table if not exists provider_submissions (
   id uuid primary key default gen_random_uuid(),

@@ -12,6 +12,17 @@ export type Provider = {
   categories: string[];
   levelsOfCare: string[];
   insurance: string[];
+  insuranceDetails: string | null;
+  treatmentTypes: string[];
+  therapies: string[];
+  amenities: string[];
+  specialties: string[];
+  featuredImageUrl: string | null;
+  imageUrls: string[];
+  priceRange: string | null;
+  treatmentDuration: string | null;
+  sourceRatingValue: number | null;
+  sourceRatingCount: number | null;
   licenseSummary: string | null;
   accreditation: string[];
   sourceUrl: string | null;
