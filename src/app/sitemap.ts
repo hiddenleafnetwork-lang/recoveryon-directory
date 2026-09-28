@@ -14,6 +14,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...populatedCategories.map((item) => ({ url: absoluteUrl(`/care/${item.slug}`), lastModified: now, changeFrequency: "weekly" as const, priority: .7 })),
     ...populatedStates.map((state) => ({ url: absoluteUrl(`/locations/${state.slug}`), lastModified: now, changeFrequency: "weekly" as const, priority: .7 })),
     ...guides.map((guide) => ({ url: absoluteUrl(`/guides/${guide.slug}`), lastModified: new Date(guide.reviewedOn), changeFrequency: "monthly" as const, priority: .8 })),
-    ...providers.map((provider) => ({ url: absoluteUrl(`/providers/${provider.slug}`), lastModified: new Date(provider.updatedAt), changeFrequency: "weekly" as const, priority: .8 })),
+    ...providers.map((provider) => ({ url: absoluteUrl(`/providers/${provider.organizationSlug}/${provider.locationSlug}`), lastModified: new Date(provider.updatedAt), changeFrequency: "weekly" as const, priority: .8 })),
   ];
 }

@@ -221,6 +221,75 @@ function publicDescription(name, city, state, treatmentTypes, levels, therapies)
     " Contact the organization directly to confirm current services, eligibility, availability, cost, and licensing.";
 }
 
+function evidenceScoreFor(provider) {
+  let score = 0;
+  const sourceCount = Number(provider.sourceData?.masterRows?.[0]?.["Source Count"] || 0);
+  if (/\bSAMHSA\b/i.test(provider.sourceNotes || "")) score += 30;
+  if (sourceCount >= 2) score += 10;
+  if (provider.address) score += 5;
+  if (provider.phone) score += 5;
+  if (provider.sourceUrl) score += 5;
+  if (provider.treatmentTypes.length) score += 10;
+  if (provider.therapies.length) score += 5;
+  if (provider.specialties.length) score += 5;
+  if (provider.insurance.length || provider.insuranceDetails) score += 5;
+  if (provider.featuredImageUrl) score += 5;
+  if (provider.priceRange || provider.treatmentDuration || provider.amenities.length) score += 5;
+  if (provider.ratingValue !== null && provider.ratingCount) {
+    const adjustedRating = (provider.ratingCount / (provider.ratingCount + 25)) * provider.ratingValue +
+      (25 / (provider.ratingCount + 25)) * 4;
+    score += Math.round((adjustedRating / 5) * 10);
+  }
+  return Math.min(score, 100);
+}
+
+function assignCanonicalFields(items) {
+  const organizationNames = new Map();
+  for (const provider of items) {
+    const nameKey = normalized(provider.name);
+    let organizationSlug = slugify(provider.name);
+    const existingName = organizationNames.get(organizationSlug);
+    if (existingName && existingName !== nameKey) organizationSlug = `${organizationSlug.slice(0, 84)}-${hash(nameKey).slice(0, 7)}`;
+    organizationNames.set(organizationSlug, nameKey);
+    provider.organizationSlug = organizationSlug;
+  }
+
+  const organizations = new Map();
+  for (const provider of items) {
+    const group = organizations.get(provider.organizationSlug) || [];
+    group.push(provider);
+    organizations.set(provider.organizationSlug, group);
+  }
+
+  for (const group of organizations.values()) {
+    const cityCounts = new Map();
+    const cityStateCounts = new Map();
+    const cityStateZipCounts = new Map();
+    for (const provider of group) {
+      const city = slugify(provider.city);
+      const cityState = slugify(`${provider.city}-${provider.state}`);
+      const cityStateZip = slugify(`${provider.city}-${provider.state}-${provider.postalCode || "location"}`);
+      cityCounts.set(city, (cityCounts.get(city) || 0) + 1);
+      cityStateCounts.set(cityState, (cityStateCounts.get(cityState) || 0) + 1);
+      cityStateZipCounts.set(cityStateZip, (cityStateZipCounts.get(cityStateZip) || 0) + 1);
+    }
+    const used = new Set();
+    for (const provider of group) {
+      const city = slugify(provider.city);
+      const cityState = slugify(`${provider.city}-${provider.state}`);
+      const cityStateZip = slugify(`${provider.city}-${provider.state}-${provider.postalCode || "location"}`);
+      let locationSlug = cityCounts.get(city) === 1 ? city : cityState;
+      if (cityStateCounts.get(cityState) > 1) locationSlug = cityStateZip;
+      if (cityStateZipCounts.get(cityStateZip) > 1 || used.has(locationSlug)) {
+        locationSlug = `${locationSlug.slice(0, 84)}-${hash(provider.sourceKey).slice(0, 7)}`;
+      }
+      used.add(locationSlug);
+      provider.locationSlug = locationSlug;
+      provider.evidenceScore = evidenceScoreFor(provider);
+    }
+  }
+}
+
 function inferredState(row, recoveryByUrl, stateMaps) {
   const direct = clean(row.State).toUpperCase();
   if (US_REGIONS.has(direct)) return direct;
@@ -440,6 +509,18 @@ for (let index = 0; index < supplementalCandidates.length; index += 1) {
   });
 }
 
+assignCanonicalFields(providers);
+
+const canonicalPathCounts = new Map();
+for (const provider of providers) {
+  const path = `${provider.organizationSlug}/${provider.locationSlug}`;
+  canonicalPathCounts.set(path, (canonicalPathCounts.get(path) || 0) + 1);
+}
+const canonicalPathConflicts = [...canonicalPathCounts].filter(([, count]) => count > 1);
+if (canonicalPathConflicts.length) {
+  throw new Error(`Canonical provider URL collision: ${JSON.stringify(canonicalPathConflicts.slice(0, 10))}`);
+}
+
 const duplicateGroups = [...groups.values()].filter((group) => group.length > 1);
 const summary = {
   masterRows: masterRows.length,
@@ -454,6 +535,8 @@ const summary = {
   supplementalDuplicatesExcluded: supplementalDuplicates,
   supplementalUsProvidersAdded: providers.filter((item) => item.sourceKey.startsWith("recovery-supplement:" )).length,
   publishableProviders: providers.length,
+  uniqueCanonicalProviderUrls: canonicalPathCounts.size,
+  canonicalProviderUrlConflicts: canonicalPathConflicts.length,
   listingsWithImages: providers.filter((item) => item.featuredImageUrl).length,
   listingsWithInsurance: providers.filter((item) => item.insurance.length || item.insuranceDetails).length,
   listingsWithTreatmentTypes: providers.filter((item) => item.treatmentTypes.length).length,
@@ -481,6 +564,7 @@ const columns = [
   "publication_status", "is_sponsored", "source_key", "intake_phone", "latitude", "longitude", "source_data", "import_fingerprint",
   "featured_image_url", "image_urls", "treatment_types", "therapies", "amenities", "specialties", "insurance_details",
   "price_range", "treatment_duration", "source_rating_value", "source_rating_count",
+  "organization_slug", "location_slug", "evidence_score",
 ];
 
 for (let offset = 0; offset < providers.length; offset += batchSize) {
@@ -495,6 +579,7 @@ for (let offset = 0; offset < providers.length; offset += batchSize) {
       provider.featuredImageUrl, pgArray(provider.imageUrls), pgArray(provider.treatmentTypes), pgArray(provider.therapies),
       pgArray(provider.amenities), pgArray(provider.specialties), provider.insuranceDetails, provider.priceRange,
       provider.treatmentDuration, provider.ratingValue, provider.ratingCount,
+      provider.organizationSlug, provider.locationSlug, provider.evidenceScore,
     ];
     const start = params.length;
     params.push(...values);

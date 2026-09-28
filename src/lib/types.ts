@@ -2,6 +2,8 @@ export type Provider = {
   id: string;
   name: string;
   slug: string;
+  organizationSlug: string;
+  locationSlug: string;
   description: string | null;
   address: string | null;
   city: string;
@@ -23,11 +25,12 @@ export type Provider = {
   treatmentDuration: string | null;
   sourceRatingValue: number | null;
   sourceRatingCount: number | null;
+  evidenceScore: number;
   licenseSummary: string | null;
   accreditation: string[];
   sourceUrl: string | null;
   lastVerifiedAt: string | null;
   updatedAt: string;
-  verificationStatus: "listed" | "provider-confirmed" | "independently-reviewed";
+  verificationStatus: "listed" | "data-verified" | "provider-confirmed" | "independently-reviewed";
   isSponsored: boolean;
 };

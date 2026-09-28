@@ -47,6 +47,41 @@ alter table providers add column if not exists price_range text;
 alter table providers add column if not exists treatment_duration text;
 alter table providers add column if not exists source_rating_value numeric(4, 2);
 alter table providers add column if not exists source_rating_count integer;
+alter table providers add column if not exists organization_slug text;
+alter table providers add column if not exists location_slug text;
+alter table providers add column if not exists evidence_score integer not null default 0
+  check (evidence_score between 0 and 100);
+
+alter table providers drop constraint if exists providers_verification_status_check;
+alter table providers add constraint providers_verification_status_check
+  check (verification_status in ('listed', 'data-verified', 'provider-confirmed', 'independently-reviewed'));
+
+create table if not exists provider_source_records (
+  id uuid primary key default gen_random_uuid(),
+  provider_id uuid not null references providers(id) on delete cascade,
+  source_type text not null,
+  external_id text,
+  source_url text,
+  fetched_at timestamptz not null default now(),
+  field_data jsonb not null default '{}'::jsonb,
+  payload_hash text,
+  match_confidence numeric(5, 4),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (provider_id, source_type, external_id)
+);
+
+create table if not exists provider_verification_checks (
+  id uuid primary key default gen_random_uuid(),
+  provider_id uuid not null references providers(id) on delete cascade,
+  check_type text not null,
+  status text not null check (status in ('pass', 'fail', 'conflict', 'not-applicable')),
+  source_url text,
+  checked_at timestamptz not null default now(),
+  expires_at timestamptz,
+  evidence jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now()
+);
 
 create table if not exists provider_submissions (
   id uuid primary key default gen_random_uuid(),
@@ -95,6 +130,14 @@ create unique index if not exists providers_source_key_unique on providers(sourc
 create index if not exists providers_name_trgm on providers using gin(name gin_trgm_ops);
 create index if not exists providers_city_trgm on providers using gin(city gin_trgm_ops);
 create index if not exists providers_address_trgm on providers using gin(address gin_trgm_ops);
+create unique index if not exists providers_canonical_path_unique
+  on providers(organization_slug, location_slug)
+  where organization_slug is not null and location_slug is not null;
+create index if not exists providers_recommended_order_idx
+  on providers(verification_status, evidence_score desc, source_rating_count desc)
+  where publication_status = 'published';
+create index if not exists provider_source_records_provider_idx on provider_source_records(provider_id, source_type);
+create index if not exists provider_verification_checks_provider_idx on provider_verification_checks(provider_id, checked_at desc);
 create index if not exists provider_submissions_created_idx on provider_submissions(created_at desc);
 create index if not exists correction_requests_created_idx on correction_requests(created_at desc);
 create index if not exists contact_inquiries_created_idx on contact_inquiries(created_at desc);

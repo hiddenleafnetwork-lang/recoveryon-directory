@@ -5,24 +5,28 @@ import { getDatabase } from "@/lib/db";
 import type { Provider } from "@/lib/types";
 
 type ProviderRow = {
-  id: string; name: string; slug: string; description: string | null; address: string | null;
+  id: string; name: string; slug: string; organization_slug: string; location_slug: string;
+  description: string | null; address: string | null;
   city: string; state: string; postal_code: string | null; phone: string | null; website: string | null;
   categories: string[] | null; levels_of_care: string[] | null; insurance: string[] | null;
   insurance_details: string | null; treatment_types: string[] | null; therapies: string[] | null;
   amenities: string[] | null; specialties: string[] | null; featured_image_url: string | null; image_urls: string[] | null;
   price_range: string | null; treatment_duration: string | null; source_rating_value: number | string | null; source_rating_count: number | null;
   license_summary: string | null; accreditation: string[] | null; last_verified_at: string | null;
-  source_url: string | null; updated_at: string; verification_status: Provider["verificationStatus"]; is_sponsored: boolean;
+  source_url: string | null; updated_at: string; evidence_score: number;
+  verification_status: Provider["verificationStatus"]; is_sponsored: boolean;
 };
 
-const providerColumns = `id, name, slug, description, address, city, state, postal_code, phone, website,
+const providerColumns = `id, name, slug, organization_slug, location_slug, description, address, city, state, postal_code, phone, website,
   categories, levels_of_care, insurance, license_summary, accreditation, last_verified_at,
   verification_status, is_sponsored, source_url, updated_at, featured_image_url, image_urls, treatment_types,
-  therapies, amenities, specialties, insurance_details, price_range, treatment_duration, source_rating_value, source_rating_count`;
+  therapies, amenities, specialties, insurance_details, price_range, treatment_duration, source_rating_value, source_rating_count,
+  evidence_score`;
 
 function toProvider(row: ProviderRow): Provider {
   return {
-    id: row.id, name: row.name, slug: row.slug, description: row.description, address: row.address,
+    id: row.id, name: row.name, slug: row.slug, organizationSlug: row.organization_slug, locationSlug: row.location_slug,
+    description: row.description, address: row.address,
     city: row.city, state: row.state, postalCode: row.postal_code, phone: row.phone, website: row.website,
     categories: row.categories || [], levelsOfCare: row.levels_of_care || [], insurance: row.insurance || [],
     insuranceDetails: row.insurance_details, treatmentTypes: row.treatment_types || [], therapies: row.therapies || [],
@@ -30,19 +34,40 @@ function toProvider(row: ProviderRow): Provider {
     imageUrls: row.image_urls || [], priceRange: row.price_range, treatmentDuration: row.treatment_duration,
     sourceRatingValue: row.source_rating_value === null ? null : Number(row.source_rating_value), sourceRatingCount: row.source_rating_count,
     licenseSummary: row.license_summary, accreditation: row.accreditation || [], sourceUrl: row.source_url, lastVerifiedAt: row.last_verified_at,
-    updatedAt: row.updated_at, verificationStatus: row.verification_status, isSponsored: row.is_sponsored,
+    updatedAt: row.updated_at, evidenceScore: row.evidence_score, verificationStatus: row.verification_status,
+    isSponsored: row.is_sponsored,
   };
 }
 
+export type ProviderSort = "recommended" | "recently-verified" | "most-reviewed" | "highest-rated" | "alphabetical";
+
 export type ProviderSearch = {
-  keyword?: string; location?: string; category?: string; state?: string; page?: number; pageSize?: number;
+  keyword?: string; location?: string; category?: string; state?: string; sort?: ProviderSort; page?: number; pageSize?: number;
 };
 export type ProviderSearchResult = { providers: Provider[]; total: number; page: number; totalPages: number };
+
+const orderBy: Record<ProviderSort, string> = {
+  recommended: `case verification_status
+      when 'independently-reviewed' then 3
+      when 'provider-confirmed' then 2
+      when 'data-verified' then 1
+      else 0 end desc,
+    evidence_score desc, source_rating_count desc nulls last, name, city, id`,
+  "recently-verified": "last_verified_at desc nulls last, evidence_score desc, name, city, id",
+  "most-reviewed": "source_rating_count desc nulls last, source_rating_value desc nulls last, evidence_score desc, name, city, id",
+  "highest-rated": "source_rating_value desc nulls last, source_rating_count desc nulls last, evidence_score desc, name, city, id",
+  alphabetical: "name, city, id",
+};
+
+export function providerPath(provider: Pick<Provider, "organizationSlug" | "locationSlug">) {
+  return `/providers/${provider.organizationSlug}/${provider.locationSlug}`;
+}
 
 export async function searchProviders(input: ProviderSearch = {}): Promise<ProviderSearchResult> {
   const sql = getDatabase();
   const pageSize = Math.min(Math.max(input.pageSize || 24, 1), 100);
   const requestedPage = Math.max(input.page || 1, 1);
+  const sort = input.sort && input.sort in orderBy ? input.sort : "recommended";
   if (!sql) return { providers: [], total: 0, page: 1, totalPages: 0 };
   const clauses = ["publication_status = 'published'"];
   const params: unknown[] = [];
@@ -65,7 +90,7 @@ export async function searchProviders(input: ProviderSearch = {}): Promise<Provi
     const page = totalPages ? Math.min(requestedPage, totalPages) : 1;
     const rows = await sql.query(
       `select ${providerColumns} from providers where ${where}
-       order by is_sponsored desc, name, city, id limit $${params.length + 1} offset $${params.length + 2}`,
+       order by ${orderBy[sort]} limit $${params.length + 1} offset $${params.length + 2}`,
       [...params, pageSize, (page - 1) * pageSize],
     );
     return { providers: (rows as ProviderRow[]).map(toProvider), total, page, totalPages };
@@ -74,13 +99,40 @@ export async function searchProviders(input: ProviderSearch = {}): Promise<Provi
   }
 }
 
-export const getProviderBySlug = cache(async (slug: string): Promise<Provider | null> => {
+export const getProviderByLegacySlug = cache(async (slug: string): Promise<Provider | null> => {
   const sql = getDatabase();
   if (!sql) return null;
   try {
     const rows = await sql.query(`select ${providerColumns} from providers where slug = $1 and publication_status = 'published' limit 1`, [slug]);
     return rows[0] ? toProvider(rows[0] as ProviderRow) : null;
   } catch { return null; }
+});
+
+export const getProviderByCanonicalPath = cache(async (organizationSlug: string, locationSlug: string): Promise<Provider | null> => {
+  const sql = getDatabase();
+  if (!sql) return null;
+  try {
+    const rows = await sql.query(
+      `select ${providerColumns} from providers
+       where organization_slug = $1 and location_slug = $2 and publication_status = 'published' limit 1`,
+      [organizationSlug, locationSlug],
+    );
+    return rows[0] ? toProvider(rows[0] as ProviderRow) : null;
+  } catch { return null; }
+});
+
+export const getProvidersByOrganizationSlug = cache(async (organizationSlug: string): Promise<Provider[]> => {
+  const sql = getDatabase();
+  if (!sql) return [];
+  try {
+    const rows = await sql.query(
+      `select ${providerColumns} from providers
+       where organization_slug = $1 and publication_status = 'published'
+       order by ${orderBy.recommended}`,
+      [organizationSlug],
+    );
+    return (rows as ProviderRow[]).map(toProvider);
+  } catch { return []; }
 });
 
 export async function hasPublishedProviders(filter: { state?: string; category?: string }) {
@@ -101,10 +153,14 @@ export async function getDirectoryFacets() {
 
 export async function getSitemapProviders() {
   const sql = getDatabase();
-  if (!sql) return [] as Array<{ slug: string; updatedAt: string }>;
+  if (!sql) return [] as Array<{ organizationSlug: string; locationSlug: string; updatedAt: string }>;
   try {
-    const rows = await sql`select slug, updated_at from providers
-      where publication_status = 'published' and verification_status <> 'listed' order by slug`;
-    return rows.map((row) => ({ slug: String(row.slug), updatedAt: String(row.updated_at) }));
-  } catch { return [] as Array<{ slug: string; updatedAt: string }>; }
+    const rows = await sql`select organization_slug, location_slug, updated_at from providers
+      where publication_status = 'published' and verification_status <> 'listed'
+        and organization_slug is not null and location_slug is not null
+      order by organization_slug, location_slug`;
+    return rows.map((row) => ({
+      organizationSlug: String(row.organization_slug), locationSlug: String(row.location_slug), updatedAt: String(row.updated_at),
+    }));
+  } catch { return [] as Array<{ organizationSlug: string; locationSlug: string; updatedAt: string }>; }
 }
