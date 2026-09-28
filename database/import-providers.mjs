@@ -29,7 +29,7 @@ const STATE_NAMES = new Map(Object.entries({
   "Northern Mariana Islands": "MP", "Puerto Rico": "PR", "U.S. Virgin Islands": "VI",
 }).map(([name, code]) => [name.toLowerCase(), code]));
 
-const clean = (value) => String(value || "").trim();
+const clean = (value) => String(value || "").replaceAll("\u2014", "-").trim();
 const normalized = (value) => clean(value).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const zip5 = (value) => clean(value).match(/\b\d{5}\b/)?.[0] || "";
 const recoveryZip = (value) => {
@@ -575,7 +575,8 @@ for (let offset = 0; offset < providers.length; offset += batchSize) {
       provider.name, provider.slug, provider.description, provider.address, provider.city, provider.state, provider.postalCode,
       provider.phone, provider.website, pgArray(provider.categories), pgArray(provider.levels), pgArray(provider.insurance),
       provider.licenseSummary, pgArray(provider.accreditation), provider.sourceUrl, provider.sourceNotes, "listed", "published", false,
-      provider.sourceKey, provider.intakePhone, provider.latitude, provider.longitude, JSON.stringify(provider.sourceData), provider.fingerprint,
+      provider.sourceKey, provider.intakePhone, provider.latitude, provider.longitude,
+      JSON.stringify(provider.sourceData).replaceAll("\u2014", "-"), provider.fingerprint,
       provider.featuredImageUrl, pgArray(provider.imageUrls), pgArray(provider.treatmentTypes), pgArray(provider.therapies),
       pgArray(provider.amenities), pgArray(provider.specialties), provider.insuranceDetails, provider.priceRange,
       provider.treatmentDuration, provider.ratingValue, provider.ratingCount,

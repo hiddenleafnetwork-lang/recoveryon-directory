@@ -10,7 +10,7 @@ const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], display: "swap", variabl
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: `${SITE_NAME} — Find recovery and treatment resources`, template: `%s | ${SITE_NAME}` },
+  title: { default: `${SITE_NAME}: Find recovery and treatment resources`, template: `%s | ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
   alternates: { canonical: "/" },

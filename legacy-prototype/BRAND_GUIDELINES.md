@@ -1,4 +1,4 @@
-# TreatmentLane Directory — Brand Guidelines & Design System
+# TreatmentLane Directory - Brand Guidelines & Design System
 
 This document outlines the official brand identity, color systems, typography rules, component specifications, and layout structures for the **TreatmentLane Directory** platform. All future page developments, subpages, digital assets, and social media creatives must adhere to these guidelines to maintain a premium, trustworthy, and minimal visual language.
 

@@ -1,4 +1,4 @@
-# TreatmentLane Directory — Admin Dashboard Guide
+# TreatmentLane Directory - Admin Dashboard Guide
 
 This comprehensive guide covers the design, architecture, database schemas, security configurations, and operations for TreatmentLane’s internal management interface.
 
