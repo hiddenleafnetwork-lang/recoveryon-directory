@@ -35,7 +35,8 @@ const draftSchema = z.object({
   secondary_keywords: z.array(z.string().trim().min(2).max(180)).max(30).default([]),
   category: z.string().trim().min(2).max(120),
   author_name: z.string().trim().min(2).max(120).default("TreatmentLane Editorial Team"),
-  reviewer_required: z.literal(true),
+  reviewer_required: z.boolean().default(false),
+  automated_quality_gate_passed: z.boolean().optional(),
   article_blocks: z.array(articleBlockSchema).min(1).max(200),
   faq: z.array(faqSchema).max(12).default([]),
   sources: z.array(sourceSchema).min(1).max(50),
@@ -44,8 +45,16 @@ const draftSchema = z.object({
   image_alt: z.string().trim().min(5).max(300),
   thumbnail_base64: z.string().min(20).max(12_000_000).optional(),
   suggested_publish_at: z.string().datetime().optional(),
-  status: z.literal("needs_medical_review"),
-}).passthrough();
+  status: z.enum(["needs_medical_review", "published"]),
+}).passthrough().superRefine((value, context) => {
+  if (value.status === "published" && value.automated_quality_gate_passed !== true) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["automated_quality_gate_passed"],
+      message: "Direct publication requires a passed automated quality gate",
+    });
+  }
+});
 
 function unauthorized() {
   return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -60,15 +69,17 @@ export async function POST(request: Request) {
   const sql = getDatabase();
   if (!sql) return NextResponse.json({ message: "Database unavailable" }, { status: 503 });
   const { thumbnail_base64: thumbnailBase64, ...payload } = parsed.data;
+  const publicationStatus = payload.status;
   const rows = await sql`insert into content_articles
     (content_unit_id, idempotency_key, slug, title, excerpt, seo_title, meta_description,
      primary_keyword, secondary_keywords, category, author_name, payload, thumbnail_base64,
-     status, scheduled_at)
+     status, scheduled_at, published_at)
     values (${payload.content_unit_id}, ${idempotencyKey}, ${payload.slug}, ${payload.title},
       ${payload.excerpt}, ${payload.seo_title}, ${payload.meta_description}, ${payload.primary_keyword},
       ${payload.secondary_keywords}, ${payload.category}, ${payload.author_name},
-      ${JSON.stringify(payload)}::jsonb, ${thumbnailBase64 || null}, 'needs_medical_review',
-      ${payload.suggested_publish_at || null})
+      ${JSON.stringify(payload)}::jsonb, ${thumbnailBase64 || null}, ${publicationStatus},
+      ${payload.suggested_publish_at || null},
+      ${publicationStatus === "published" ? new Date().toISOString() : null})
     on conflict (idempotency_key) do nothing
     returning id, slug, status, scheduled_at`;
   if (rows[0]) return NextResponse.json({ article: rows[0], created: true }, { status: 201 });
