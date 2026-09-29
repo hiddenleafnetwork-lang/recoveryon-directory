@@ -34,14 +34,15 @@ export function ContactForm() {
     setStatus("success");
   }
 
-  if (status === "success") return <div className="success-panel"><CheckCircle2 size={32} /><h2>Message received</h2><p>Thank you. We will review your message and respond when a reply is needed.</p></div>;
+  if (status === "success") return <div className="success-panel" role="status"><CheckCircle2 size={32} /><h2>Message received</h2><p>Thank you. We will review your message and respond when a reply is needed.</p></div>;
 
   return <form className="form-card" onSubmit={submit}>
+    <p className="form-required-note"><span className="required-mark" aria-hidden="true">*</span> Required fields</p>
     <div className="form-grid">
-      <label>Your name<input name="name" required maxLength={120} /></label>
-      <label>Email<input name="email" type="email" required maxLength={200} /></label>
-      <label className="full-field">Topic<select name="topic" required defaultValue=""><option value="" disabled>Select one</option><option value="general">General question</option><option value="provider">Provider listing</option><option value="partnership">Partnership or media</option><option value="privacy">Privacy request</option><option value="other">Other</option></select></label>
-      <label className="full-field">Message<textarea name="message" required rows={6} maxLength={3000} /></label>
+      <label><span className="field-label">Your name <span className="required-mark" aria-hidden="true">*</span></span><input name="name" required maxLength={120} /></label>
+      <label><span className="field-label">Email <span className="required-mark" aria-hidden="true">*</span></span><input name="email" type="email" required maxLength={200} /></label>
+      <label className="full-field"><span className="field-label">Topic <span className="required-mark" aria-hidden="true">*</span></span><select name="topic" required defaultValue=""><option value="" disabled>Select one</option><option value="general">General question</option><option value="provider">Provider listing</option><option value="partnership">Partnership or media</option><option value="privacy">Privacy request</option><option value="other">Other</option></select></label>
+      <label className="full-field"><span className="field-label">Message <span className="required-mark" aria-hidden="true">*</span></span><textarea name="message" required rows={6} maxLength={3000} /></label>
       <label className="honeypot" aria-hidden="true">Leave this empty<input name="companyFax" tabIndex={-1} autoComplete="off" /></label>
     </div>
     {status === "error" && <p className="form-error" role="alert">{message}</p>}

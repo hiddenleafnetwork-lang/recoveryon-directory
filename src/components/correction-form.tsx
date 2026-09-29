@@ -34,15 +34,16 @@ export function CorrectionForm({ providerSlug = "" }: { providerSlug?: string })
     setStatus("success");
   }
 
-  if (status === "success") return <div className="success-panel"><CheckCircle2 size={32} /><h2>Correction received</h2><p>We will review the request against provider and public-source information before making a change.</p></div>;
+  if (status === "success") return <div className="success-panel" role="status"><CheckCircle2 size={32} /><h2>Correction received</h2><p>We will review the request against provider and public-source information before making a change.</p></div>;
 
   return <form className="form-card" onSubmit={submit}>
+    <p className="form-required-note"><span className="required-mark" aria-hidden="true">*</span> Required fields</p>
     <div className="form-grid">
-      <label>Your name<input name="requesterName" required maxLength={120} /></label>
-      <label>Email<input name="requesterEmail" type="email" required maxLength={200} /></label>
-      <label className="full-field">Provider name or listing URL<input name="providerSlug" defaultValue={providerSlug} maxLength={300} placeholder="Organization name or TreatmentLane listing URL" /></label>
-      <label className="full-field">What should be corrected?<textarea name="details" required rows={6} maxLength={3000} placeholder="Describe the current information, the requested correction, and how it can be verified." /></label>
-      <label className="full-field">Supporting source URL<input name="sourceUrl" type="url" maxLength={500} placeholder="https://" /></label>
+      <label><span className="field-label">Your name <span className="required-mark" aria-hidden="true">*</span></span><input name="requesterName" required maxLength={120} /></label>
+      <label><span className="field-label">Email <span className="required-mark" aria-hidden="true">*</span></span><input name="requesterEmail" type="email" required maxLength={200} /></label>
+      <label className="full-field"><span className="field-label">Provider name or listing URL <span className="optional-label">(optional)</span></span><input name="providerSlug" defaultValue={providerSlug} maxLength={300} placeholder="Organization name or TreatmentLane listing URL" /></label>
+      <label className="full-field"><span className="field-label">What should be corrected? <span className="required-mark" aria-hidden="true">*</span></span><textarea name="details" required rows={6} maxLength={3000} placeholder="Describe the current information, the requested correction, and how it can be verified." /></label>
+      <label className="full-field"><span className="field-label">Supporting source URL <span className="optional-label">(optional)</span></span><input name="sourceUrl" type="url" maxLength={500} placeholder="https://" /></label>
       <label className="honeypot" aria-hidden="true">Leave this empty<input name="companyFax" tabIndex={-1} autoComplete="off" /></label>
     </div>
     {status === "error" && <p className="form-error" role="alert">{message}</p>}
