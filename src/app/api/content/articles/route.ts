@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { isContentApiAuthorized } from "@/lib/articles";
 import { getDatabase } from "@/lib/db";
@@ -82,7 +83,11 @@ export async function POST(request: Request) {
       ${publicationStatus === "published" ? new Date().toISOString() : null})
     on conflict (idempotency_key) do nothing
     returning id, slug, status, scheduled_at`;
-  if (rows[0]) return NextResponse.json({ article: rows[0], created: true }, { status: 201 });
+  if (rows[0]) {
+    revalidatePath("/guides");
+    revalidatePath(`/guides/${payload.slug}`);
+    return NextResponse.json({ article: rows[0], created: true }, { status: 201 });
+  }
   const existing = await sql`select id, slug, status, scheduled_at from content_articles
     where idempotency_key = ${idempotencyKey} limit 1`;
   return NextResponse.json({ article: existing[0], created: false }, { status: 200 });
