@@ -309,3 +309,9 @@ p { color: var(--ink-soft); }
   .form-grid { grid-template-columns: 1fr; }
   .full-field { grid-column: auto; }
 }
+
+.article-byline { font-size: .84rem !important; }
+.article-thumbnail { width: 100%; height: auto; margin-bottom: 30px; border: 1px solid var(--line); border-radius: 18px; }
+.article-faq { padding: 20px 0; border-bottom: 1px solid var(--line); }
+.article-faq h3 { margin: 0 0 8px; }
+.article-faq p { margin-bottom: 0; }

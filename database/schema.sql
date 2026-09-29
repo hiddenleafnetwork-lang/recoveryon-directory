@@ -123,6 +123,33 @@ create table if not exists contact_inquiries (
   created_at timestamptz not null default now()
 );
 
+create table if not exists content_articles (
+  id uuid primary key default gen_random_uuid(),
+  content_unit_id text not null unique,
+  idempotency_key text not null unique,
+  slug text not null unique,
+  title text not null,
+  excerpt text not null,
+  seo_title text not null,
+  meta_description text not null,
+  primary_keyword text not null,
+  secondary_keywords text[] not null default '{}',
+  category text not null,
+  author_name text not null default 'TreatmentLane Editorial Team',
+  payload jsonb not null default '{}'::jsonb,
+  thumbnail_base64 text,
+  thumbnail_mime_type text not null default 'image/webp',
+  status text not null default 'needs_medical_review'
+    check (status in ('needs_medical_review', 'approved', 'published', 'rejected', 'archived')),
+  reviewer_name text,
+  reviewer_credentials text,
+  reviewed_at timestamptz,
+  scheduled_at timestamptz,
+  published_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create index if not exists providers_publication_idx on providers(publication_status);
 create index if not exists providers_state_city_idx on providers(state, city);
 create index if not exists providers_categories_gin on providers using gin(categories);
@@ -141,3 +168,8 @@ create index if not exists provider_verification_checks_provider_idx on provider
 create index if not exists provider_submissions_created_idx on provider_submissions(created_at desc);
 create index if not exists correction_requests_created_idx on correction_requests(created_at desc);
 create index if not exists contact_inquiries_created_idx on contact_inquiries(created_at desc);
+create index if not exists content_articles_review_queue_idx
+  on content_articles(status, scheduled_at, created_at);
+create index if not exists content_articles_published_idx
+  on content_articles(published_at desc)
+  where status = 'published';
