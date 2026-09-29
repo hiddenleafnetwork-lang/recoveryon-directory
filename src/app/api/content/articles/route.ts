@@ -81,7 +81,24 @@ export async function POST(request: Request) {
       ${JSON.stringify(payload)}::jsonb, ${thumbnailBase64 || null}, ${publicationStatus},
       ${payload.suggested_publish_at || null},
       ${publicationStatus === "published" ? new Date().toISOString() : null})
-    on conflict (idempotency_key) do nothing
+    on conflict (idempotency_key) do update set
+      slug = excluded.slug,
+      title = excluded.title,
+      excerpt = excluded.excerpt,
+      seo_title = excluded.seo_title,
+      meta_description = excluded.meta_description,
+      primary_keyword = excluded.primary_keyword,
+      secondary_keywords = excluded.secondary_keywords,
+      category = excluded.category,
+      author_name = excluded.autor_name,
+      payload = excluded.payload,
+      thumbnail_base64 = coalesce(excluded.thumbnail_base64, content_articles.thumbnail_base64),
+      status = excluded.status,
+      scheduled_at = excluded.scheduled_at,
+      published_at = case when excluded.status = 'published'
+        then coalesce(content_articles.published_at, now())
+        else content_articles.published_at end,
+      updated_at = now()
     returning id, slug, status, scheduled_at`;
   if (rows[0]) {
     revalidatePath("/guides");
@@ -115,6 +132,6 @@ export async function GET(request: Request) {
      order by coalesce(scheduled_at, created_at), created_at
      limit $2`,
     [dueBefore, limit],
-  );
+   );
   return NextResponse.json({ articles: rows });
 }
