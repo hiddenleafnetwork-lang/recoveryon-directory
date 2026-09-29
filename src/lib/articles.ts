@@ -48,8 +48,16 @@ function stringList(value: unknown) {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 }
 
+function isoDate(value: unknown, fallback: string) {
+  const candidate = text(value, fallback);
+  const parsed = new Date(candidate);
+  return Number.isNaN(parsed.getTime()) ? fallback : parsed.toISOString();
+}
+
 function mapPublishedArticle(row: ArticleRow): PublishedArticle {
   const payload = row.payload && typeof row.payload === "object" ? row.payload as Record<string, unknown> : {};
+  const updatedAt = isoDate(row.updated_at, new Date(0).toISOString());
+  const publishedAt = isoDate(row.published_at, updatedAt);
   return {
     id: text(row.id),
     slug: text(row.slug),
@@ -63,9 +71,9 @@ function mapPublishedArticle(row: ArticleRow): PublishedArticle {
     authorName: text(row.author_name, "TreatmentLane Editorial Team"),
     reviewerName: text(row.reviewer_name),
     reviewerCredentials: text(row.reviewer_credentials),
-    reviewedAt: new Date(text(row.reviewed_at)).toISOString(),
-    publishedAt: new Date(text(row.published_at)).toISOString(),
-    updatedAt: new Date(text(row.updated_at)).toISOString(),
+    reviewedAt: isoDate(row.reviewed_at, publishedAt),
+    publishedAt,
+    updatedAt,
     thumbnailMimeType: text(row.thumbnail_mime_type, "image/webp"),
     hasThumbnail: Boolean(row.has_thumbnail),
     imageAlt: text(payload.image_alt, text(row.title)),
