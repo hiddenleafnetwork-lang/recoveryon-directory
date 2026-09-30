@@ -4,6 +4,7 @@ export type Provider = {
   slug: string;
   organizationSlug: string;
   locationSlug: string;
+  organizationLocationCount: number;
   description: string | null;
   address: string | null;
   city: string;
