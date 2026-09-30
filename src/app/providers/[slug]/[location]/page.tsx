@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { ProviderDetailPage } from "@/components/provider-detail-page";
-import { getProviderByCanonicalPath, providerPath } from "@/lib/providers";
+import { getProviderByCanonicalPath, getProvidersByOrganizationSlug, providerPath } from "@/lib/providers";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string; location: string }> }): Promise<Metadata> {
   const { slug, location } = await params;
@@ -20,5 +20,7 @@ export default async function ProviderLocationPage({ params }: { params: Promise
   const { slug, location } = await params;
   const provider = await getProviderByCanonicalPath(slug, location);
   if (!provider) notFound();
-  return <ProviderDetailPage provider={provider} />;
+  if (provider.organizationLocationCount <= 1) permanentRedirect(providerPath(provider));
+  const organizationProviders = await getProvidersByOrganizationSlug(slug);
+  return <ProviderDetailPage provider={provider} organizationProviders={organizationProviders} />;
 }
