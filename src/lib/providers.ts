@@ -15,17 +15,22 @@ type ProviderRow = {
   license_summary: string | null; accreditation: string[] | null; last_verified_at: string | null;
   source_url: string | null; updated_at: string; evidence_score: number;
   verification_status: Provider["verificationStatus"]; is_sponsored: boolean;
+  organization_location_count: number | string;
 };
 
 const providerColumns = `id, name, slug, organization_slug, location_slug, description, address, city, state, postal_code, phone, website,
   categories, levels_of_care, insurance, license_summary, accreditation, last_verified_at,
   verification_status, is_sponsored, source_url, updated_at, featured_image_url, image_urls, treatment_types,
   therapies, amenities, specialties, insurance_details, price_range, treatment_duration, source_rating_value, source_rating_count,
-  evidence_score`;
+  evidence_score,
+  (select count(*) from providers organization_locations
+    where organization_locations.organization_slug = providers.organization_slug
+      and organization_locations.publication_status = 'published')::int as organization_location_count`;
 
 function toProvider(row: ProviderRow): Provider {
   return {
     id: row.id, name: row.name, slug: row.slug, organizationSlug: row.organization_slug, locationSlug: row.location_slug,
+    organizationLocationCount: Number(row.organization_location_count || 1),
     description: row.description, address: row.address,
     city: row.city, state: row.state, postalCode: row.postal_code, phone: row.phone, website: row.website,
     categories: row.categories || [], levelsOfCare: row.levels_of_care || [], insurance: row.insurance || [],
@@ -59,8 +64,10 @@ const orderBy: Record<ProviderSort, string> = {
   alphabetical: "name, city, id",
 };
 
-export function providerPath(provider: Pick<Provider, "organizationSlug" | "locationSlug">) {
-  return `/providers/${provider.organizationSlug}/${provider.locationSlug}`;
+export function providerPath(provider: Pick<Provider, "organizationSlug" | "locationSlug" | "organizationLocationCount">) {
+  return provider.organizationLocationCount > 1
+    ? `/providers/${provider.organizationSlug}/${provider.locationSlug}`
+    : `/providers/${provider.organizationSlug}`;
 }
 
 export async function searchProviders(input: ProviderSearch = {}): Promise<ProviderSearchResult> {
@@ -153,14 +160,19 @@ export async function getDirectoryFacets() {
 
 export async function getSitemapProviders() {
   const sql = getDatabase();
-  if (!sql) return [] as Array<{ organizationSlug: string; locationSlug: string; updatedAt: string }>;
+  if (!sql) return [] as Array<{ organizationSlug: string; locationSlug: string; locationCount: number; updatedAt: string }>;
   try {
-    const rows = await sql`select organization_slug, location_slug, updated_at from providers
+    const rows = await sql`select organization_slug, location_slug, updated_at,
+      (select count(*) from providers organization_locations
+        where organization_locations.organization_slug = providers.organization_slug
+          and organization_locations.publication_status = 'published')::int as organization_location_count
+      from providers
       where publication_status = 'published' and verification_status <> 'listed'
         and organization_slug is not null and location_slug is not null
       order by organization_slug, location_slug`;
     return rows.map((row) => ({
-      organizationSlug: String(row.organization_slug), locationSlug: String(row.location_slug), updatedAt: String(row.updated_at),
+      organizationSlug: String(row.organization_slug), locationSlug: String(row.location_slug),
+      locationCount: Number(row.organization_location_count || 1), updatedAt: String(row.updated_at),
     }));
-  } catch { return [] as Array<{ organizationSlug: string; locationSlug: string; updatedAt: string }>; }
+  } catch { return [] as Array<{ organizationSlug: string; locationSlug: string; locationCount: number; updatedAt: string }>; }
 }
