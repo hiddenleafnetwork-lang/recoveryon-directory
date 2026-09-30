@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BadgeCheck, Building2, MapPin, Star } from "lucide-react";
+import { BadgeCheck, Building2, MapPin, MapPinned, Star } from "lucide-react";
 import { providerPath } from "@/lib/providers";
 import type { Provider } from "@/lib/types";
 
@@ -14,6 +14,7 @@ const labels = {
 export function ProviderCard({ provider }: { provider: Provider }) {
   const tags = [...provider.treatmentTypes, ...provider.categories].filter((item, index, items) => items.indexOf(item) === index).slice(0, 4);
   const href = providerPath(provider);
+  const locationCountLabel = `${provider.organizationLocationCount.toLocaleString()} ${provider.organizationLocationCount === 1 ? "location" : "locations"}`;
   return (
     <article className="provider-card">
       {provider.isSponsored && <span className="sponsored-label">Sponsored</span>}
@@ -23,7 +24,12 @@ export function ProviderCard({ provider }: { provider: Provider }) {
           : <span className="provider-card-placeholder" aria-hidden="true"><Building2 /></span>}
       </Link>
       <div className="provider-card-body">
-        <div className="eyebrow"><MapPin size={15} /> {provider.city}, {provider.state}</div>
+        <div className="provider-card-heading">
+          <div className="eyebrow"><MapPin size={15} /> {provider.city}, {provider.state}</div>
+          {provider.organizationLocationCount > 1
+            ? <Link className="location-count-badge" href={`/providers/${provider.organizationSlug}`} aria-label={`View all ${locationCountLabel} for ${provider.name}`}><MapPinned size={14} /> {locationCountLabel}</Link>
+            : <span className="location-count-badge"><MapPinned size={14} /> {locationCountLabel}</span>}
+        </div>
         <h2><Link href={href}>{provider.name}</Link></h2>
         <p>{provider.description || "View treatment types, services, contact information, and source details."}</p>
         <div className="tag-row">{tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
