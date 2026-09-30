@@ -325,3 +325,8 @@ p { color: var(--ink-soft); }
   .form-grid { grid-template-columns: 1fr; }
   .full-field { grid-column: auto; }
 }
+
+
+.provider-card-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 14px; }
+.location-count-badge { display: inline-flex; align-items: center; gap: 5px; flex: 0 0 auto; padding: 5px 9px; border: 1px solid #b9dcda; border-radius: 999px; color: var(--teal-dark); background: #eff9f7; font-size: .7rem; font-weight: 800; line-height: 1; text-decoration: none; }
+a.location-count-badge:hover { border-color: var(--teal); background: #e4f5f2; }
