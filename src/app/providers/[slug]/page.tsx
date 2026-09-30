@@ -2,14 +2,25 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { ProviderCard } from "@/components/provider-card";
+import { ProviderDetailPage } from "@/components/provider-detail-page";
 import { getProviderByLegacySlug, getProvidersByOrganizationSlug, providerPath } from "@/lib/providers";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const legacy = await getProviderByLegacySlug(slug);
-  if (legacy) return { robots: { index: false, follow: true }, alternates: { canonical: providerPath(legacy) } };
   const providers = await getProvidersByOrganizationSlug(slug);
+  if (legacy && legacy.organizationSlug !== slug) return { robots: { index: false, follow: true }, alternates: { canonical: providerPath(legacy) } };
   if (!providers.length) return {};
+  if (providers.length === 1) {
+    const provider = providers[0];
+    return {
+      title: `${provider.name} in ${provider.city}, ${provider.state}`,
+      description: provider.description || `Review treatment types, services, insurance information, and contact details for ${provider.name}.`,
+      alternates: { canonical: providerPath(provider) },
+      robots: { index: provider.verificationStatus !== "listed", follow: true },
+      openGraph: provider.featuredImageUrl ? { images: [{ url: provider.featuredImageUrl }] } : undefined,
+    };
+  }
   const name = providers[0].name;
   return {
     title: `${name} locations`,
@@ -22,11 +33,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function OrganizationPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const legacy = await getProviderByLegacySlug(slug);
-  if (legacy) permanentRedirect(providerPath(legacy));
+  if (legacy && legacy.organizationSlug !== slug) permanentRedirect(providerPath(legacy));
 
   const providers = await getProvidersByOrganizationSlug(slug);
   if (!providers.length) notFound();
-  if (providers.length === 1) permanentRedirect(providerPath(providers[0]));
+  if (providers.length === 1) return <ProviderDetailPage provider={providers[0]} organizationProviders={providers} />;
 
   return <>
     <section className="page-hero"><div className="shell">
