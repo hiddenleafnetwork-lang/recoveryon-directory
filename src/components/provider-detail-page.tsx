@@ -19,10 +19,11 @@ function InformationTags({ items }: { items: string[] }) {
   return <div className="information-tags">{items.map((item) => <span key={item}>{item}</span>)}</div>;
 }
 
-export function ProviderDetailPage({ provider }: { provider: Provider }) {
+export function ProviderDetailPage({ provider, organizationProviders = [provider] }: { provider: Provider; organizationProviders?: Provider[] }) {
   const gallery = provider.imageUrls.slice(0, 5);
   const careTypes = unique([...provider.treatmentTypes, ...provider.levelsOfCare, ...provider.categories]);
   const path = providerPath(provider);
+  const hasMultipleLocations = organizationProviders.length > 1;
   const jsonLd = {
     "@context": "https://schema.org", "@type": "MedicalBusiness", name: provider.name,
     url: absoluteUrl(path), telephone: provider.phone || undefined,
@@ -36,7 +37,7 @@ export function ProviderDetailPage({ provider }: { provider: Provider }) {
   return <>
     <JsonLd data={jsonLd} />
     <section className="provider-hero"><div className="shell">
-      <div className="breadcrumb"><Link href="/directory">Directory</Link><span>/</span><Link href={`/providers/${provider.organizationSlug}`}>{provider.name}</Link><span>/</span><span>{provider.city}</span></div>
+      <div className="breadcrumb"><Link href="/directory">Directory</Link><span>/</span>{hasMultipleLocations ? <><Link href={`/providers/${provider.organizationSlug}`}>{provider.name} locations</Link><span>/</span><span>{provider.city}</span></> : <span>{provider.name}</span>}</div>
       <div className="provider-hero-copy">
         <div>{provider.isSponsored && <span className="kicker plain">Sponsored placement</span>}<h1>{provider.name}</h1><p><MapPin size={18} /> {provider.city}, {provider.state}</p></div>
         <div className="provider-hero-status"><BadgeCheck size={18} /> {verificationLabels[provider.verificationStatus]}</div>
@@ -55,6 +56,22 @@ export function ProviderDetailPage({ provider }: { provider: Provider }) {
     <div className="shell provider-detail-grid">
       <main className="provider-content">
         <div className="notice"><strong>{verificationLabels[provider.verificationStatus]}.</strong> Information below comes from public source data and has not necessarily been confirmed by the provider. <Link href="/how-we-verify">Read our verification standards</Link>.</div>
+
+        {hasMultipleLocations && <section className="listing-section provider-location-section">
+          <span className="section-label">Multiple locations</span>
+          <h2>{provider.name} has {organizationProviders.length.toLocaleString()} published locations</h2>
+          <p>You are viewing the {provider.city}, {provider.state} location. Choose another location to compare its address, services, contact details, and verification information.</p>
+          <div className="provider-location-grid">
+            {organizationProviders.map((location) => {
+              const isCurrent = location.id === provider.id;
+              const label = `${location.city}, ${location.state}`;
+              return isCurrent
+                ? <div className="provider-location-link is-current" key={location.id}><MapPin size={18} /><span><strong>{label}</strong><small>Current location</small></span></div>
+                : <Link className="provider-location-link" href={providerPath(location)} key={location.id}><MapPin size={18} /><span><strong>{label}</strong><small>View location details</small></span></Link>;
+            })}
+          </div>
+          <Link className="text-link provider-all-locations-link" href={`/providers/${provider.organizationSlug}`}>View all {provider.name} locations</Link>
+        </section>}
 
         <section className="listing-section">
           <span className="section-label">Overview</span><h2>About {provider.name}</h2>
