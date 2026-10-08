@@ -17,8 +17,11 @@ function list(values: string[]) {
 }
 
 function rating(provider: Provider) {
-  if (provider.sourceRatingValue === null || provider.sourceRatingCount === null) return "Not listed";
-  return `${provider.sourceRatingValue.toFixed(1)} from ${provider.sourceRatingCount.toLocaleString()} source ratings`;
+  const value = provider.publicReviewRatingValue ?? provider.sourceRatingValue;
+  const count = provider.publicReviewRatingCount ?? provider.sourceRatingCount;
+  const source = provider.publicReviewSourceName || "public source";
+  if (value === null || count === null) return "Not listed";
+  return `${value.toFixed(1)} from ${count.toLocaleString()} ratings on ${source}`;
 }
 
 export default async function ComparePage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
@@ -43,7 +46,7 @@ export default async function ComparePage({ searchParams }: { searchParams: Prom
     { label: "Accreditation", value: (provider) => list(provider.accreditation) },
     { label: "Typical duration", value: (provider) => provider.treatmentDuration || "Not listed" },
     { label: "Source price information", value: (provider) => provider.priceRange || "Not listed" },
-    { label: "Source rating", value: rating },
+    { label: "Public review rating", value: rating },
   ];
 
   return <>

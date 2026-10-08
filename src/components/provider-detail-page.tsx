@@ -5,7 +5,7 @@ import { CompareButton } from "@/components/compare-button";
 import { JsonLd } from "@/components/json-ld";
 import { providerPath } from "@/lib/providers";
 import { absoluteUrl } from "@/lib/site";
-import type { Provider } from "@/lib/types";
+import type { Provider, ReviewSignal, ReviewTheme } from "@/lib/types";
 
 export const verificationLabels = {
   listed: "Directory listing",
@@ -20,7 +20,44 @@ function InformationTags({ items }: { items: string[] }) {
   return <div className="information-tags">{items.map((item) => <span key={item}>{item}</span>)}</div>;
 }
 
-export function ProviderDetailPage({ provider, organizationProviders = [provider] }: { provider: Provider; organizationProviders?: Provider[] }) {
+function ReviewThemes({ title, themes, tone }: { title: string; themes: ReviewTheme[]; tone: "positive" | "critical" }) {
+  return <div className={`review-theme-group ${tone}`}><h3>{title}</h3>{themes.length
+    ? <ul>{themes.map((theme) => <li key={theme.label}><span>{theme.label}</span><small>{theme.reviewCount} sampled reviews</small></li>)}</ul>
+    : <p>No repeated {tone === "positive" ? "positive" : "critical"} theme met our two-review threshold in this sample.</p>}</div>;
+}
+
+function GoogleReviewSignal({ signal }: { signal: ReviewSignal }) {
+  const total = Math.max(signal.sampledReviewCount, 1);
+  return <div className="review-source-card google-review-card">
+    <div className="review-source-heading">
+      <div><span className="review-source-name">Google Maps</span><h3>{signal.averageRating?.toFixed(1) || "No rating"} {signal.reviewCount !== null && <small>from {signal.reviewCount.toLocaleString()} public ratings</small>}</h3></div>
+      <a href={signal.sourceUrl} rel="noopener noreferrer nofollow" target="_blank">View on Google Maps <ExternalLink size={14} /></a>
+    </div>
+    <p className="review-sample-meta">Sample of {signal.sampledReviewCount.toLocaleString()} newest ratings collected {new Date(signal.fetchedAt).toLocaleDateString("en-US", { dateStyle: "medium" })}. {signal.textReviewCount.toLocaleString()} included written feedback used for the theme summary. The full rating and count come from Google Maps.</p>
+    {signal.sampledReviewCount > 0 && <div className="rating-distribution" aria-label={`Star distribution in the ${signal.sampledReviewCount} review sample`}>
+      {[5, 4, 3, 2, 1].map((stars) => {
+        const count = Number(signal.ratingDistribution[String(stars)] || 0);
+        return <div className="rating-row" key={stars}><span>{stars} star</span><div><i style={{ width: `${Math.round((count / total) * 100)}%` }} /></div><strong>{count}</strong></div>;
+      })}
+    </div>}
+    {signal.reviewSummary && <div className="review-summary"><h3>What recent reviewers report</h3><p>{signal.reviewSummary}</p></div>}
+    <div className="review-theme-grid">
+      <ReviewThemes title="Positive themes" themes={signal.positiveThemes} tone="positive" />
+      <ReviewThemes title="Critical themes" themes={signal.concernThemes} tone="critical" />
+    </div>
+    {signal.summaryLimitations && <p className="review-limitations"><strong>Limits:</strong> {signal.summaryLimitations}</p>}
+  </div>;
+}
+
+function DirectoryReviewSignal({ signal }: { signal: ReviewSignal }) {
+  return <div className="review-source-card directory-review-card">
+    <div><span className="review-source-name">{signal.sourceName}</span><h3>{signal.averageRating?.toFixed(1) || "No rating"} {signal.reviewCount !== null && <small>from {signal.reviewCount.toLocaleString()} displayed reviews</small>}</h3></div>
+    <p>{signal.sourceNotes || "Rating displayed on the linked third-party directory source."}</p>
+    <a href={signal.sourceUrl} rel="noopener noreferrer nofollow" target="_blank">View source record <ExternalLink size={14} /></a>
+  </div>;
+}
+
+export function ProviderDetailPage({ provider, organizationProviders = [provider], reviewSignals = [] }: { provider: Provider; organizationProviders?: Provider[]; reviewSignals?: ReviewSignal[] }) {
   const gallery = provider.imageUrls.slice(0, 5);
   const careTypes = unique([...provider.treatmentTypes, ...provider.levelsOfCare, ...provider.categories]);
   const path = providerPath(provider);
@@ -79,13 +116,23 @@ export function ProviderDetailPage({ provider, organizationProviders = [provider
         <section className="listing-section">
           <span className="section-label">Overview</span><h2>About {provider.name}</h2>
           <p className="listing-lead">{provider.description || "Detailed information for this organization has not yet been published."}</p>
-          {(provider.priceRange || provider.treatmentDuration || provider.sourceRatingValue !== null || careTypes.length > 0) && <div className="quick-facts">
+          {(provider.priceRange || provider.treatmentDuration || (provider.sourceRatingValue !== null && reviewSignals.length === 0) || careTypes.length > 0) && <div className="quick-facts">
             {careTypes.length > 0 && <div><Layers3 /><span>Primary type</span><strong>{careTypes[0]}</strong></div>}
             {provider.treatmentDuration && <div><Clock3 /><span>Typical duration</span><strong>{provider.treatmentDuration}</strong></div>}
             {provider.priceRange && <div><DollarSign /><span>Source price information</span><strong>{provider.priceRange}</strong></div>}
-            {provider.sourceRatingValue !== null && provider.sourceRatingCount !== null && <div><Star /><span>Source rating</span><strong>{provider.sourceRatingValue.toFixed(1)} from {provider.sourceRatingCount.toLocaleString()} ratings</strong></div>}
+            {reviewSignals.length === 0 && provider.sourceRatingValue !== null && provider.sourceRatingCount !== null && <div><Star /><span>Source rating</span><strong>{provider.sourceRatingValue.toFixed(1)} from {provider.sourceRatingCount.toLocaleString()} ratings</strong></div>}
           </div>}
         </section>
+
+        {reviewSignals.length > 0 && <section className="listing-section review-signals-section" id="reviews">
+          <span className="section-label">Third-party review signals</span><h2>What public reviews can and cannot tell you</h2>
+          <p className="listing-lead">We show recent patterns and critical feedback alongside the source, sample size, and collection date. Reviews are personal opinions, not TreatmentLane findings, and they do not prove safety, treatment quality, or clinical outcomes.</p>
+          <div className="review-source-list">{reviewSignals.map((signal) => signal.sourceType === "google"
+            ? <GoogleReviewSignal signal={signal} key={signal.sourceType} />
+            : <DirectoryReviewSignal signal={signal} key={signal.sourceType} />)}</div>
+          {reviewSignals.length > 1 && <p className="review-overlap-note"><strong>Why we do not combine totals:</strong> directories can display reviews syndicated from Google or another platform. Adding the counts together could count the same review more than once.</p>}
+          <p className="review-method-link"><Link href="/review-methodology">Read our review sourcing and summary methodology</Link>.</p>
+        </section>}
 
         <section className="listing-section">
           <span className="section-label">Care options</span><h2>Treatment types and levels of care</h2>

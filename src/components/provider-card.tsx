@@ -16,6 +16,9 @@ export function ProviderCard({ provider }: { provider: Provider }) {
   const tags = [...provider.treatmentTypes, ...provider.categories].filter((item, index, items) => items.indexOf(item) === index).slice(0, 4);
   const href = providerPath(provider);
   const locationCountLabel = `${provider.organizationLocationCount.toLocaleString()} ${provider.organizationLocationCount === 1 ? "location" : "locations"}`;
+  const ratingValue = provider.publicReviewRatingValue ?? provider.sourceRatingValue;
+  const ratingCount = provider.publicReviewRatingCount ?? provider.sourceRatingCount;
+  const ratingSource = provider.publicReviewSourceName || "Source";
   return (
     <article className="provider-card">
       {provider.isSponsored && <span className="sponsored-label">Sponsored</span>}
@@ -36,7 +39,7 @@ export function ProviderCard({ provider }: { provider: Provider }) {
         <div className="tag-row">{tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
         <div className="provider-card-meta">
           <span className="verification-line"><BadgeCheck size={16} /> {labels[provider.verificationStatus]}</span>
-          {provider.sourceRatingValue !== null && provider.sourceRatingCount !== null && <span className="source-rating"><Star size={15} /> {provider.sourceRatingValue.toFixed(1)} from {provider.sourceRatingCount.toLocaleString()}</span>}
+          {ratingValue !== null && ratingCount !== null && <span className="source-rating"><Star size={15} /> {ratingValue.toFixed(1)} from {ratingCount.toLocaleString()} on {ratingSource}</span>}
         </div>
         <div className="provider-card-actions"><Link className="card-action" href={href}>View details</Link><CompareButton compact provider={{ id: provider.id, name: provider.name, href }} /></div>
       </div>

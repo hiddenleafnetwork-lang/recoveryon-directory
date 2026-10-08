@@ -22,6 +22,7 @@ export function SiteFooter() {
         <div>
           <h2>Trust</h2>
           <Link href="/how-we-verify">How we verify</Link>
+          <Link href="/review-methodology">Review methodology</Link>
           <Link href="/corrections">Request a correction</Link>
           <Link href="/about">About us</Link>
           <Link href="/contact">Contact</Link>

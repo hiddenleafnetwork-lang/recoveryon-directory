@@ -28,6 +28,9 @@ export type Provider = {
   treatmentDuration: string | null;
   sourceRatingValue: number | null;
   sourceRatingCount: number | null;
+  publicReviewRatingValue: number | null;
+  publicReviewRatingCount: number | null;
+  publicReviewSourceName: string | null;
   evidenceScore: number;
   licenseSummary: string | null;
   accreditation: string[];
@@ -36,4 +39,31 @@ export type Provider = {
   updatedAt: string;
   verificationStatus: "listed" | "data-verified" | "provider-confirmed" | "independently-reviewed";
   isSponsored: boolean;
+};
+
+export type ReviewTheme = {
+  label: string;
+  reviewCount: number;
+};
+
+export type ReviewSignal = {
+  sourceType: "google" | "recovery.com" | "rehab.com" | "rehabs.com" | "other";
+  sourceName: string;
+  sourceUrl: string;
+  externalPlaceId: string | null;
+  averageRating: number | null;
+  reviewCount: number | null;
+  sampledReviewCount: number;
+  textReviewCount: number;
+  ratingDistribution: Record<string, number>;
+  reviewSummary: string | null;
+  positiveThemes: ReviewTheme[];
+  concernThemes: ReviewTheme[];
+  summaryLimitations: string | null;
+  reviewDateStart: string | null;
+  reviewDateEnd: string | null;
+  matchConfidence: number | null;
+  sourceNotes: string | null;
+  collectionMethod: string;
+  fetchedAt: string;
 };

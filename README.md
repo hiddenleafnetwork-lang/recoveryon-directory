@@ -40,4 +40,16 @@ The sitemap, robots file, metadata, structured data, social image, and canonical
 - Record a review date and source URL for independently reviewed claims.
 - Label paid placement as sponsored; payment must not determine verification status.
 
+## Public review signals
+
+Review enrichment requires server-only `APIFY_TOKEN` and `OPENAI_API_KEY` values. Never expose them with a `NEXT_PUBLIC_` prefix. Run the schema migration before the first import.
+
+```bash
+npm run db:migrate
+npm run db:import-review-signals -- --provider-slug=northpoint-colorado --max-reviews=40
+npm run db:import-review-signals -- --provider-slug=northpoint-colorado --max-reviews=40 --commit
+```
+
+The command without `--commit` still calls Apify and OpenAI, but does not write to the database. Add `--refresh` to revisit a source collected within the last 30 days. The importer rejects weak location matches, disables reviewer personal data, caps and deduplicates the newest-review sample, and stores summaries rather than full review text. Directory ratings remain separate because different sites may syndicate the same underlying reviews.
+
 The original static prototype is preserved in `legacy-prototype/` for reference and is not served by the production app.

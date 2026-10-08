@@ -2,7 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 import { getDatabase } from "@/lib/db";
-import type { Provider } from "@/lib/types";
+import type { Provider, ReviewSignal, ReviewTheme } from "@/lib/types";
 
 type ProviderRow = {
   id: string; name: string; slug: string; organization_slug: string; location_slug: string;
@@ -13,6 +13,7 @@ type ProviderRow = {
   insurance_details: string | null; treatment_types: string[] | null; therapies: string[] | null;
   amenities: string[] | null; specialties: string[] | null; featured_image_url: string | null; image_urls: string[] | null;
   price_range: string | null; treatment_duration: string | null; source_rating_value: number | string | null; source_rating_count: number | null;
+  public_review_rating_value: number | string | null; public_review_rating_count: number | null; public_review_source_name: string | null;
   license_summary: string | null; accreditation: string[] | null; last_verified_at: string | null;
   source_url: string | null; updated_at: string; evidence_score: number;
   verification_status: Provider["verificationStatus"]; is_sponsored: boolean;
@@ -24,6 +25,15 @@ const providerColumns = `id, name, slug, organization_slug, location_slug, descr
   verification_status, is_sponsored, source_url, updated_at, featured_image_url, image_urls, treatment_types,
   therapies, amenities, specialties, insurance_details, price_range, treatment_duration, source_rating_value, source_rating_count,
   evidence_score,
+  (select average_rating from provider_review_sources review_source
+    where review_source.provider_id = providers.id and review_source.source_type = 'google'
+      and review_source.match_status = 'accepted' limit 1) as public_review_rating_value,
+  (select review_count from provider_review_sources review_source
+    where review_source.provider_id = providers.id and review_source.source_type = 'google'
+      and review_source.match_status = 'accepted' limit 1) as public_review_rating_count,
+  (select source_name from provider_review_sources review_source
+    where review_source.provider_id = providers.id and review_source.source_type = 'google'
+      and review_source.match_status = 'accepted' limit 1) as public_review_source_name,
   (select count(*) from providers organization_locations
     where organization_locations.organization_slug = providers.organization_slug
       and organization_locations.publication_status = 'published')::int as organization_location_count`;
@@ -41,6 +51,8 @@ function toProvider(row: ProviderRow): Provider {
     amenities: row.amenities || [], specialties: row.specialties || [], featuredImageUrl: row.featured_image_url,
     imageUrls: row.image_urls || [], priceRange: row.price_range, treatmentDuration: row.treatment_duration,
     sourceRatingValue: row.source_rating_value === null ? null : Number(row.source_rating_value), sourceRatingCount: row.source_rating_count,
+    publicReviewRatingValue: row.public_review_rating_value === null ? null : Number(row.public_review_rating_value),
+    publicReviewRatingCount: row.public_review_rating_count, publicReviewSourceName: row.public_review_source_name,
     licenseSummary: row.license_summary, accreditation: row.accreditation || [], sourceUrl: row.source_url, lastVerifiedAt: row.last_verified_at,
     updatedAt: row.updated_at, evidenceScore: row.evidence_score, verificationStatus: row.verification_status,
     isSponsored: row.is_sponsored,
@@ -167,6 +179,47 @@ export async function getProvidersByIds(ids: string[]): Promise<Provider[]> {
     });
   } catch { return []; }
 }
+
+function reviewThemes(value: unknown): ReviewTheme[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item) => {
+    if (!item || typeof item !== "object") return [];
+    const theme = item as { label?: unknown; reviewCount?: unknown };
+    const label = typeof theme.label === "string" ? theme.label : "";
+    const reviewCount = Number(theme.reviewCount);
+    return label && Number.isInteger(reviewCount) && reviewCount > 0 ? [{ label, reviewCount }] : [];
+  });
+}
+
+export const getProviderReviewSignals = cache(async (providerId: string): Promise<ReviewSignal[]> => {
+  const sql = getDatabase();
+  if (!sql) return [];
+  try {
+    const rows = await sql`select source_type, source_name, source_url, external_place_id, average_rating, review_count,
+      sampled_review_count, text_review_count, rating_distribution, review_summary, positive_themes, concern_themes, summary_limitations,
+      review_date_start, review_date_end, match_confidence, source_notes, collection_method, fetched_at
+      from provider_review_sources where provider_id = ${providerId} and match_status = 'accepted'
+      order by case source_type when 'google' then 1 when 'recovery.com' then 2 else 3 end, source_name`;
+    return rows.map((row) => ({
+      sourceType: String(row.source_type) as ReviewSignal["sourceType"], sourceName: String(row.source_name),
+      sourceUrl: String(row.source_url), externalPlaceId: row.external_place_id ? String(row.external_place_id) : null,
+      averageRating: row.average_rating === null ? null : Number(row.average_rating),
+      reviewCount: row.review_count === null ? null : Number(row.review_count),
+      sampledReviewCount: Number(row.sampled_review_count || 0),
+      textReviewCount: Number(row.text_review_count || 0),
+      ratingDistribution: row.rating_distribution && typeof row.rating_distribution === "object"
+        ? row.rating_distribution as Record<string, number> : {},
+      reviewSummary: row.review_summary ? String(row.review_summary) : null,
+      positiveThemes: reviewThemes(row.positive_themes), concernThemes: reviewThemes(row.concern_themes),
+      summaryLimitations: row.summary_limitations ? String(row.summary_limitations) : null,
+      reviewDateStart: row.review_date_start ? String(row.review_date_start) : null,
+      reviewDateEnd: row.review_date_end ? String(row.review_date_end) : null,
+      matchConfidence: row.match_confidence === null ? null : Number(row.match_confidence),
+      sourceNotes: row.source_notes ? String(row.source_notes) : null,
+      collectionMethod: String(row.collection_method), fetchedAt: String(row.fetched_at),
+    }));
+  } catch { return []; }
+});
 
 export async function hasPublishedProviders(filter: { state?: string; category?: string }) {
   return (await searchProviders({ ...filter, pageSize: 1 })).total > 0;

@@ -83,6 +83,40 @@ create table if not exists provider_verification_checks (
   created_at timestamptz not null default now()
 );
 
+create table if not exists provider_review_sources (
+  id uuid primary key default gen_random_uuid(),
+  provider_id uuid not null references providers(id) on delete cascade,
+  source_type text not null check (source_type in ('google', 'recovery.com', 'rehab.com', 'rehabs.com', 'other')),
+  source_name text not null,
+  source_url text not null,
+  external_place_id text,
+  average_rating numeric(4, 2) check (average_rating between 0 and 5),
+  review_count integer check (review_count >= 0),
+  sampled_review_count integer not null default 0 check (sampled_review_count >= 0),
+  rating_distribution jsonb not null default '{}'::jsonb,
+  review_summary text,
+  positive_themes jsonb not null default '[]'::jsonb,
+  concern_themes jsonb not null default '[]'::jsonb,
+  summary_limitations text,
+  review_date_start timestamptz,
+  review_date_end timestamptz,
+  match_confidence numeric(5, 4),
+  source_notes text,
+  collection_method text not null,
+  summary_model text,
+  summary_version text,
+  fetched_at timestamptz not null default now(),
+  summarized_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (provider_id, source_type)
+);
+
+alter table provider_review_sources add column if not exists text_review_count integer not null default 0
+  check (text_review_count >= 0);
+alter table provider_review_sources add column if not exists match_status text not null default 'accepted'
+  check (match_status in ('accepted', 'rejected'));
+
 create table if not exists provider_submissions (
   id uuid primary key default gen_random_uuid(),
   organization_name text not null,
@@ -165,6 +199,8 @@ create index if not exists providers_recommended_order_idx
   where publication_status = 'published';
 create index if not exists provider_source_records_provider_idx on provider_source_records(provider_id, source_type);
 create index if not exists provider_verification_checks_provider_idx on provider_verification_checks(provider_id, checked_at desc);
+create index if not exists provider_review_sources_provider_idx on provider_review_sources(provider_id, fetched_at desc);
+create index if not exists provider_review_sources_source_idx on provider_review_sources(source_type, fetched_at desc);
 create index if not exists provider_submissions_created_idx on provider_submissions(created_at desc);
 create index if not exists correction_requests_created_idx on correction_requests(created_at desc);
 create index if not exists contact_inquiries_created_idx on contact_inquiries(created_at desc);

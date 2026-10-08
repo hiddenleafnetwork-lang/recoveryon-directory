@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { ProviderCard } from "@/components/provider-card";
 import { ProviderDetailPage } from "@/components/provider-detail-page";
-import { getProviderByLegacySlug, getProvidersByOrganizationSlug, providerPath } from "@/lib/providers";
+import { getProviderByLegacySlug, getProviderReviewSignals, getProvidersByOrganizationSlug, providerPath } from "@/lib/providers";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -37,7 +37,10 @@ export default async function OrganizationPage({ params }: { params: Promise<{ s
 
   const providers = await getProvidersByOrganizationSlug(slug);
   if (!providers.length) notFound();
-  if (providers.length === 1) return <ProviderDetailPage provider={providers[0]} organizationProviders={providers} />;
+  if (providers.length === 1) {
+    const reviewSignals = await getProviderReviewSignals(providers[0].id);
+    return <ProviderDetailPage provider={providers[0]} organizationProviders={providers} reviewSignals={reviewSignals} />;
+  }
 
   return <>
     <section className="page-hero"><div className="shell">
