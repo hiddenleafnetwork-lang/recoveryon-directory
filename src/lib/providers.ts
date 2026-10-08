@@ -63,7 +63,8 @@ export type ProviderSort = "recommended" | "recently-verified" | "most-reviewed"
 
 export type ProviderSearch = {
   keyword?: string; location?: string; category?: string; state?: string; levelOfCare?: string; insurance?: string;
-  specialty?: string; completeOnly?: boolean; sort?: ProviderSort; page?: number; pageSize?: number;
+  specialty?: string; audience?: string; medication?: string; access?: string;
+  completeOnly?: boolean; sort?: ProviderSort; page?: number; pageSize?: number;
 };
 export type ProviderSearchResult = { providers: Provider[]; total: number; page: number; totalPages: number };
 
@@ -108,6 +109,15 @@ export async function searchProviders(input: ProviderSearch = {}): Promise<Provi
   if (input.levelOfCare?.trim()) clauses.push(`${add(input.levelOfCare.trim())} = any(levels_of_care)`);
   if (input.insurance?.trim()) clauses.push(`${add(input.insurance.trim())} = any(insurance)`);
   if (input.specialty?.trim()) clauses.push(`${add(input.specialty.trim())} = any(specialties)`);
+  if (input.audience?.trim()) clauses.push(`${add(input.audience.trim())} = any(specialties)`);
+  if (input.medication?.trim()) {
+    const value = add(input.medication.trim());
+    clauses.push(`(${value} = any(specialties) or ${value} = any(levels_of_care) or ${value} = any(treatment_types))`);
+  }
+  if (input.access?.trim()) {
+    const value = add(input.access.trim());
+    clauses.push(`(${value} = any(specialties) or ${value} = any(levels_of_care) or ${value} = any(treatment_types))`);
+  }
   if (input.completeOnly) clauses.push("evidence_score >= 75");
   const where = clauses.join(" and ");
   try {
@@ -164,7 +174,7 @@ export const getProvidersByOrganizationSlug = cache(async (organizationSlug: str
 
 export async function getProvidersByIds(ids: string[]): Promise<Provider[]> {
   const sql = getDatabase();
-  const uniqueIds = ids.filter((id, index) => ids.indexOf(id) === index).slice(0, 3);
+  const uniqueIds = ids.filter((id, index) => ids.indexOf(id) === index).slice(0, 5);
   if (!sql || !uniqueIds.length) return [];
   try {
     const rows = await sql.query(

@@ -2,7 +2,7 @@
 
 import { Scale } from "lucide-react";
 import { useEffect, useState } from "react";
-import { COMPARISON_EVENT, readComparison, toggleComparison, type ComparisonSelection } from "@/lib/comparison-storage";
+import { COMPARISON_EVENT, MAX_COMPARISON_ITEMS, readComparison, toggleComparison, type ComparisonSelection } from "@/lib/comparison-storage";
 
 export function CompareButton({ provider, compact = false }: { provider: ComparisonSelection; compact?: boolean }) {
   const [selected, setSelected] = useState(false);
@@ -24,7 +24,7 @@ export function CompareButton({ provider, compact = false }: { provider: Compari
   function toggle() {
     const result = toggleComparison(provider);
     setSelected(result.items.some((item) => item.id === provider.id));
-    setMessage(result.limitReached ? "You can compare up to three listings." : "");
+    setMessage(result.limitReached ? `You can compare up to ${MAX_COMPARISON_ITEMS} listings.` : "");
   }
 
   return (

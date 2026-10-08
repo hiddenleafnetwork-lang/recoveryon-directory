@@ -8,7 +8,7 @@ export type ComparisonSelection = {
 
 export const COMPARISON_EVENT = "treatmentlane:comparison-change";
 const COMPARISON_KEY = "treatmentlane-comparison";
-const MAX_COMPARISON_ITEMS = 3;
+export const MAX_COMPARISON_ITEMS = 5;
 
 export function readComparison() {
   try {

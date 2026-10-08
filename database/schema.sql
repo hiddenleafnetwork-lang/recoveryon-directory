@@ -134,6 +134,23 @@ create table if not exists provider_submissions (
   reviewed_at timestamptz
 );
 
+alter table provider_submissions add column if not exists request_type text not null default 'list-new';
+alter table provider_submissions add column if not exists provider_path text;
+alter table provider_submissions add column if not exists availability_status text;
+alter table provider_submissions add column if not exists estimated_wait text;
+alter table provider_submissions add column if not exists admissions_hours text;
+alter table provider_submissions add column if not exists insurance_updates text;
+alter table provider_submissions add column if not exists cost_updates text;
+alter table provider_submissions add column if not exists profile_updates text;
+alter table provider_submissions add column if not exists attested boolean not null default false;
+
+alter table provider_submissions drop constraint if exists provider_submissions_request_type_check;
+alter table provider_submissions add constraint provider_submissions_request_type_check
+  check (request_type in ('claim-existing', 'update-profile', 'update-availability', 'list-new'));
+alter table provider_submissions drop constraint if exists provider_submissions_availability_status_check;
+alter table provider_submissions add constraint provider_submissions_availability_status_check
+  check (availability_status is null or availability_status in ('accepting', 'waitlist', 'not-accepting', 'unknown'));
+
 create table if not exists correction_requests (
   id uuid primary key default gen_random_uuid(),
   provider_slug text,
@@ -154,6 +171,13 @@ create table if not exists contact_inquiries (
   message text not null,
   status text not null default 'new'
     check (status in ('new', 'reviewing', 'approved', 'declined', 'spam')),
+  created_at timestamptz not null default now()
+);
+
+create table if not exists provider_interactions (
+  id bigserial primary key,
+  provider_id uuid not null references providers(id) on delete cascade,
+  event_type text not null check (event_type in ('call', 'email', 'website', 'directions', 'google-maps')),
   created_at timestamptz not null default now()
 );
 
@@ -204,6 +228,7 @@ create index if not exists provider_review_sources_source_idx on provider_review
 create index if not exists provider_submissions_created_idx on provider_submissions(created_at desc);
 create index if not exists correction_requests_created_idx on correction_requests(created_at desc);
 create index if not exists contact_inquiries_created_idx on contact_inquiries(created_at desc);
+create index if not exists provider_interactions_provider_created_idx on provider_interactions(provider_id, created_at desc);
 create index if not exists content_articles_review_queue_idx
   on content_articles(status, scheduled_at, created_at);
 create index if not exists content_articles_published_idx

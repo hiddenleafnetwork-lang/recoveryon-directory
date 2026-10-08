@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, BadgeCheck, ExternalLink, Phone, Scale } from "lucide-react";
 import { CompareButton } from "@/components/compare-button";
+import { DecisionTracker } from "@/components/decision-tracker";
+import { ProviderActionLink } from "@/components/provider-action-link";
 import { getProvidersByIds, providerPath } from "@/lib/providers";
 import type { Provider } from "@/lib/types";
 
@@ -27,15 +29,16 @@ function rating(provider: Provider) {
 export default async function ComparePage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const params = await searchParams;
   const rawIds = Array.isArray(params.ids) ? params.ids[0] || "" : params.ids || "";
-  const ids = rawIds.split(",").map((id) => id.trim()).filter(Boolean).slice(0, 3);
+  const ids = rawIds.split(",").map((id) => id.trim()).filter(Boolean).slice(0, 5);
   const providers = await getProvidersByIds(ids);
 
   if (!providers.length) {
-    return <><section className="page-hero"><div className="shell"><span className="kicker plain">Compare listings</span><h1>Build a treatment shortlist</h1><p>Add up to three listings from the directory to compare public information side by side.</p></div></section><section className="section"><div className="content-shell empty-state"><Scale size={38} /><h2>No listings selected</h2><p>Use the Compare button on any directory card or provider profile.</p><Link className="button" href="/directory">Browse the directory</Link></div></section></>;
+    return <><section className="page-hero"><div className="shell"><span className="kicker plain">Compare listings</span><h1>Build a treatment shortlist</h1><p>Add up to five listings from the directory to compare public information side by side.</p></div></section><section className="section"><div className="content-shell empty-state"><Scale size={38} /><h2>No listings selected</h2><p>Use the Compare button on any directory card or provider profile.</p><Link className="button" href="/directory">Browse the directory</Link></div></section></>;
   }
 
   const rows: Array<{ label: string; value: (provider: Provider) => React.ReactNode }> = [
     { label: "Location", value: (provider) => `${provider.city}, ${provider.state}` },
+    { label: "Full address", value: (provider) => provider.address || "Not listed" },
     { label: "Listing status", value: (provider) => provider.verificationStatus.replaceAll("-", " ") },
     { label: "Last reviewed", value: (provider) => provider.lastVerifiedAt ? new Date(provider.lastVerifiedAt).toLocaleDateString("en-US", { dateStyle: "medium" }) : "Not independently reviewed" },
     { label: "Care options", value: (provider) => list([...provider.treatmentTypes, ...provider.levelsOfCare].filter((item, index, values) => values.indexOf(item) === index)) },
@@ -44,9 +47,11 @@ export default async function ComparePage({ searchParams }: { searchParams: Prom
     { label: "Therapies", value: (provider) => list(provider.therapies) },
     { label: "Amenities", value: (provider) => list(provider.amenities) },
     { label: "Accreditation", value: (provider) => list(provider.accreditation) },
+    { label: "License information", value: (provider) => provider.licenseSummary || "Not independently summarized" },
     { label: "Typical duration", value: (provider) => provider.treatmentDuration || "Not listed" },
     { label: "Source price information", value: (provider) => provider.priceRange || "Not listed" },
     { label: "Public review rating", value: rating },
+    { label: "Profile completeness", value: (provider) => `${provider.evidenceScore}% source evidence score` },
   ];
 
   return <>
@@ -59,9 +64,10 @@ export default async function ComparePage({ searchParams }: { searchParams: Prom
           return <th scope="col" key={provider.id}><Link href={href}>{provider.name}</Link><small>{provider.city}, {provider.state}</small><CompareButton compact provider={{ id: provider.id, name: provider.name, href }} /></th>;
         })}</tr></thead>
         <tbody>{rows.map((row) => <tr key={row.label}><th scope="row">{row.label}</th>{providers.map((provider) => <td key={provider.id}>{row.value(provider)}</td>)}</tr>)}</tbody>
-        <tfoot><tr><th scope="row">Contact</th>{providers.map((provider) => <td key={provider.id}><div className="comparison-contact">{provider.phone && <a href={`tel:${provider.phone}`}><Phone size={15} /> {provider.phone}</a>}{provider.website && <a href={provider.website} rel="noopener noreferrer nofollow" target="_blank">Official website <ExternalLink size={14} /></a>}<Link href={providerPath(provider)}>View full listing</Link></div></td>)}</tr></tfoot>
+        <tfoot><tr><th scope="row">Contact</th>{providers.map((provider) => <td key={provider.id}><div className="comparison-contact">{provider.phone && <ProviderActionLink eventType="call" href={`tel:${provider.phone}`} providerId={provider.id}><Phone size={15} /> {provider.phone}</ProviderActionLink>}{provider.website && <ProviderActionLink eventType="website" external href={provider.website} providerId={provider.id}>Official website <ExternalLink size={14} /></ProviderActionLink>}<Link href={providerPath(provider)}>View full listing</Link></div></td>)}</tr></tfoot>
       </table></div>
       <div className="inline-actions"><Link className="button button-secondary" href="/directory"><ArrowLeft size={17} /> Add another listing</Link></div>
+      <DecisionTracker providers={providers.map((provider) => ({ id: provider.id, name: provider.name }))} />
     </div></section>
   </>;
 }

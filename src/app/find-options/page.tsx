@@ -4,7 +4,7 @@ import { GuidedFinder } from "@/components/guided-finder";
 
 export const metadata: Metadata = {
   title: "Find treatment options",
-  description: "Answer three simple questions to narrow TreatmentLane directory listings by support, payment preference, and location.",
+  description: "Answer a few private questions to narrow TreatmentLane listings by care needs, population, medication support, payment, and location.",
   alternates: { canonical: "/find-options" },
 };
 
@@ -15,7 +15,7 @@ export default function FindOptionsPage() {
         <div className="shell">
           <span className="kicker plain">Guided search</span>
           <h1>Find a useful place to start.</h1>
-          <p>Answer three simple questions. We will turn your choices into directory filters, without collecting your answers or choosing a provider for you.</p>
+          <p>Answer a few private questions about care needs, practical fit, payment, and location. Your answers stay in your browser and become transparent directory filters.</p>
         </div>
       </section>
       <section className="section section-tint">
