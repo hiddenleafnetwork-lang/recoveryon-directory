@@ -13,8 +13,10 @@ export function SiteFooter() {
         <div>
           <h2>Explore</h2>
           <Link href="/directory">Find care</Link>
+          <Link href="/find-options">Guided finder</Link>
           <Link href="/care">Types of care</Link>
           <Link href="/locations">Browse locations</Link>
+          <Link href="/insurance">Insurance and payment</Link>
           <Link href="/guides">Guides</Link>
         </div>
         <div>

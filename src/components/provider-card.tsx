@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BadgeCheck, Building2, MapPin, MapPinned, Star } from "lucide-react";
+import { CompareButton } from "@/components/compare-button";
 import { providerPath } from "@/lib/providers";
 import type { Provider } from "@/lib/types";
 
@@ -35,8 +36,9 @@ export function ProviderCard({ provider }: { provider: Provider }) {
         <div className="tag-row">{tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
         <div className="provider-card-meta">
           <span className="verification-line"><BadgeCheck size={16} /> {labels[provider.verificationStatus]}</span>
-          {provider.sourceRatingValue !== null && provider.sourceRatingCount !== null && <span className="source-rating"><Star size={15} /> {provider.sourceRatingValue.toFixed(1)} source rating</span>}
+          {provider.sourceRatingValue !== null && provider.sourceRatingCount !== null && <span className="source-rating"><Star size={15} /> {provider.sourceRatingValue.toFixed(1)} from {provider.sourceRatingCount.toLocaleString()}</span>}
         </div>
+        <div className="provider-card-actions"><Link className="card-action" href={href}>View details</Link><CompareButton compact provider={{ id: provider.id, name: provider.name, href }} /></div>
       </div>
     </article>
   );

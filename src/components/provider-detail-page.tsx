@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BadgeCheck, Clock3, DollarSign, ExternalLink, Images, Layers3, MapPin, Phone, Star } from "lucide-react";
+import { BadgeCheck, Clock3, DollarSign, ExternalLink, Images, Layers3, MapPin, Navigation, Phone, Star } from "lucide-react";
+import { CompareButton } from "@/components/compare-button";
 import { JsonLd } from "@/components/json-ld";
 import { providerPath } from "@/lib/providers";
 import { absoluteUrl } from "@/lib/site";
@@ -23,6 +24,8 @@ export function ProviderDetailPage({ provider, organizationProviders = [provider
   const gallery = provider.imageUrls.slice(0, 5);
   const careTypes = unique([...provider.treatmentTypes, ...provider.levelsOfCare, ...provider.categories]);
   const path = providerPath(provider);
+  const directionsQuery = [provider.address, provider.city, provider.state, provider.postalCode].filter(Boolean).join(", ");
+  const directionsHref = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(directionsQuery)}`;
   const hasMultipleLocations = organizationProviders.length > 1;
   const jsonLd = {
     "@context": "https://schema.org", "@type": "MedicalBusiness", name: provider.name,
@@ -131,7 +134,11 @@ export function ProviderDetailPage({ provider, organizationProviders = [provider
           <dt>Listing status</dt><dd><BadgeCheck size={15} /> {verificationLabels[provider.verificationStatus]}</dd>
           <dt>Last reviewed</dt><dd>{provider.lastVerifiedAt ? new Date(provider.lastVerifiedAt).toLocaleDateString("en-US", { dateStyle: "medium" }) : "Not independently reviewed"}</dd>
         </dl>
-        {provider.phone && <a className="button provider-call-button" href={`tel:${provider.phone}`}><Phone size={17} /> Call organization</a>}
+        <div className="provider-contact-actions">
+          {provider.phone && <a className="button provider-call-button" href={`tel:${provider.phone}`}><Phone size={17} /> Call organization</a>}
+          <a className="button button-secondary" href={directionsHref} rel="noopener noreferrer" target="_blank"><Navigation size={17} /> Get directions</a>
+          <CompareButton provider={{ id: provider.id, name: provider.name, href: path }} />
+        </div>
         <p className="form-disclaimer">TreatmentLane does not recommend or guarantee any provider. In an emergency, call 911 or 988.</p>
       </aside>
     </div>

@@ -50,7 +50,8 @@ function toProvider(row: ProviderRow): Provider {
 export type ProviderSort = "recommended" | "recently-verified" | "most-reviewed" | "highest-rated" | "alphabetical";
 
 export type ProviderSearch = {
-  keyword?: string; location?: string; category?: string; state?: string; sort?: ProviderSort; page?: number; pageSize?: number;
+  keyword?: string; location?: string; category?: string; state?: string; levelOfCare?: string; insurance?: string;
+  specialty?: string; completeOnly?: boolean; sort?: ProviderSort; page?: number; pageSize?: number;
 };
 export type ProviderSearchResult = { providers: Provider[]; total: number; page: number; totalPages: number };
 
@@ -92,6 +93,10 @@ export async function searchProviders(input: ProviderSearch = {}): Promise<Provi
   }
   if (input.category?.trim()) clauses.push(`${add(input.category.trim())} = any(categories)`);
   if (input.state?.trim()) clauses.push(`state = ${add(input.state.trim().toUpperCase())}`);
+  if (input.levelOfCare?.trim()) clauses.push(`${add(input.levelOfCare.trim())} = any(levels_of_care)`);
+  if (input.insurance?.trim()) clauses.push(`${add(input.insurance.trim())} = any(insurance)`);
+  if (input.specialty?.trim()) clauses.push(`${add(input.specialty.trim())} = any(specialties)`);
+  if (input.completeOnly) clauses.push("evidence_score >= 75");
   const where = clauses.join(" and ");
   try {
     const countRows = await sql.query(`select count(*)::int as count from providers where ${where}`, params);
@@ -145,20 +150,54 @@ export const getProvidersByOrganizationSlug = cache(async (organizationSlug: str
   } catch { return []; }
 });
 
+export async function getProvidersByIds(ids: string[]): Promise<Provider[]> {
+  const sql = getDatabase();
+  const uniqueIds = ids.filter((id, index) => ids.indexOf(id) === index).slice(0, 3);
+  if (!sql || !uniqueIds.length) return [];
+  try {
+    const rows = await sql.query(
+      `select ${providerColumns} from providers
+       where id = any($1::uuid[]) and publication_status = 'published'`,
+      [uniqueIds],
+    );
+    const providers = (rows as ProviderRow[]).map(toProvider);
+    return uniqueIds.flatMap((id) => {
+      const provider = providers.find((item) => item.id === id);
+      return provider ? [provider] : [];
+    });
+  } catch { return []; }
+}
+
 export async function hasPublishedProviders(filter: { state?: string; category?: string }) {
   return (await searchProviders({ ...filter, pageSize: 1 })).total > 0;
 }
 
 export async function getDirectoryFacets() {
   const sql = getDatabase();
-  if (!sql) return { states: [] as string[], categories: [] as string[] };
+  const empty = { states: [] as string[], categories: [] as string[], levelsOfCare: [] as string[], insurance: [] as string[], specialties: [] as string[] };
+  if (!sql) return empty;
   try {
-    const [stateRows, categoryRows] = await Promise.all([
+    const [stateRows, categoryRows, levelRows, insuranceRows, specialtyRows] = await Promise.all([
       sql`select distinct state from providers where publication_status = 'published' order by state`,
       sql`select distinct unnest(categories) as category from providers where publication_status = 'published' order by category`,
+      sql`select item, count(*)::int as count from providers, unnest(levels_of_care) item
+        where publication_status = 'published' and nullif(trim(item), '') is not null and item not like '%<%' and char_length(item) <= 80
+        group by item order by count desc, item limit 20`,
+      sql`select item, count(*)::int as count from providers, unnest(insurance) item
+        where publication_status = 'published' and nullif(trim(item), '') is not null
+        group by item order by count desc, item limit 60`,
+      sql`select item, count(*)::int as count from providers, unnest(specialties) item
+        where publication_status = 'published' and nullif(trim(item), '') is not null and item not like '%<%' and char_length(item) <= 80
+        group by item order by count desc, item limit 30`,
     ]);
-    return { states: stateRows.map((row) => String(row.state)), categories: categoryRows.map((row) => String(row.category)) };
-  } catch { return { states: [], categories: [] }; }
+    return {
+      states: stateRows.map((row) => String(row.state)),
+      categories: categoryRows.map((row) => String(row.category)),
+      levelsOfCare: levelRows.map((row) => String(row.item)),
+      insurance: insuranceRows.map((row) => String(row.item)),
+      specialties: specialtyRows.map((row) => String(row.item)),
+    };
+  } catch { return empty; }
 }
 
 export async function getSitemapProviders() {

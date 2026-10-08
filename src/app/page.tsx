@@ -17,6 +17,7 @@ export default function Home() {
           <h1>Find recovery support with more confidence.</h1>
           <p className="hero-copy">Search treatment, detox, therapy, sober living, and recovery resources. See how each listing was reviewed.</p>
           <SearchForm />
+          <p className="guided-search-link">Not sure which care term to use? <Link href="/find-options">Answer three simple questions <ArrowRight size={15} /></Link></p>
           <div className="popular-links"><span>Explore:</span>{careCategories.slice(0, 5).map((category) => <Link key={category.slug} href={`/care/${category.slug}`}>{category.shortName}</Link>)}</div>
         </div>
       </section>
