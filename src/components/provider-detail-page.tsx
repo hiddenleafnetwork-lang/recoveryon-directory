@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BadgeCheck, CalendarDays, Clock3, DollarSign, ExternalLink, Images, Layers3, Mail, MapPin, Navigation, Phone, Pill, ShieldCheck, Star } from "lucide-react";
 import { CompareButton } from "@/components/compare-button";
 import { JsonLd } from "@/components/json-ld";
+import { ProviderLocationMap } from "@/components/provider-location-map";
 import { providerPath } from "@/lib/providers";
 import { absoluteUrl } from "@/lib/site";
 import type { Provider, ProviderProfileDetails, ReviewSignal, ReviewTheme } from "@/lib/types";
@@ -94,7 +95,7 @@ export function ProviderDetailPage({ provider, organizationProviders = [provider
     <div className="shell provider-detail-grid">
       <main className="provider-content">
         <div className="notice"><strong>{verificationLabels[provider.verificationStatus]}.</strong> Information below comes from public source data and has not necessarily been confirmed by the provider. <Link href="/how-we-verify">Read our verification standards</Link>.</div>
-        <nav className="profile-jump-links" aria-label="On this page"><span>On this page</span><a href="#overview">Overview</a>{reviewSignals.length > 0 && <a href="#reviews">Reviews</a>}<a href="#care">Care</a><a href="#approaches">Approaches</a><a href="#payment">Payment</a><a href="#admissions">Admissions</a><a href="#safety">Safety</a><a href="#questions">Questions</a></nav>
+        <nav className="profile-jump-links" aria-label="On this page"><span>On this page</span><a href="#overview">Overview</a><a href="#map">Map</a>{reviewSignals.length > 0 && <a href="#reviews">Reviews</a>}<a href="#care">Care</a><a href="#approaches">Approaches</a><a href="#payment">Payment</a><a href="#admissions">Admissions</a><a href="#safety">Safety</a><a href="#questions">Questions</a></nav>
 
         {hasMultipleLocations && <section className="listing-section provider-location-section"><span className="section-label">Multiple locations</span><h2>{provider.name} has {organizationProviders.length.toLocaleString()} published locations</h2><p>You are viewing the {provider.city}, {provider.state} location. Choose another location to compare its address, services, contact details, and verification information.</p><div className="provider-location-grid">{organizationProviders.map((location) => {
           const isCurrent = location.id === provider.id; const label = `${location.city}, ${location.state}`;
@@ -110,6 +111,8 @@ export function ProviderDetailPage({ provider, organizationProviders = [provider
           {reviewSignals[0]?.averageRating !== null && reviewSignals[0]?.averageRating !== undefined && <div><Star /><span>{reviewSignals[0].sourceName} rating</span><strong>{reviewSignals[0].averageRating.toFixed(1)} from {reviewSignals[0].reviewCount?.toLocaleString() || "an unlisted number of"} ratings</strong></div>}
           {reviewSignals.length === 0 && provider.sourceRatingValue !== null && provider.sourceRatingCount !== null && <div><Star /><span>Source rating</span><strong>{provider.sourceRatingValue.toFixed(1)} from {provider.sourceRatingCount.toLocaleString()} ratings</strong></div>}
         </div></section>
+
+        <section className="listing-section provider-map-section" id="map"><span className="section-label">Location map</span><h2>Where to find {provider.name}</h2><p>{fullAddress}. Confirm the destination and intake instructions with the organization before traveling.</p><ProviderLocationMap name={provider.name} address={fullAddress} latitude={provider.latitude} longitude={provider.longitude} /><div className="provider-map-actions"><a className="button button-secondary button-small" href={directionsHref} rel="noopener noreferrer" target="_blank"><Navigation size={16} /> Get directions</a><a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(directionsQuery)}`} rel="noopener noreferrer" target="_blank">Open in Google Maps <ExternalLink size={14} /></a></div></section>
 
         {reviewSignals.length > 0 && <section className="listing-section review-signals-section" id="reviews"><span className="section-label">Third-party review signals</span><h2>What public reviews can and cannot tell you</h2><p className="listing-lead">We show recent patterns and critical feedback alongside the source, sample size, and collection date. Reviews are personal opinions, not TreatmentLane findings, and they do not prove safety, treatment quality, or clinical outcomes.</p><div className="review-source-list">{reviewSignals.map((signal) => signal.sourceType === "google" ? <GoogleReviewSignal signal={signal} key={signal.sourceType} /> : <DirectoryReviewSignal signal={signal} key={signal.sourceType} />)}</div>{reviewSignals.length > 1 && <p className="review-overlap-note"><strong>Why we do not combine totals:</strong> directories can display reviews syndicated from Google or another platform. Adding the counts together could count the same review more than once.</p>}<p className="review-method-link"><Link href="/review-methodology">Read our review sourcing and summary methodology</Link>.</p></section>}
 
