@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: `${provider.name} in ${provider.city}, ${provider.state}`,
       description: provider.description || `Review treatment types, services, insurance information, and contact details for ${provider.name}.`,
       alternates: { canonical: providerPath(provider) },
-      robots: { index: provider.verificationStatus !== "listed", follow: true },
+      robots: { index: true, follow: true },
       openGraph: provider.featuredImageUrl ? { images: [{ url: provider.featuredImageUrl }] } : undefined,
     };
   }
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${name} locations`,
     description: `View published ${name} locations, services, source details, and verification status on TreatmentLane.`,
     alternates: { canonical: `/providers/${slug}` },
-    robots: { index: providers.some((provider) => provider.verificationStatus !== "listed"), follow: true },
+    robots: { index: true, follow: true },
   };
 }
 
