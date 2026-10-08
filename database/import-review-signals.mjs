@@ -238,7 +238,7 @@ async function upsertGoogle(provider, reviews) {
        summary_version, match_status, fetched_at, summarized_at, updated_at)
      values ($1, 'google', 'Google Maps', $2, $3, $4, $5, $6, $7, $8::jsonb, $9, $10::jsonb, $11::jsonb, $12,
        $13, $14, $15, $16, 'Apify Google Maps Reviews Scraper, newest reviews, personal data disabled', $17,
-       case when $17 is null then null else 'balanced-review-signals-v2' end, 'accepted', now(), $18, now())
+       case when $17::text is null then null else 'balanced-review-signals-v2' end, 'accepted', now(), $18, now())
      on conflict (provider_id, source_type) do update set
        source_name = excluded.source_name, source_url = excluded.source_url, external_place_id = excluded.external_place_id,
        average_rating = excluded.average_rating, review_count = excluded.review_count,

@@ -23,6 +23,34 @@ function InformationTags({ items }: { items: string[] }) {
   return <div className="information-tags">{items.map((item) => <span key={item}>{item}</span>)}</div>;
 }
 
+function importedSourceRatingSignal(provider: Provider): ReviewSignal | null {
+  if (provider.sourceRatingValue === null || provider.sourceRatingCount === null || !provider.sourceUrl) return null;
+  let sourceType: ReviewSignal["sourceType"] = "other";
+  let sourceName = "Public source";
+  try {
+    const hostname = new URL(provider.sourceUrl).hostname.replace(/^www\./, "");
+    if (hostname === "recovery.com" || hostname.endsWith(".recovery.com")) {
+      sourceType = "recovery.com";
+      sourceName = "Recovery.com";
+    } else if (hostname === "rehab.com" || hostname.endsWith(".rehab.com")) {
+      sourceType = "rehab.com";
+      sourceName = "Rehab.com";
+    } else if (hostname === "rehabs.com" || hostname.endsWith(".rehabs.com")) {
+      sourceType = "rehabs.com";
+      sourceName = "Rehabs.com";
+    }
+  } catch { /* Keep the generic source label for a malformed legacy URL. */ }
+  return {
+    sourceType, sourceName, sourceUrl: provider.sourceUrl, externalPlaceId: null,
+    averageRating: provider.sourceRatingValue, reviewCount: provider.sourceRatingCount,
+    sampledReviewCount: 0, textReviewCount: 0, ratingDistribution: {}, reviewSummary: null,
+    positiveThemes: [], concernThemes: [], summaryLimitations: null, reviewDateStart: null, reviewDateEnd: null,
+    matchConfidence: null,
+    sourceNotes: `Rating and displayed review count imported from the linked ${sourceName} record. A separate Google review sample has not yet been collected for this listing.`,
+    collectionMethod: "Imported source record", fetchedAt: provider.updatedAt,
+  };
+}
+
 function ReviewThemes({ title, themes, tone }: { title: string; themes: ReviewTheme[]; tone: "positive" | "critical" }) {
   return <div className={`review-theme-group ${tone}`}><h3>{title}</h3>{themes.length
     ? <ul>{themes.map((theme) => <li key={theme.label}><span>{theme.label}</span><small>{theme.reviewCount} sampled reviews</small></li>)}</ul>
@@ -60,6 +88,10 @@ export function ProviderDetailPage({ provider, organizationProviders = [provider
   const fullAddress = provider.address && provider.address.toLowerCase().includes(provider.city.toLowerCase())
     ? provider.address : [provider.address, provider.city, provider.state, provider.postalCode].filter(Boolean).join(", ");
   const officialWebsite = provider.website || profileDetails.officialWebsite;
+  const importedSourceSignal = importedSourceRatingSignal(provider);
+  const hasImportedSourceSignal = importedSourceSignal && reviewSignals.some((signal) => signal.sourceType === importedSourceSignal.sourceType || signal.sourceUrl === importedSourceSignal.sourceUrl);
+  const displayedReviewSignals = importedSourceSignal && !hasImportedSourceSignal ? [...reviewSignals, importedSourceSignal] : reviewSignals;
+  const hasGoogleReviewSignal = displayedReviewSignals.some((signal) => signal.sourceType === "google");
   const directionsQuery = fullAddress;
   const directionsHref = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(directionsQuery)}`;
   const hasMultipleLocations = organizationProviders.length > 1;
@@ -95,7 +127,7 @@ export function ProviderDetailPage({ provider, organizationProviders = [provider
     <div className="shell provider-detail-grid">
       <main className="provider-content">
         <div className="notice"><strong>{verificationLabels[provider.verificationStatus]}.</strong> Information below comes from public source data and has not necessarily been confirmed by the provider. <Link href="/how-we-verify">Read our verification standards</Link>.</div>
-        <nav className="profile-jump-links" aria-label="On this page"><span>On this page</span><a href="#overview">Overview</a><a href="#map">Map</a>{reviewSignals.length > 0 && <a href="#reviews">Reviews</a>}<a href="#care">Care</a><a href="#approaches">Approaches</a><a href="#payment">Payment</a><a href="#admissions">Admissions</a><a href="#safety">Safety</a><a href="#questions">Questions</a></nav>
+        <nav className="profile-jump-links" aria-label="On this page"><span>On this page</span><a href="#overview">Overview</a><a href="#map">Map</a>{displayedReviewSignals.length > 0 && <a href="#reviews">Reviews</a>}<a href="#care">Care</a><a href="#approaches">Approaches</a><a href="#payment">Payment</a><a href="#admissions">Admissions</a><a href="#safety">Safety</a><a href="#questions">Questions</a></nav>
 
         {hasMultipleLocations && <section className="listing-section provider-location-section"><span className="section-label">Multiple locations</span><h2>{provider.name} has {organizationProviders.length.toLocaleString()} published locations</h2><p>You are viewing the {provider.city}, {provider.state} location. Choose another location to compare its address, services, contact details, and verification information.</p><div className="provider-location-grid">{organizationProviders.map((location) => {
           const isCurrent = location.id === provider.id; const label = `${location.city}, ${location.state}`;
@@ -114,7 +146,7 @@ export function ProviderDetailPage({ provider, organizationProviders = [provider
 
         <section className="listing-section provider-map-section" id="map"><span className="section-label">Location map</span><h2>Where to find {provider.name}</h2><p>{fullAddress}. Confirm the destination and intake instructions with the organization before traveling.</p><ProviderLocationMap name={provider.name} address={fullAddress} latitude={provider.latitude} longitude={provider.longitude} /><div className="provider-map-actions"><a className="button button-secondary button-small" href={directionsHref} rel="noopener noreferrer" target="_blank"><Navigation size={16} /> Get directions</a><a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(directionsQuery)}`} rel="noopener noreferrer" target="_blank">Open in Google Maps <ExternalLink size={14} /></a></div></section>
 
-        {reviewSignals.length > 0 && <section className="listing-section review-signals-section" id="reviews"><span className="section-label">Third-party review signals</span><h2>What public reviews can and cannot tell you</h2><p className="listing-lead">We show recent patterns and critical feedback alongside the source, sample size, and collection date. Reviews are personal opinions, not TreatmentLane findings, and they do not prove safety, treatment quality, or clinical outcomes.</p><div className="review-source-list">{reviewSignals.map((signal) => signal.sourceType === "google" ? <GoogleReviewSignal signal={signal} key={signal.sourceType} /> : <DirectoryReviewSignal signal={signal} key={signal.sourceType} />)}</div>{reviewSignals.length > 1 && <p className="review-overlap-note"><strong>Why we do not combine totals:</strong> directories can display reviews syndicated from Google or another platform. Adding the counts together could count the same review more than once.</p>}<p className="review-method-link"><Link href="/review-methodology">Read our review sourcing and summary methodology</Link>.</p></section>}
+        {displayedReviewSignals.length > 0 && <section className="listing-section review-signals-section" id="reviews"><span className="section-label">Third-party review signals</span><h2>What public reviews can and cannot tell you</h2><p className="listing-lead">We show recent patterns and critical feedback alongside the source, sample size, and collection date. Reviews are personal opinions, not TreatmentLane findings, and they do not prove safety, treatment quality, or clinical outcomes.</p><div className="review-source-list">{displayedReviewSignals.map((signal) => signal.sourceType === "google" ? <GoogleReviewSignal signal={signal} key={signal.sourceType} /> : <DirectoryReviewSignal signal={signal} key={signal.sourceType} />)}</div>{!hasGoogleReviewSignal && <p className="review-overlap-note"><strong>Google review sample pending:</strong> <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${provider.name}, ${fullAddress}`)}`} rel="noopener noreferrer nofollow" target="_blank">View this location on Google Maps</a> to check its current public rating and reviews.</p>}{displayedReviewSignals.length > 1 && <p className="review-overlap-note"><strong>Why we do not combine totals:</strong> directories can display reviews syndicated from Google or another platform. Adding the counts together could count the same review more than once.</p>}<p className="review-method-link"><Link href="/review-methodology">Read our review sourcing and summary methodology</Link>.</p></section>}
 
         <section className="listing-section" id="care"><span className="section-label">Care options</span><h2>Treatment types and levels of care</h2><p>These are the care settings and program categories named in available public records. Confirm that the program is active, appropriate for the person&apos;s needs, and delivered at this location.</p>{careTypes.length ? <InformationTags items={careTypes} /> : <p>No treatment types are listed in the available source data.</p>}</section>
 
