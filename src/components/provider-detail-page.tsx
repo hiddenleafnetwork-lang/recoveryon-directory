@@ -59,15 +59,16 @@ function ReviewThemes({ title, themes, tone }: { title: string; themes: ReviewTh
 
 function GoogleReviewSignal({ signal }: { signal: ReviewSignal }) {
   const total = Math.max(signal.sampledReviewCount, 1);
+  const hasThemeAnalysis = Boolean(signal.reviewSummary || signal.positiveThemes.length || signal.concernThemes.length);
   return <div className="review-source-card google-review-card">
     <div className="review-source-heading"><div><span className="review-source-name">Google Maps</span><h3>{signal.averageRating?.toFixed(1) || "No rating"} {signal.reviewCount !== null && <small>from {signal.reviewCount.toLocaleString()} public ratings</small>}</h3></div><a href={signal.sourceUrl} rel="noopener noreferrer nofollow" target="_blank">View on Google Maps <ExternalLink size={14} /></a></div>
-    <p className="review-sample-meta">Sample of {signal.sampledReviewCount.toLocaleString()} newest ratings collected {new Date(signal.fetchedAt).toLocaleDateString("en-US", { dateStyle: "medium" })}. {signal.textReviewCount.toLocaleString()} included written feedback used for the theme summary. The full rating and count come from Google Maps.</p>
+    <p className="review-sample-meta">Sample of {signal.sampledReviewCount.toLocaleString()} newest ratings collected {new Date(signal.fetchedAt).toLocaleDateString("en-US", { dateStyle: "medium" })}. {signal.textReviewCount.toLocaleString()} included written feedback{hasThemeAnalysis ? " used for the theme summary" : "; theme analysis has not yet been generated for this sample"}. The full rating and count come from Google Maps.</p>
     {signal.sampledReviewCount > 0 && <div className="rating-distribution" aria-label={`Star distribution in the ${signal.sampledReviewCount} review sample`}>{[5, 4, 3, 2, 1].map((stars) => {
       const count = Number(signal.ratingDistribution[String(stars)] || 0);
       return <div className="rating-row" key={stars}><span>{stars} star</span><div><i style={{ width: `${Math.round((count / total) * 100)}%` }} /></div><strong>{count}</strong></div>;
     })}</div>}
     {signal.reviewSummary && <div className="review-summary"><h3>What recent reviewers report</h3><p>{signal.reviewSummary}</p></div>}
-    <div className="review-theme-grid"><ReviewThemes title="Positive themes" themes={signal.positiveThemes} tone="positive" /><ReviewThemes title="Critical themes" themes={signal.concernThemes} tone="critical" /></div>
+    {hasThemeAnalysis && <div className="review-theme-grid"><ReviewThemes title="Positive themes" themes={signal.positiveThemes} tone="positive" /><ReviewThemes title="Critical themes" themes={signal.concernThemes} tone="critical" /></div>}
     {signal.summaryLimitations && <p className="review-limitations"><strong>Limits:</strong> {signal.summaryLimitations}</p>}
   </div>;
 }

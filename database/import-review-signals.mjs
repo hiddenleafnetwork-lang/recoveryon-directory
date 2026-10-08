@@ -9,10 +9,12 @@ if (!process.env.OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not configur
 const args = process.argv.slice(2);
 const commit = args.includes("--commit");
 const refresh = args.includes("--refresh");
+const skipSummaries = args.includes("--skip-summaries");
 const valueArg = (name, fallback = "") => args.find((value) => value.startsWith(`${name}=`))?.slice(name.length + 1) || fallback;
 const limit = Math.min(Math.max(Number.parseInt(valueArg("--limit", "10"), 10) || 10, 1), 250);
 const maxReviews = Math.min(Math.max(Number.parseInt(valueArg("--max-reviews", "50"), 10) || 50, 10), 150);
 const providerSlug = valueArg("--provider-slug");
+const datasetId = valueArg("--dataset-id");
 const model = process.env.OPENAI_REVIEW_MODEL || "gpt-5-mini";
 const sql = neon(process.env.DATABASE_URL);
 
@@ -113,6 +115,7 @@ async function summarizeReviews(provider, reviews) {
     if (!text || !Number.isFinite(stars)) return [];
     return [{ id: index + 1, stars, publishedAt: clean(review.publishedAtDate || review.publishAt), text }];
   });
+  if (skipSummaries) return { summary: null, textReviewCount: usable.length };
   if (usable.length < 5) return { summary: null, textReviewCount: usable.length };
 
   const response = await fetch("https://api.openai.com/v1/responses", {
@@ -147,6 +150,18 @@ async function summarizeReviews(provider, reviews) {
 }
 
 async function runGoogleReviews(providers) {
+  if (datasetId) {
+    if (!/^[A-Za-z0-9]+$/.test(datasetId)) throw new Error("Apify dataset ID is invalid");
+    const endpoint = new URL(`https://api.apify.com/v2/datasets/${datasetId}/items`);
+    endpoint.searchParams.set("clean", "true");
+    endpoint.searchParams.set("format", "json");
+    const response = await fetch(endpoint, { headers: { Authorization: `Bearer ${process.env.APIFY_TOKEN}` } });
+    const body = await response.text();
+    if (!response.ok) throw new Error(`Apify dataset read failed with status ${response.status}: ${body.slice(0, 400)}`);
+    const items = JSON.parse(body);
+    if (!Array.isArray(items)) throw new Error("Apify dataset returned an unexpected payload");
+    return items;
+  }
   const expectedCost = providers.length * maxReviews * 0.0006;
   const chargeCap = Math.max(1, Math.ceil(expectedCost * 2 * 100) / 100);
   const endpoint = new URL("https://api.apify.com/v2/actors/compass~google-maps-reviews-scraper/run-sync-get-dataset-items");
@@ -280,7 +295,7 @@ if (!providers.length) {
   process.exit(0);
 }
 
-console.log(`${commit ? "Enriching" : "Previewing"} ${providers.length} provider review profiles with up to ${maxReviews} recent Google reviews each.`);
+console.log(`${commit ? "Enriching" : "Previewing"} ${providers.length} provider review profiles with up to ${maxReviews} recent Google reviews each${datasetId ? ` from saved dataset ${datasetId}` : ""}.`);
 
 const recoveryResults = await Promise.all(providers.map(async (provider) => {
   try { return await upsertRecovery(provider, await fetchRecoveryRating(provider.source_url)); }
