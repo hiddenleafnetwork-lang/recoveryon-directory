@@ -318,6 +318,10 @@ p { color: var(--ink-soft); }
 .admissions-contact-strip svg { flex: 0 0 auto; }
 .admissions-contact-strip span { display: grid; min-width: 0; overflow-wrap: anywhere; font-size: .75rem; font-weight: 800; }
 .admissions-contact-strip small { color: var(--ink-soft); font-size: .62rem; font-weight: 750; text-transform: uppercase; letter-spacing: .05em; }
+.audience-guidance-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; }
+.audience-guidance-grid > div { padding: 18px; border: 1px solid var(--line); border-radius: 13px; background: #fbfdfd; }
+.audience-guidance-grid h3 { margin: 0 0 8px; font-size: .92rem; }
+.audience-guidance-grid p { margin: 0; font-size: .77rem; }
 .missing-information-section { margin-top: 4px; }
 .gap-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin: 22px 0 0; padding: 0; list-style: none; }
 .gap-list li { padding: 13px 14px; border: 1px solid #ead8cd; border-radius: 11px; color: #78452f; background: #fff8f4; font-size: .8rem; font-weight: 700; }
@@ -435,7 +439,7 @@ p { color: var(--ink-soft); }
 @media (max-width: 620px) {
   .review-source-heading { display: grid; }
   .review-theme-grid { grid-template-columns: 1fr; }
-  .admissions-contact-strip, .gap-list { grid-template-columns: 1fr; }
+  .admissions-contact-strip, .gap-list, .audience-guidance-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 760px) {

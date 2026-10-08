@@ -77,4 +77,8 @@ export type ProviderProfileDetails = {
   evidenceSourceCount: number | null;
   evidenceSources: string[];
   supportServices: string[];
+  accessServices: string[];
+  coordinatedServices: string[];
+  medicationServices: string[];
+  languages: string[];
 };

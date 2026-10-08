@@ -230,7 +230,7 @@ function cleanString(value: unknown) {
 }
 
 export const getProviderProfileDetails = cache(async (providerId: string): Promise<ProviderProfileDetails> => {
-  const empty: ProviderProfileDetails = { email: null, intakePhone: null, officialWebsite: null, operatingDays: [], is24Hours: null, evidenceSourceCount: null, evidenceSources: [], supportServices: [] };
+  const empty: ProviderProfileDetails = { email: null, intakePhone: null, officialWebsite: null, operatingDays: [], is24Hours: null, evidenceSourceCount: null, evidenceSources: [], supportServices: [], accessServices: [], coordinatedServices: [], medicationServices: [], languages: [] };
   const sql = getDatabase();
   if (!sql) return empty;
   try {
@@ -248,6 +248,21 @@ export const getProviderProfileDetails = cache(async (providerId: string): Promi
       ["Peer support", "Peer support"], ["Social skills development", "Social skills development"],
       ["Suicide prevention", "Suicide prevention services"], ["Family psychoeducation", "Family education"],
     ] as const;
+    const accessServices = [
+      ["Transportation assistance", "Transportation assistance"], ["Education services", "Education support"],
+      ["Vocational rehab", "Vocational rehabilitation"], ["Supported employment", "Supported employment"],
+      ["Transitional housing", "Transitional housing"], ["Supported housing", "Supported housing"],
+      ["Childcare for clients", "Childcare for clients"], ["Beds for clients children", "Beds for clients' children"],
+      ["Legal advocacy", "Legal advocacy"],
+    ] as const;
+    const coordinatedServices = [
+      ["Integrated primary care", "Integrated primary care"], ["Intensive case mgmt", "Intensive case management"],
+      ["Psychosocial rehab", "Psychosocial rehabilitation"], ["Assertive community treatment", "Assertive community treatment"],
+      ["Chronic disease mgmt", "Chronic disease management"], ["Illness mgmt + recovery", "Illness management and recovery"],
+      ["Diet/exercise counseling", "Diet and exercise counseling"], ["DV services", "Domestic violence support"],
+    ] as const;
+    const languageNames = ["Spanish", "American Sign Language", "Vietnamese", "Korean", "Chinese", "Tagalog", "Arabic", "French", "Russian", "Portuguese", "Hindi", "Hmong", "Ojibwa", "Yupik"];
+    const mapped = (items: ReadonlyArray<readonly [string, string]>) => [...new Set(items.flatMap(([needle, label]) => codes.includes(needle) ? [label] : []))];
     const evidenceSources = [
       master["Samhsa In Su"] === "Y" || master["Samhsa In Mh"] === "Y" ? "SAMHSA directory data" : "",
       Object.keys(recovery).length ? "Recovery.com source record" : "",
@@ -262,7 +277,18 @@ export const getProviderProfileDetails = cache(async (providerId: string): Promi
       is24Hours: master["Is 24 7"] === "Y" ? true : master["Is 24 7"] === "N" ? false : null,
       evidenceSourceCount: Number.isFinite(sourceCount) && sourceCount > 0 ? sourceCount : null,
       evidenceSources: [...new Set(evidenceSources)],
-      supportServices: supportedServices.flatMap(([needle, label]) => codes.includes(needle) ? [label] : []),
+      supportServices: mapped(supportedServices), accessServices: mapped(accessServices),
+      coordinatedServices: mapped(coordinatedServices),
+      medicationServices: [
+        codes.some((item) => ["Prescribes buprenorphine", "Buprenorphine", "Bup maintenance", "Bup-naloxone"].includes(item)) && "Buprenorphine treatment",
+        codes.some((item) => ["Prescribes naltrexone", "Naltrexone", "Relapse prevention (naltrexone)"].includes(item)) && "Naltrexone treatment",
+        codes.some((item) => ["Methadone", "Methadone maintenance", "Outpatient methadone/buprenorphine"].includes(item)) && "Methadone treatment",
+        codes.includes("Acamprosate") && "Acamprosate", codes.includes("Disulfiram") && "Disulfiram",
+        codes.includes("Lofexidine/Clonidine detox") && "Lofexidine or clonidine for withdrawal",
+        codes.includes("Withdrawal stabilization") && "Withdrawal stabilization",
+        codes.includes("OTP (federally certified)") && "Federally certified opioid treatment program",
+      ].filter(Boolean) as string[],
+      languages: languageNames.filter((language) => codes.includes(language)),
     };
   } catch { return empty; }
 });
