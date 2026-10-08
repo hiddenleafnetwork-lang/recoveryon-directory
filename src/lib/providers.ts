@@ -7,7 +7,8 @@ import type { Provider } from "@/lib/types";
 type ProviderRow = {
   id: string; name: string; slug: string; organization_slug: string; location_slug: string;
   description: string | null; address: string | null;
-  city: string; state: string; postal_code: string | null; phone: string | null; website: string | null;
+  city: string; state: string; postal_code: string | null; latitude: number | string | null; longitude: number | string | null;
+  phone: string | null; website: string | null;
   categories: string[] | null; levels_of_care: string[] | null; insurance: string[] | null;
   insurance_details: string | null; treatment_types: string[] | null; therapies: string[] | null;
   amenities: string[] | null; specialties: string[] | null; featured_image_url: string | null; image_urls: string[] | null;
@@ -18,7 +19,7 @@ type ProviderRow = {
   organization_location_count: number | string;
 };
 
-const providerColumns = `id, name, slug, organization_slug, location_slug, description, address, city, state, postal_code, phone, website,
+const providerColumns = `id, name, slug, organization_slug, location_slug, description, address, city, state, postal_code, latitude, longitude, phone, website,
   categories, levels_of_care, insurance, license_summary, accreditation, last_verified_at,
   verification_status, is_sponsored, source_url, updated_at, featured_image_url, image_urls, treatment_types,
   therapies, amenities, specialties, insurance_details, price_range, treatment_duration, source_rating_value, source_rating_count,
@@ -32,7 +33,9 @@ function toProvider(row: ProviderRow): Provider {
     id: row.id, name: row.name, slug: row.slug, organizationSlug: row.organization_slug, locationSlug: row.location_slug,
     organizationLocationCount: Number(row.organization_location_count || 1),
     description: row.description, address: row.address,
-    city: row.city, state: row.state, postalCode: row.postal_code, phone: row.phone, website: row.website,
+    city: row.city, state: row.state, postalCode: row.postal_code,
+    latitude: row.latitude === null ? null : Number(row.latitude), longitude: row.longitude === null ? null : Number(row.longitude),
+    phone: row.phone, website: row.website,
     categories: row.categories || [], levelsOfCare: row.levels_of_care || [], insurance: row.insurance || [],
     insuranceDetails: row.insurance_details, treatmentTypes: row.treatment_types || [], therapies: row.therapies || [],
     amenities: row.amenities || [], specialties: row.specialties || [], featuredImageUrl: row.featured_image_url,

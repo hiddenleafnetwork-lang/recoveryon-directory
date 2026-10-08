@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SearchX } from "lucide-react";
 import { Pagination } from "@/components/pagination";
+import { DirectoryMap, type DirectoryMapProvider } from "@/components/directory-map";
+import { LocationAutocompleteInput } from "@/components/location-autocomplete-input";
 import { ProviderCard } from "@/components/provider-card";
 import { careCategories, states } from "@/lib/content";
-import { searchProviders, type ProviderSort } from "@/lib/providers";
+import { providerPath, searchProviders, type ProviderSort } from "@/lib/providers";
 
 function single(value: string | string[] | undefined) { return Array.isArray(value) ? value[0] || "" : value || ""; }
 
@@ -31,6 +33,20 @@ export default async function DirectoryPage({ searchParams }: { searchParams: Pr
   const requestedPage = Math.max(Number.parseInt(single(params.page), 10) || 1, 1);
   const result = await searchProviders({ keyword, location, category, state, sort, page: requestedPage });
   const paginationParams = Object.fromEntries(Object.entries({ keyword, location, category, state, sort: sort === "recommended" ? "" : sort }).filter(([, value]) => value));
+  const mapProviders = result.providers.flatMap((provider): DirectoryMapProvider[] => {
+    if (provider.latitude === null || provider.longitude === null) return [];
+    if (!Number.isFinite(provider.latitude) || !Number.isFinite(provider.longitude)) return [];
+    if (provider.latitude < -90 || provider.latitude > 90 || provider.longitude < -180 || provider.longitude > 180) return [];
+    return [{
+      id: provider.id,
+      name: provider.name,
+      city: provider.city,
+      state: provider.state,
+      href: providerPath(provider),
+      latitude: provider.latitude,
+      longitude: provider.longitude,
+    }];
+  });
 
   return (
     <>
@@ -39,7 +55,7 @@ export default async function DirectoryPage({ searchParams }: { searchParams: Pr
         <form className="filter-card" method="get">
           <h2>Filter listings</h2>
           <label>Keyword<input name="keyword" defaultValue={single(params.keyword)} placeholder="Service or provider" /></label>
-          <label>Location<input name="location" defaultValue={single(params.location)} placeholder="City, state, or ZIP" /></label>
+          <label>Location<LocationAutocompleteInput key={single(params.location)} defaultValue={single(params.location)} /></label>
           <label>Type of care<select name="category" defaultValue={category}><option value="">All care types</option>{careCategories.map((item) => <option key={item.slug} value={item.name}>{item.name}</option>)}</select></label>
           <label>State<select name="state" defaultValue={state}><option value="">All states</option>{states.map((item) => <option key={item.code} value={item.code}>{item.name}</option>)}</select></label>
           <label>Sort by<select name="sort" defaultValue={sort}><option value="recommended">Recommended</option><option value="recently-verified">Recently verified</option><option value="most-reviewed">Most reviewed</option><option value="highest-rated">Highest source rating</option><option value="alphabetical">Alphabetical</option></select></label>
@@ -47,6 +63,7 @@ export default async function DirectoryPage({ searchParams }: { searchParams: Pr
         </form>
         <section>
           <div className="results-heading"><div><h1>{result.total ? `${result.total.toLocaleString()} published ${result.total === 1 ? "listing" : "listings"}` : "Published listings"}</h1><p>Recommended order uses verification, source evidence, profile completeness, and review confidence. Sponsored labels do not change organic order.</p></div></div>
+          <DirectoryMap providers={mapProviders} resultCount={result.providers.length} />
           {result.providers.length ? <><div className="provider-list">{result.providers.map((provider) => <ProviderCard key={provider.id} provider={provider} />)}</div><Pagination pathname="/directory" params={paginationParams} page={result.page} totalPages={result.totalPages} /></> : <div className="empty-state"><SearchX size={36} /><h2>No matching listings</h2><p>Try another search or suggest an organization for review.</p><Link className="button" href="/providers/apply">Suggest an organization</Link></div>}
         </section>
       </div>

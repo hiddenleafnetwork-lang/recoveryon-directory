@@ -10,6 +10,8 @@ export type Provider = {
   city: string;
   state: string;
   postalCode: string | null;
+  latitude: number | null;
+  longitude: number | null;
   phone: string | null;
   website: string | null;
   categories: string[];

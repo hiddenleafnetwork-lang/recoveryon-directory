@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, MapPin, Search } from "lucide-react";
+import { LocationAutocompleteInput } from "@/components/location-autocomplete-input";
 
 export function SearchForm({ compact = false }: { compact?: boolean }) {
   const router = useRouter();
@@ -27,7 +28,7 @@ export function SearchForm({ compact = false }: { compact?: boolean }) {
       <label>
         <span className="sr-only">City, state, or ZIP code</span>
         <MapPin size={20} aria-hidden="true" />
-        <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="City, state, or ZIP" />
+        <LocationAutocompleteInput onValueChange={setLocation} />
       </label>
       <button className="button" type="submit">Search <ArrowRight size={18} /></button>
     </form>
