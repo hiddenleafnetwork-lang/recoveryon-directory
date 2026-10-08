@@ -67,3 +67,14 @@ export type ReviewSignal = {
   collectionMethod: string;
   fetchedAt: string;
 };
+
+export type ProviderProfileDetails = {
+  email: string | null;
+  intakePhone: string | null;
+  officialWebsite: string | null;
+  operatingDays: string[];
+  is24Hours: boolean | null;
+  evidenceSourceCount: number | null;
+  evidenceSources: string[];
+  supportServices: string[];
+};

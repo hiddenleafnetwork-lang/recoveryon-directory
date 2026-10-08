@@ -2,7 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 import { getDatabase } from "@/lib/db";
-import type { Provider, ReviewSignal, ReviewTheme } from "@/lib/types";
+import type { Provider, ProviderProfileDetails, ReviewSignal, ReviewTheme } from "@/lib/types";
 
 type ProviderRow = {
   id: string; name: string; slug: string; organization_slug: string; location_slug: string;
@@ -219,6 +219,52 @@ export const getProviderReviewSignals = cache(async (providerId: string): Promis
       collectionMethod: String(row.collection_method), fetchedAt: String(row.fetched_at),
     }));
   } catch { return []; }
+});
+
+function objectValue(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
+}
+
+function cleanString(value: unknown) {
+  return typeof value === "string" ? value.replaceAll("\u2014", "-").replaceAll("\u2013", "-").trim() : "";
+}
+
+export const getProviderProfileDetails = cache(async (providerId: string): Promise<ProviderProfileDetails> => {
+  const empty: ProviderProfileDetails = { email: null, intakePhone: null, officialWebsite: null, operatingDays: [], is24Hours: null, evidenceSourceCount: null, evidenceSources: [], supportServices: [] };
+  const sql = getDatabase();
+  if (!sql) return empty;
+  try {
+    const rows = await sql`select email, intake_phone, source_data from providers where id = ${providerId} limit 1`;
+    if (!rows[0]) return empty;
+    const sourceData = objectValue(rows[0].source_data);
+    const masterRows = Array.isArray(sourceData.masterRows) ? sourceData.masterRows : [];
+    const master = objectValue(masterRows[0]);
+    const recovery = objectValue(sourceData.recoveryRow);
+    const operatingDaysRaw = cleanString(master["Days Open"] || recovery.days_open);
+    const codes = cleanString(master["Samhsa Service Codes Named"]).split("|").map((item) => item.trim());
+    const supportedServices = [
+      ["Case management", "Case management"], ["Transportation assistance", "Transportation assistance"],
+      ["Education services", "Education support"], ["Court-ordered outpatient", "Court-ordered outpatient care"],
+      ["Peer support", "Peer support"], ["Social skills development", "Social skills development"],
+      ["Suicide prevention", "Suicide prevention services"], ["Family psychoeducation", "Family education"],
+    ] as const;
+    const evidenceSources = [
+      master["Samhsa In Su"] === "Y" || master["Samhsa In Mh"] === "Y" ? "SAMHSA directory data" : "",
+      Object.keys(recovery).length ? "Recovery.com source record" : "",
+      cleanString(master["Website Real"]) ? "Organization website" : "",
+    ].filter(Boolean);
+    const sourceCount = Number(master["Source Count"]);
+    return {
+      email: cleanString(rows[0].email || master.Email || recovery.email) || null,
+      intakePhone: cleanString(rows[0].intake_phone || master["Intake Phone"]) || null,
+      officialWebsite: cleanString(master["Website Real"]) || null,
+      operatingDays: operatingDaysRaw ? operatingDaysRaw.split(",").map((day) => day.trim()).filter(Boolean) : [],
+      is24Hours: master["Is 24 7"] === "Y" ? true : master["Is 24 7"] === "N" ? false : null,
+      evidenceSourceCount: Number.isFinite(sourceCount) && sourceCount > 0 ? sourceCount : null,
+      evidenceSources: [...new Set(evidenceSources)],
+      supportServices: supportedServices.flatMap(([needle, label]) => codes.includes(needle) ? [label] : []),
+    };
+  } catch { return empty; }
 });
 
 export async function hasPublishedProviders(filter: { state?: string; category?: string }) {

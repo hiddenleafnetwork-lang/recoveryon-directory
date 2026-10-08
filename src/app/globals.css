@@ -288,6 +288,10 @@ p { color: var(--ink-soft); }
 .provider-detail-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 48px; padding: 48px 0 70px; }
 .provider-content { min-width: 0; }
 .provider-content a { color: var(--teal-dark); text-decoration: underline; text-underline-offset: 3px; }
+.provider-content section[id] { scroll-margin-top: 96px; }
+.profile-jump-links { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: #fbfdfd; }
+.profile-jump-links span { margin-right: 3px; color: var(--ink); font-size: .72rem; font-weight: 850; }
+.profile-jump-links a { padding: 5px 8px; border-radius: 999px; color: var(--teal-dark); background: var(--aqua); font-size: .69rem; font-weight: 800; text-decoration: none; }
 .listing-section { padding: 40px 0; border-bottom: 1px solid var(--line); }
 .listing-section:last-child { border-bottom: 0; }
 .listing-section h2 { margin: 7px 0 18px; font-size: clamp(1.65rem, 3vw, 2.15rem); }
@@ -299,6 +303,28 @@ p { color: var(--ink-soft); }
 .quick-facts svg { grid-row: 1 / span 2; width: 22px; color: var(--teal); }
 .quick-facts span { color: var(--ink-soft); font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; font-weight: 800; }
 .quick-facts strong { font-size: .86rem; line-height: 1.35; }
+.subsection-panel { display: flex; align-items: flex-start; gap: 13px; margin-top: 22px; padding: 18px; border: 1px solid #cfe4df; border-radius: 13px; background: var(--aqua); }
+.subsection-panel svg { flex: 0 0 auto; color: var(--teal-dark); }
+.subsection-panel h3, .decision-checklist h3 { margin: 0 0 6px; font-size: 1rem; }
+.subsection-panel p { margin: 0; font-size: .82rem; }
+.decision-checklist { margin-top: 24px; padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: #fbfdfd; }
+.decision-checklist ul { display: grid; gap: 9px; margin: 12px 0 0; padding-left: 20px; }
+.decision-checklist li { color: var(--ink-soft); font-size: .82rem; }
+.admissions-question-list { display: grid; gap: 10px; margin: 22px 0 0; padding: 0; list-style: none; counter-reset: admission-question; }
+.admissions-question-list li { position: relative; min-height: 44px; padding: 12px 14px 12px 47px; border: 1px solid var(--line); border-radius: 11px; color: var(--ink-soft); background: white; font-size: .83rem; counter-increment: admission-question; }
+.admissions-question-list li::before { content: counter(admission-question); position: absolute; left: 13px; top: 10px; display: grid; place-items: center; width: 25px; height: 25px; border-radius: 999px; color: white; background: var(--teal); font-size: .7rem; font-weight: 850; }
+.admissions-contact-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; margin-top: 18px; }
+.admissions-contact-strip a { display: flex; align-items: center; gap: 9px; min-width: 0; padding: 13px; border: 1px solid #cfe4df; border-radius: 11px; background: var(--aqua); text-decoration: none; }
+.admissions-contact-strip svg { flex: 0 0 auto; }
+.admissions-contact-strip span { display: grid; min-width: 0; overflow-wrap: anywhere; font-size: .75rem; font-weight: 800; }
+.admissions-contact-strip small { color: var(--ink-soft); font-size: .62rem; font-weight: 750; text-transform: uppercase; letter-spacing: .05em; }
+.missing-information-section { margin-top: 4px; }
+.gap-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin: 22px 0 0; padding: 0; list-style: none; }
+.gap-list li { padding: 13px 14px; border: 1px solid #ead8cd; border-radius: 11px; color: #78452f; background: #fff8f4; font-size: .8rem; font-weight: 700; }
+.profile-faq { display: grid; gap: 9px; }
+.profile-faq details { border: 1px solid var(--line); border-radius: 11px; background: white; }
+.profile-faq summary { padding: 15px 17px; color: var(--ink); font-size: .84rem; font-weight: 820; cursor: pointer; }
+.profile-faq details p { margin: 0; padding: 0 17px 16px; font-size: .8rem; }
 .information-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .information-tags span { display: inline-flex; align-items: center; min-height: 36px; padding: 7px 12px; border-radius: 999px; border: 1px solid #cfe4df; color: var(--ink); background: var(--aqua); font-size: .78rem; font-weight: 700; }
 .source-detail { margin: 18px 0 0; padding: 16px 18px; border-radius: 12px; background: var(--cream); border: 1px solid #ebe7de; }
@@ -409,6 +435,7 @@ p { color: var(--ink-soft); }
 @media (max-width: 620px) {
   .review-source-heading { display: grid; }
   .review-theme-grid { grid-template-columns: 1fr; }
+  .admissions-contact-strip, .gap-list { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 760px) {

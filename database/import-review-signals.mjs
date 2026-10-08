@@ -57,6 +57,10 @@ function safeReviewText(value) {
     .slice(0, 1_200);
 }
 
+function safeSummaryText(value) {
+  return clean(value).replace(/[^\x20-\x7E]/g, " ").replace(/\s+/g, " ").trim();
+}
+
 function searchString(provider) {
   return clean([provider.name, provider.address, provider.city, provider.state, provider.postal_code].filter(Boolean).join(" "));
 }
@@ -133,10 +137,10 @@ async function summarizeReviews(provider, reviews) {
   const parsed = SummarySchema.parse(JSON.parse(outputText(payload)));
   const themesWithCounts = (themes) => themes.flatMap((theme) => {
     const reviewIds = [...new Set(theme.reviewIds)].filter((id) => id <= usable.length);
-    return reviewIds.length >= 2 ? [{ label: theme.label, reviewCount: reviewIds.length }] : [];
+    return reviewIds.length >= 2 ? [{ label: safeSummaryText(theme.label), reviewCount: reviewIds.length }] : [];
   });
   return { textReviewCount: usable.length, summary: {
-    ...parsed,
+    overview: safeSummaryText(parsed.overview), limitations: safeSummaryText(parsed.limitations),
     positiveThemes: themesWithCounts(parsed.positiveThemes),
     concernThemes: themesWithCounts(parsed.concernThemes),
   } };
