@@ -49,7 +49,7 @@ function stringList(value: unknown) {
 }
 
 function isoDate(value: unknown, fallback: string) {
-  const candidate = text(value, fallback);
+  const candidate = value instanceof Date ? value.toISOString() : text(value, fallback);
   const parsed = new Date(candidate);
   return Number.isNaN(parsed.getTime()) ? fallback : parsed.toISOString();
 }

@@ -157,6 +157,11 @@ p { color: var(--ink-soft); }
 .prose h3 { margin-top: 34px; }
 .prose p, .prose li { color: var(--ink-soft); }
 .prose a { color: var(--teal-dark); text-decoration: underline; text-underline-offset: 3px; }
+.prose strong { color: var(--ink); }
+.article-list { display: grid; gap: 10px; padding-left: 1.5rem; }
+.article-list li { padding-left: 4px; }
+.article-list li::marker { color: var(--teal-dark); font-weight: 800; }
+.article-inline-source { display: inline; font-size: .92em; font-weight: 750; overflow-wrap: anywhere; }
 .article-byline { font-size: .84rem !important; }
 .article-thumbnail { width: 100%; height: auto; margin-bottom: 30px; border: 1px solid var(--line); border-radius: 18px; }
 .article-faq { padding: 20px 0; border-bottom: 1px solid var(--line); }
