@@ -152,7 +152,7 @@ export const guides: Guide[] = [
       { label: "CMS consumer resources", href: "https://www.cms.gov/medical-bill-rights" },
       { label: "SAMHSA National Helpline", href: "https://www.samhsa.gov/find-help/helplines/national-helpline" },
     ],
-  },,
+  },
 
   {
     slug: "how-much-does-rehab-cost",
