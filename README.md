@@ -20,6 +20,7 @@ The site works without a database connection, but the directory will be empty an
 4. Deploy to Vercel and verify the preview URL.
 5. Add `treatmentlane.com` and `www.treatmentlane.com` to the Vercel project.
 6. Point Cloudflare DNS to the records Vercel provides, then verify both hosts redirect to the preferred HTTPS address.
+7. Pushes to `main` auto-deploy to production through the connected Vercel project.
 
 Never expose `DATABASE_URL` in browser code or commit `.env.local`.
 
