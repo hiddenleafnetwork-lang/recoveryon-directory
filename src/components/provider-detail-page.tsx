@@ -3,7 +3,7 @@ import Link from "next/link";
 import { BadgeCheck, Clock3, DollarSign, ExternalLink, Images, Layers3, MapPin, Phone, Star } from "lucide-react";
 import { JsonLd } from "@/components/json-ld";
 import { providerPath } from "@/lib/providers";
-import { absoluteUrl } from "@/lib/site";
+import { absoluteUrl, sourceDisplayName } from "@/lib/site";
 import type { Provider } from "@/lib/types";
 
 export const verificationLabels = {
@@ -24,10 +24,19 @@ export function ProviderDetailPage({ provider, organizationProviders = [provider
   const careTypes = unique([...provider.treatmentTypes, ...provider.levelsOfCare, ...provider.categories]);
   const path = providerPath(provider);
   const hasMultipleLocations = organizationProviders.length > 1;
+  const sourceName = sourceDisplayName(provider.sourceUrl);
+  const ratingValue = provider.sourceRatingValue;
+  const ratingCount = provider.sourceRatingCount;
+  const hasSourceRating = ratingValue !== null && ratingCount !== null;
   const jsonLd = {
     "@context": "https://schema.org", "@type": "MedicalBusiness", name: provider.name,
     url: absoluteUrl(path), telephone: provider.phone || undefined,
     image: provider.featuredImageUrl || undefined,
+    aggregateRating: hasSourceRating ? {
+      "@type": "AggregateRating",
+      ratingValue,
+      reviewCount: ratingCount,
+    } : undefined,
     address: {
       "@type": "PostalAddress", streetAddress: provider.address || undefined, addressLocality: provider.city,
       addressRegion: provider.state, postalCode: provider.postalCode || undefined, addressCountry: "US",
@@ -80,7 +89,7 @@ export function ProviderDetailPage({ provider, organizationProviders = [provider
             {careTypes.length > 0 && <div><Layers3 /><span>Primary type</span><strong>{careTypes[0]}</strong></div>}
             {provider.treatmentDuration && <div><Clock3 /><span>Typical duration</span><strong>{provider.treatmentDuration}</strong></div>}
             {provider.priceRange && <div><DollarSign /><span>Source price information</span><strong>{provider.priceRange}</strong></div>}
-            {provider.sourceRatingValue !== null && provider.sourceRatingCount !== null && <div><Star /><span>Source rating</span><strong>{provider.sourceRatingValue.toFixed(1)} from {provider.sourceRatingCount.toLocaleString()} ratings</strong></div>}
+            {ratingValue !== null && ratingCount !== null && <div><Star /><span>{sourceName ? `${sourceName} rating` : "Source rating"}</span><strong>{ratingValue.toFixed(1)} from {ratingCount.toLocaleString()} ratings</strong></div>}
           </div>}
         </section>
 
