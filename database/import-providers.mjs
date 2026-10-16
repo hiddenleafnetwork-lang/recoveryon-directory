@@ -10,6 +10,7 @@ const commit = args.has("--commit");
 const root = process.cwd();
 const masterPath = resolve(root, process.env.MASTER_CSV || "work/data/atc-usa-master.csv");
 const recoveryPath = resolve(root, process.env.RECOVERY_CSV || "work/data/recovery-centers-usa.csv");
+const TREATMENTLANE_LISTING_PLACEHOLDER = "https://treatmentlane.com/images/treatmentlane-listing-placeholder.webp";
 
 const US_REGIONS = new Set([
   "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA",
@@ -156,18 +157,8 @@ function recoveryAmenities(row) {
 
 function cleanImages(row) {
   const candidates = [row.featured_image, ...clean(row.all_images).split(/\s*\|\s*/)].map((value) => clean(value).replace(/\\$/, ""));
-  const used = new Set();
-  const images = [];
-  for (const candidate of candidates) {
-    if (!candidate.startsWith("https://res.cloudinary.com/rehabpath/image/upload/")) continue;
-    if (/\.svg(?:\?|$)|h_48,w_48|e_trim:10/i.test(candidate)) continue;
-    const assetKey = candidate.split("?")[0].split("/").at(-1)?.replace(/\.[^.]+$/, "");
-    if (!assetKey || used.has(assetKey)) continue;
-    used.add(assetKey);
-    images.push(candidate);
-    if (images.length === 8) break;
-  }
-  return images;
+  const hasRecoveryImage = candidates.some((candidate) => candidate.startsWith("https://res.cloudinary.com/rehabpath/image/upload/") && !/\.svg(?:\?|$)|h_48,w_48|e_trim:10/i.test(candidate));
+  return hasRecoveryImage ? [TREATMENTLANE_LISTING_PLACEHOLDER] : [];
 }
 
 const SPECIALTY_LABELS = new Map([

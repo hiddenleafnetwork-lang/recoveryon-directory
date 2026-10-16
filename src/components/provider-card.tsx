@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BadgeCheck, Building2, MapPin, MapPinned, Star } from "lucide-react";
 import { CompareButton } from "@/components/compare-button";
 import { providerPath } from "@/lib/providers";
+import { isListingPlaceholder } from "@/lib/site";
 import type { Provider } from "@/lib/types";
 
 const labels = {
@@ -19,12 +20,13 @@ export function ProviderCard({ provider }: { provider: Provider }) {
   const ratingValue = provider.publicReviewRatingValue ?? provider.sourceRatingValue;
   const ratingCount = provider.publicReviewRatingCount ?? provider.sourceRatingCount;
   const ratingSource = provider.publicReviewSourceName || "Source";
+  const usesPlaceholder = isListingPlaceholder(provider.featuredImageUrl);
   return (
     <article className="provider-card">
       {provider.isSponsored && <span className="sponsored-label">Sponsored</span>}
       <Link className="provider-card-media" href={href} aria-label={`View ${provider.name}`}>
         {provider.featuredImageUrl
-          ? <Image src={provider.featuredImageUrl} alt={`${provider.name} facility`} fill sizes="(max-width: 760px) 100vw, 190px" unoptimized />
+          ? <Image src={provider.featuredImageUrl} alt={usesPlaceholder ? "TreatmentLane listing photo placeholder" : `${provider.name} facility`} fill sizes="(max-width: 760px) 100vw, 190px" unoptimized />
           : <span className="provider-card-placeholder" aria-hidden="true"><Building2 /></span>}
       </Link>
       <div className="provider-card-body">

@@ -6,7 +6,7 @@ import { JsonLd } from "@/components/json-ld";
 import { ProviderLocationMap } from "@/components/provider-location-map";
 import { ProviderActionLink } from "@/components/provider-action-link";
 import { providerPath } from "@/lib/providers";
-import { absoluteUrl } from "@/lib/site";
+import { absoluteUrl, isListingPlaceholder } from "@/lib/site";
 import type { Provider, ProviderProfileDetails, ReviewSignal, ReviewTheme } from "@/lib/types";
 
 export const verificationLabels = {
@@ -82,6 +82,7 @@ export function ProviderDetailPage({ provider, organizationProviders = [provider
   provider: Provider; organizationProviders?: Provider[]; reviewSignals?: ReviewSignal[]; profileDetails: ProviderProfileDetails;
 }) {
   const gallery = provider.imageUrls.slice(0, 5);
+  const galleryUsesPlaceholder = gallery.length === 1 && isListingPlaceholder(gallery[0]);
   const careTypes = unique([...provider.treatmentTypes, ...provider.levelsOfCare, ...provider.categories]);
   const medicationSupport = unique([...profileDetails.medicationServices, ...provider.therapies, ...provider.specialties]).filter((item) => /medication-assisted|buprenorphine|naltrexone|methadone|acamprosate|disulfiram|withdrawal|opioid treatment/i.test(item));
   const counselingApproaches = unique(provider.therapies).filter((item) => !medicationSupport.some((medication) => medication.toLowerCase() === item.toLowerCase()));
@@ -124,7 +125,7 @@ export function ProviderDetailPage({ provider, organizationProviders = [provider
     <JsonLd data={jsonLd} />
     <section className="provider-hero"><div className="shell"><div className="breadcrumb"><Link href="/directory">Directory</Link><span>/</span>{hasMultipleLocations ? <><Link href={`/providers/${provider.organizationSlug}`}>{provider.name} locations</Link><span>/</span><span>{provider.city}</span></> : <span>{provider.name}</span>}</div><div className="provider-hero-copy"><div>{provider.isSponsored && <span className="kicker plain">Sponsored placement</span>}<h1>{provider.name}</h1><p><MapPin size={18} /> {provider.city}, {provider.state}</p></div><div className="provider-hero-status"><BadgeCheck size={18} /> {verificationLabels[provider.verificationStatus]}</div></div></div></section>
 
-    {gallery.length > 0 && <section className="shell provider-gallery-wrap"><div className={`provider-gallery gallery-count-${Math.min(gallery.length, 5)}`}>{gallery.map((image, index) => <div className="provider-gallery-image" key={image}><Image src={image} alt={`${provider.name} facility${index ? ` photo ${index + 1}` : ""}`} fill sizes={index === 0 ? "(max-width: 760px) 100vw, 65vw" : "(max-width: 760px) 50vw, 25vw"} priority={index === 0} unoptimized /></div>)}</div><p className="image-attribution"><Images size={14} /> Photos supplied by the public source listing. Confirm that photos are current with the organization.</p></section>}
+    {gallery.length > 0 && <section className="shell provider-gallery-wrap"><div className={`provider-gallery gallery-count-${Math.min(gallery.length, 5)}`}>{gallery.map((image, index) => <div className="provider-gallery-image" key={image}><Image src={image} alt={galleryUsesPlaceholder ? "TreatmentLane listing photo placeholder" : `${provider.name} facility${index ? ` photo ${index + 1}` : ""}`} fill sizes={index === 0 ? "(max-width: 760px) 100vw, 65vw" : "(max-width: 760px) 50vw, 25vw"} priority={index === 0} unoptimized /></div>)}</div><p className="image-attribution"><Images size={14} /> {galleryUsesPlaceholder ? "TreatmentLane placeholder. A current provider photo has not been supplied." : "Photos supplied by the public source listing. Confirm that photos are current with the organization."}</p></section>}
 
     <div className="shell provider-detail-grid">
       <main className="provider-content">

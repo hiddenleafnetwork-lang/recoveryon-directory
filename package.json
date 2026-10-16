@@ -11,6 +11,7 @@
     "db:import-providers": "node --env-file=.env.local database/import-providers.mjs",
     "db:verification-queue": "node --env-file=.env.local database/verification-queue.mjs",
     "db:import-review-signals": "node --env-file=.env.local database/import-review-signals.mjs",
+    "db:replace-recovery-images": "node --env-file=.env.local database/replace-recovery-images.mjs",
     "db:clean-punctuation": "node --env-file=.env.local database/clean-punctuation.mjs",
     "seo:indexnow": "node scripts/submit-indexnow.mjs",
     "check:punctuation": "node scripts/check-punctuation.mjs"
