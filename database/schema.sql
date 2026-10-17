@@ -123,6 +123,22 @@ create table if not exists contact_inquiries (
   created_at timestamptz not null default now()
 );
 
+create table if not exists listing_events (
+  id uuid primary key default gen_random_uuid(),
+  provider_id uuid not null references providers(id) on delete cascade,
+  event_type text not null check (event_type in ('impression', 'click')),
+  created_at timestamptz not null default now()
+);
+
+create or replace view listing_event_daily as
+select
+  provider_id,
+  created_at::date as event_date,
+  count(*) filter (where event_type = 'impression')::int as impressions,
+  count(*) filter (where event_type = 'click')::int as clicks
+from listing_events
+group by provider_id, created_at::date;
+
 create table if not exists content_articles (
   id uuid primary key default gen_random_uuid(),
   content_unit_id text not null unique,
@@ -168,6 +184,8 @@ create index if not exists provider_verification_checks_provider_idx on provider
 create index if not exists provider_submissions_created_idx on provider_submissions(created_at desc);
 create index if not exists correction_requests_created_idx on correction_requests(created_at desc);
 create index if not exists contact_inquiries_created_idx on contact_inquiries(created_at desc);
+create index if not exists listing_events_provider_created_idx on listing_events(provider_id, created_at desc);
+create index if not exists listing_events_type_created_idx on listing_events(event_type, created_at desc);
 create index if not exists content_articles_review_queue_idx
   on content_articles(status, scheduled_at, created_at);
 create index if not exists content_articles_published_idx

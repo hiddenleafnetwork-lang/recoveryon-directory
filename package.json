@@ -10,6 +10,7 @@
     "db:migrate": "node --env-file=.env.local database/migrate.mjs",
     "db:import-providers": "node --env-file=.env.local database/import-providers.mjs",
     "db:verification-queue": "node --env-file=.env.local database/verification-queue.mjs",
+    "db:listing-report": "node --env-file=.env.local database/listing-event-report.mjs",
     "db:clean-punctuation": "node --env-file=.env.local database/clean-punctuation.mjs",
     "check:punctuation": "node scripts/check-punctuation.mjs"
   },

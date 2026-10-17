@@ -21,7 +21,7 @@ export function ContactForm() {
     }).catch(() => null);
     if (!response) {
       setStatus("error");
-      setMessage("We could not connect. Please try again or email hello@treatmentlane.com.");
+      setMessage("We could not connect. Please try again or email suraj@treatmentlane.com.");
       return;
     }
     const result = await response.json().catch(() => ({ message: "Something went wrong." }));
