@@ -24,6 +24,8 @@ The site works without a database connection, but the directory will be empty an
 
 Never expose `DATABASE_URL` in browser code or commit `.env.local`.
 
+Form submissions are saved to Postgres and send an email notification through SMTP. For Google Workspace, set `SMTP_USER` to the mailbox address and `SMTP_PASSWORD` to a Google App Password. Keep the app password in the hosting provider's encrypted environment variables and never commit it.
+
 ## Quality checks
 
 ```bash

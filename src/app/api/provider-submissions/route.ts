@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createProviderSubmission } from "@/lib/db";
+import { notifyProviderSubmission } from "@/lib/form-notifications";
 
 const schema = z.object({
   organizationName: z.string().trim().min(2).max(160),
@@ -26,6 +27,11 @@ export async function POST(request: Request) {
     if (!saved) return NextResponse.json({ message: "Applications are temporarily unavailable. Please email suraj@treatmentlane.com." }, { status: 503 });
   } catch {
     return NextResponse.json({ message: "We could not save the application. Please try again." }, { status: 500 });
+  }
+  try {
+    await notifyProviderSubmission(data);
+  } catch (error) {
+    console.error("Provider application notification failed", error instanceof Error ? error.message : "Unknown error");
   }
   return NextResponse.json({ ok: true }, { status: 201 });
 }
