@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createContactInquiry } from "@/lib/db";
+import { notifyContactInquiry } from "@/lib/form-notifications";
 
 const schema = z.object({
   name: z.string().trim().min(2).max(120),
@@ -20,6 +21,11 @@ export async function POST(request: Request) {
     if (!saved) return NextResponse.json({ message: "The form is temporarily unavailable. Please email suraj@treatmentlane.com." }, { status: 503 });
   } catch {
     return NextResponse.json({ message: "We could not save your message. Please try again." }, { status: 500 });
+  }
+  try {
+    await notifyContactInquiry(parsed.data);
+  } catch (error) {
+    console.error("Contact inquiry notification failed", error instanceof Error ? error.message : "Unknown error");
   }
   return NextResponse.json({ ok: true }, { status: 201 });
 }
