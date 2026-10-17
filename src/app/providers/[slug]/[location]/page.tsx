@@ -11,9 +11,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const ctrMetadata = getLifeStanceLocationMetadata(provider);
   return {
     title: ctrMetadata ? { absolute: ctrMetadata.title } : `${provider.name} in ${provider.city}, ${provider.state}`,
-    description: ctrMetadata?.description || provider.description || `Review treatment types, services, insurance information, and contact details for ${provider.name}.`,
+    description: (ctrMetadata?.description || provider.description || `Review treatment types, services, insurance information, and contact details for ${provider.name}.`).slice(0, 157) + '...',
     alternates: { canonical: providerPath(provider) },
-    robots: { index: provider.verificationStatus !== "listed", follow: true },
+    robots: { index: true, follow: true },
     openGraph: provider.featuredImageUrl ? { images: [{ url: provider.featuredImageUrl }] } : undefined,
   };
 }
