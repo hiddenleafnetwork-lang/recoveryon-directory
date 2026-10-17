@@ -67,12 +67,17 @@ export type ProviderSearch = {
 export type ProviderSearchResult = { providers: Provider[]; total: number; page: number; totalPages: number };
 
 const orderBy: Record<ProviderSort, string> = {
-  recommended: `case verification_status
-      when 'independently-reviewed' then 3
-      when 'provider-confirmed' then 2
-      when 'data-verified' then 1
+  recommended: `(evidence_score + case verification_status
+      when 'independently-reviewed' then 20
+      when 'provider-confirmed' then 15
+      when 'data-verified' then 10
+      else 0 end) desc,
+    case
+      when source_rating_value between 0 and 5 and source_rating_count > 0 then
+        (source_rating_count::numeric / (source_rating_count + 25)) * source_rating_value
+        + (25::numeric / (source_rating_count + 25)) * 4.0
       else 0 end desc,
-    evidence_score desc, source_rating_count desc nulls last, name, city, id`,
+    source_rating_count desc nulls last, name, city, id`,
   "recently-verified": "last_verified_at desc nulls last, evidence_score desc, name, city, id",
   "most-reviewed": "source_rating_count desc nulls last, source_rating_value desc nulls last, evidence_score desc, name, city, id",
   "highest-rated": "source_rating_value desc nulls last, source_rating_count desc nulls last, evidence_score desc, name, city, id",
