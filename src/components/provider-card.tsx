@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BadgeCheck, Building2, MapPin, MapPinned, Star } from "lucide-react";
+import { ArrowRight, BadgeCheck, Building2, MapPin, MapPinned, Star } from "lucide-react";
+import { FeaturedBadge } from "@/components/featured-badge";
+import { ListingCta, ListingImpression } from "@/components/listing-event-tracking";
 import { providerPath } from "@/lib/providers";
 import { sourceDisplayName } from "@/lib/site";
 import type { Provider } from "@/lib/types";
@@ -18,8 +20,9 @@ export function ProviderCard({ provider }: { provider: Provider }) {
   const locationCountLabel = `${provider.organizationLocationCount.toLocaleString()} ${provider.organizationLocationCount === 1 ? "location" : "locations"}`;
   const sourceName = sourceDisplayName(provider.sourceUrl);
   return (
-    <article className="provider-card">
-      {provider.isSponsored && <span className="sponsored-label">Sponsored</span>}
+    <article className={`provider-card${provider.isSponsored ? " provider-card-featured" : ""}`}>
+      <ListingImpression providerId={provider.id} />
+      {provider.isSponsored && <FeaturedBadge />}
       <Link className="provider-card-media" href={href} aria-label={`View ${provider.name}`}>
         {provider.featuredImageUrl
           ? <Image src={provider.featuredImageUrl} alt={`${provider.name} facility`} fill sizes="(max-width: 760px) 100vw, 190px" unoptimized />
@@ -39,6 +42,7 @@ export function ProviderCard({ provider }: { provider: Provider }) {
           <span className="verification-line"><BadgeCheck size={16} /> {labels[provider.verificationStatus]}</span>
           {provider.sourceRatingValue !== null && provider.sourceRatingCount !== null && <span className="source-rating"><Star size={15} /> {sourceName ? `${provider.sourceRatingValue.toFixed(1)} from ${provider.sourceRatingCount.toLocaleString()} reviews on ${sourceName}` : `${provider.sourceRatingValue.toFixed(1)} source rating`}</span>}
         </div>
+        <ListingCta providerId={provider.id} href={href}>View profile <ArrowRight size={15} /></ListingCta>
       </div>
     </article>
   );

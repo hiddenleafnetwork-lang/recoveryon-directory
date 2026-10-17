@@ -23,6 +23,7 @@ export function SiteFooter() {
           <Link href="/corrections">Request a correction</Link>
           <Link href="/about">About us</Link>
           <Link href="/contact">Contact</Link>
+          <Link href="/advertise">Advertise</Link>
         </div>
         <div>
           <h2>Important</h2>

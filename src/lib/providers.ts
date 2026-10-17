@@ -67,7 +67,8 @@ export type ProviderSearch = {
 export type ProviderSearchResult = { providers: Provider[]; total: number; page: number; totalPages: number };
 
 const orderBy: Record<ProviderSort, string> = {
-  recommended: `(evidence_score + case verification_status
+  recommended: `is_sponsored desc,
+    (evidence_score + case verification_status
       when 'independently-reviewed' then 20
       when 'provider-confirmed' then 15
       when 'data-verified' then 10
@@ -78,10 +79,10 @@ const orderBy: Record<ProviderSort, string> = {
         + (25::numeric / (source_rating_count + 25)) * 4.0
       else 0 end desc,
     source_rating_count desc nulls last, name, city, id`,
-  "recently-verified": "last_verified_at desc nulls last, evidence_score desc, name, city, id",
-  "most-reviewed": "source_rating_count desc nulls last, source_rating_value desc nulls last, evidence_score desc, name, city, id",
-  "highest-rated": "source_rating_value desc nulls last, source_rating_count desc nulls last, evidence_score desc, name, city, id",
-  alphabetical: "name, city, id",
+  "recently-verified": "is_sponsored desc, last_verified_at desc nulls last, evidence_score desc, name, city, id",
+  "most-reviewed": "is_sponsored desc, source_rating_count desc nulls last, source_rating_value desc nulls last, evidence_score desc, name, city, id",
+  "highest-rated": "is_sponsored desc, source_rating_value desc nulls last, source_rating_count desc nulls last, evidence_score desc, name, city, id",
+  alphabetical: "is_sponsored desc, name, city, id",
 };
 
 export function providerPath(provider: Pick<Provider, "organizationSlug" | "locationSlug" | "organizationLocationCount">) {

@@ -20,7 +20,9 @@ function InformationTags({ items }: { items: string[] }) {
 }
 
 export function ProviderDetailPage({ provider, organizationProviders = [provider] }: { provider: Provider; organizationProviders?: Provider[] }) {
-  const gallery = provider.imageUrls.slice(0, 5);
+  const gallery = unique(provider.isSponsored && provider.featuredImageUrl
+    ? [provider.featuredImageUrl, ...provider.imageUrls]
+    : provider.imageUrls).slice(0, 5);
   const careTypes = unique([...provider.treatmentTypes, ...provider.levelsOfCare, ...provider.categories]);
   const path = providerPath(provider);
   const hasMultipleLocations = organizationProviders.length > 1;
@@ -48,7 +50,7 @@ export function ProviderDetailPage({ provider, organizationProviders = [provider
     <section className="provider-hero"><div className="shell">
       <div className="breadcrumb"><Link href="/directory">Directory</Link><span>/</span>{hasMultipleLocations ? <><Link href={`/providers/${provider.organizationSlug}`}>{provider.name} locations</Link><span>/</span><span>{provider.city}</span></> : <span>{provider.name}</span>}</div>
       <div className="provider-hero-copy">
-        <div>{provider.isSponsored && <span className="kicker plain">Sponsored placement</span>}<h1>{provider.name}</h1><p><MapPin size={18} /> {provider.city}, {provider.state}</p></div>
+        <div>{provider.isSponsored && <span className="kicker plain">Featured listing</span>}<h1>{provider.name}</h1><p><MapPin size={18} /> {provider.city}, {provider.state}</p></div>
         <div className="provider-hero-status"><BadgeCheck size={18} /> {verificationLabels[provider.verificationStatus]}</div>
       </div>
     </div></section>
@@ -59,12 +61,14 @@ export function ProviderDetailPage({ provider, organizationProviders = [provider
           <Image src={image} alt={`${provider.name} facility${index ? ` photo ${index + 1}` : ""}`} fill sizes={index === 0 ? "(max-width: 760px) 100vw, 65vw" : "(max-width: 760px) 50vw, 25vw"} priority={index === 0} unoptimized />
         </div>)}
       </div>
-      <p className="image-attribution"><Images size={14} /> Photos supplied by the public source listing. Confirm that photos are current with the organization.</p>
+      <p className="image-attribution"><Images size={14} /> Photos come from public source data or the organization. Confirm that photos are current before making a decision.</p>
     </section>}
 
     <div className="shell provider-detail-grid">
       <main className="provider-content">
         <div className="notice"><strong>{verificationLabels[provider.verificationStatus]}.</strong> Information below comes from public source data and has not necessarily been confirmed by the provider. <Link href="/how-we-verify">Read our verification standards</Link>.</div>
+
+        {provider.isSponsored && <div className="featured-profile-notice"><strong>Featured profile.</strong> This organization pays a flat monthly fee for enhanced placement, a longer profile, and photos. Payment does not affect its verification status.</div>}
 
         {hasMultipleLocations && <section className="listing-section provider-location-section">
           <span className="section-label">Multiple locations</span>

@@ -18,7 +18,7 @@ export async function POST(request: Request) {
   if (parsed.data.companyFax) return NextResponse.json({ ok: true }, { status: 201 });
   try {
     const saved = await createCorrectionRequest(parsed.data);
-    if (!saved) return NextResponse.json({ message: "Corrections are temporarily unavailable. Please email hello@treatmentlane.com." }, { status: 503 });
+    if (!saved) return NextResponse.json({ message: "Corrections are temporarily unavailable. Please email suraj@treatmentlane.com." }, { status: 503 });
   } catch {
     return NextResponse.json({ message: "We could not save the correction. Please try again." }, { status: 500 });
   }

@@ -46,7 +46,7 @@ export default async function DirectoryPage({ searchParams }: { searchParams: Pr
           <button className="button" type="submit">Apply filters</button>
         </form>
         <section>
-          <div className="results-heading"><div><h1>{result.total ? `${result.total.toLocaleString()} published ${result.total === 1 ? "listing" : "listings"}` : "Published listings"}</h1><p>Recommended order prioritizes strong source evidence and complete profiles, then considers verification and review confidence. It is not alphabetical, newest-first, or influenced by sponsorship.</p></div></div>
+          <div className="results-heading"><div><h1>{result.total ? `${result.total.toLocaleString()} published ${result.total === 1 ? "listing" : "listings"}` : "Published listings"}</h1><p>Clearly labeled Featured listings appear first. Within Featured and standard groups, recommended order prioritizes strong source evidence, complete profiles, verification, and review confidence.</p></div></div>
           {result.providers.length ? <><div className="provider-list">{result.providers.map((provider) => <ProviderCard key={provider.id} provider={provider} />)}</div><Pagination pathname="/directory" params={paginationParams} page={result.page} totalPages={result.totalPages} /></> : <div className="empty-state"><SearchX size={36} /><h2>No matching listings</h2><p>Try another search or suggest an organization for review.</p><Link className="button" href="/providers/apply">Suggest an organization</Link></div>}
         </section>
       </div>
