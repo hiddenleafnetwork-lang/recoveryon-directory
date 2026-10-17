@@ -1,6 +1,6 @@
 import type { Guide } from "@/lib/content";
 
-type GuideDraft = {
+export type GuideDraft = {
   slug: string;
   title: string;
   description: string;
@@ -13,7 +13,7 @@ type GuideDraft = {
   sources: Guide["sources"];
 };
 
-function buildGuide(draft: GuideDraft): Guide {
+export function buildGuide(draft: GuideDraft): Guide {
   return {
     slug: draft.slug,
     title: draft.title,
