@@ -6,6 +6,7 @@ import { JsonLd } from "@/components/json-ld";
 import { Pagination } from "@/components/pagination";
 import { ProviderCard } from "@/components/provider-card";
 import { states } from "@/lib/content";
+import { stateEditorial } from "@/lib/state-editorial";
 import { hasPublishedProviders, providerPath, searchProviders } from "@/lib/providers";
 import { absoluteUrl } from "@/lib/site";
 
@@ -23,6 +24,7 @@ export default async function StatePage({ params, searchParams }: { params: Prom
   const { state: slug } = await params;
   const state = states.find((item) => item.slug === slug);
   if (!state) notFound();
+  const editorial = stateEditorial[slug];
   const query = await searchParams;
   const result = await searchProviders({ state: state.code, page: Math.max(Number.parseInt(query.page || "1", 10) || 1, 1) });
   const itemListJsonLd = result.providers.length ? {
@@ -35,5 +37,5 @@ export default async function StatePage({ params, searchParams }: { params: Prom
       url: absoluteUrl(providerPath(provider)),
     })),
   } : null;
-  return <>{itemListJsonLd && <JsonLd data={itemListJsonLd} />}<section className="page-hero"><div className="shell"><div className="breadcrumb"><Link href="/locations">Locations</Link><span>/</span><span>{state.name}</span></div><h1>Treatment and recovery resources in {state.name}</h1><p>Compare published listings and confirm licensing, services, insurance, and availability directly.</p></div></section><section className="section"><div className="shell">{result.providers.length ? <><div className="results-heading"><div><h2>{result.total.toLocaleString()} listings in {state.name}</h2><p>Showing {result.providers.length} listings on this page.</p></div></div><div className="provider-list">{result.providers.map((provider) => <ProviderCard key={provider.id} provider={provider} />)}</div><Pagination pathname={`/locations/${state.slug}`} page={result.page} totalPages={result.totalPages} /></> : <div className="empty-state"><SearchX size={36} /><h2>No listings published for {state.name} yet</h2><p>Suggest an organization for review and inclusion.</p><Link className="button" href="/providers/apply">Suggest an organization</Link></div>}</div></section></>;
+  return <>{itemListJsonLd && <JsonLd data={itemListJsonLd} />}<section className="page-hero"><div className="shell"><div className="breadcrumb"><Link href="/locations">Locations</Link><span>/</span><span>{state.name}</span></div><h1>Treatment and recovery resources in {state.name}</h1><p>Compare published listings and confirm licensing, services, insurance, and availability directly.</p></div></section><section className="section"><div className="shell">{result.providers.length ? <><div className="results-heading"><div><h2>{result.total.toLocaleString()} listings in {state.name}</h2><p>Showing {result.providers.length} listings on this page.</p></div></div><div className="provider-list">{result.providers.map((provider) => <ProviderCard key={provider.id} provider={provider} />)}</div><Pagination pathname={`/locations/${state.slug}`} page={result.page} totalPages={result.totalPages} /></> : <div className="empty-state"><SearchX size={36} /><h2>No listings published for {state.name} yet</h2><p>Suggest an organization for review and inclusion.</p><Link className="button" href="/providers/apply">Suggest an organization</Link></div>}</div></section>{editorial ? <section className="section"><div className="shell content-shell prose"><h2>Finding addiction treatment in {state.name}</h2><p>{editorial.intro}</p>{editorial.sections.map((section) => <section key={section.heading}><h3>{section.heading}</h3><p>{section.body}</p></section>)}</div></section> : null}</>;
 }
