@@ -25,7 +25,7 @@ export function buildGuide(draft: GuideDraft): Guide {
     sections: draft.uniqueSections
       ? draft.uniqueSections.map((section, index) => ({
           heading: section.heading,
-          body: `${topicBodies[index]} ${section.body}`,
+          body: topicBodies[index] ? `${topicBodies[index]} ${section.body}` : section.body,
         }))
       : [
       {
