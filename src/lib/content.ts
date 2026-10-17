@@ -1,3 +1,5 @@
+import { guideBatch1 } from "@/lib/guide-content-batch-1";
+
 export type CareCategory = {
   name: string;
   slug: string;
@@ -530,4 +532,5 @@ export const guides: Guide[] = [
       },
     ],
   },
+  ...guideBatch1,
 ];
