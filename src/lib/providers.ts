@@ -27,6 +27,21 @@ const providerColumns = `id, name, slug, organization_slug, location_slug, descr
     where organization_locations.organization_slug = providers.organization_slug
       and organization_locations.publication_status = 'published')::int as organization_location_count`;
 
+const listingPlaceholderPath = "/images/treatmentlane-listing-placeholder.webp";
+
+function normalizeProviderImageUrl(value: string | null) {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    if ((url.hostname === "treatmentlane.com" || url.hostname === "www.treatmentlane.com") && url.pathname === listingPlaceholderPath) {
+      return listingPlaceholderPath;
+    }
+  } catch {
+    return value;
+  }
+  return value;
+}
+
 function toProvider(row: ProviderRow): Provider {
   return {
     id: row.id, name: row.name, slug: row.slug, organizationSlug: row.organization_slug, locationSlug: row.location_slug,
@@ -35,8 +50,8 @@ function toProvider(row: ProviderRow): Provider {
     city: row.city, state: row.state, postalCode: row.postal_code, phone: row.phone, website: row.website,
     categories: row.categories || [], levelsOfCare: row.levels_of_care || [], insurance: row.insurance || [],
     insuranceDetails: row.insurance_details, treatmentTypes: row.treatment_types || [], therapies: row.therapies || [],
-    amenities: row.amenities || [], specialties: row.specialties || [], featuredImageUrl: row.featured_image_url,
-    imageUrls: row.image_urls || [], priceRange: row.price_range, treatmentDuration: row.treatment_duration,
+    amenities: row.amenities || [], specialties: row.specialties || [], featuredImageUrl: normalizeProviderImageUrl(row.featured_image_url),
+    imageUrls: (row.image_urls || []).map((image) => normalizeProviderImageUrl(image)).filter((image): image is string => Boolean(image)), priceRange: row.price_range, treatmentDuration: row.treatment_duration,
     sourceRatingValue: row.source_rating_value === null ? null : Number(row.source_rating_value), sourceRatingCount: row.source_rating_count,
     licenseSummary: row.license_summary, accreditation: row.accreditation || [], sourceUrl: row.source_url, lastVerifiedAt: row.last_verified_at,
     updatedAt: row.updated_at, evidenceScore: row.evidence_score, verificationStatus: row.verification_status,

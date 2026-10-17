@@ -154,6 +154,9 @@ function recoveryAmenities(row) {
   return AMENITY_PATTERNS.filter(([, pattern]) => pattern.test(text)).map(([label]) => label);
 }
 
+const RECOVERY_BRANDED_IMAGE = "og-image-recovery-com.jpg";
+const TREATMENTLANE_BRANDED_IMAGE = "https://treatmentlane.com/images/treatmentlane-listing-placeholder.webp";
+
 function cleanImages(row) {
   const candidates = [row.featured_image, ...clean(row.all_images).split(/\s*\|\s*/)].map((value) => clean(value).replace(/\\$/, ""));
   const used = new Set();
@@ -164,7 +167,7 @@ function cleanImages(row) {
     const assetKey = candidate.split("?")[0].split("/").at(-1)?.replace(/\.[^.]+$/, "");
     if (!assetKey || used.has(assetKey)) continue;
     used.add(assetKey);
-    images.push(candidate);
+    images.push(candidate.split("?")[0].split("/").at(-1) === RECOVERY_BRANDED_IMAGE ? TREATMENTLANE_BRANDED_IMAGE : candidate);
     if (images.length === 8) break;
   }
   return images;
