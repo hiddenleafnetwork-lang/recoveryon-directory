@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ state: st
   const state = states.find((item) => item.slug === slug);
   if (!state) return {};
   const hasListings = await hasPublishedProviders({ state: state.code });
-  return { title: `Treatment resources in ${state.name} | TreatmentLane`, description: `Find and compare reviewed addiction treatment centers, detox, rehab, and recovery resources in ${state.name}. Verify licensing, services, and insurance.`, alternates: { canonical: `/locations/${state.slug}` }, robots: { index: hasListings, follow: true } };
+  return { title: `Treatment resources in ${state.name}`, description: `Find and compare reviewed addiction treatment centers, detox, rehab, and recovery resources in ${state.name}. Verify licensing, services, and insurance.`, alternates: { canonical: `/locations/${state.slug}` }, robots: { index: hasListings, follow: true } };
 }
 
 export default async function StatePage({ params, searchParams }: { params: Promise<{ state: string }>; searchParams: Promise<{ page?: string }> }) {
