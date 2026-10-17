@@ -118,7 +118,7 @@ export const careEditorial: Record<string, { intro: string; sections: { heading:
 };
 
 // SOURCES
-(URLs consulted during research):
+// (URLs consulted during research):
 // - https://www.rehab.com/levels-of-care (ASAM levels 0.5-4, Level 1 <9 hrs/week, IOP 9-19, PHP 20+)
 // - https://clearstepsrecovery.com/recovery-programs/iop-vs-php (IOP 9-19 hrs, PHP 20+ hrs per ASAM/SAMHSA)
 // - https://americanaddictioncenters.org/withdrawal-timelines-treatments (alcohol peaks 24-72h, DTs 48-72h; opioids 4-10 days; benzo protracted)
