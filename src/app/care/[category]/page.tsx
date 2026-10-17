@@ -18,8 +18,8 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
   if (!category) return {};
   const hasListings = await hasPublishedProviders({ category: category.name });
   return {
-    title: `${category.name}: what to know and how to compare options`,
-    description: category.description,
+    title: `${category.name}: compare options | TreatmentLane`,
+    description: `${category.description} Compare providers, verify licensing, and find the right fit on TreatmentLane.`,
     alternates: { canonical: `/care/${category.slug}` },
     robots: { index: hasListings, follow: true },
   };

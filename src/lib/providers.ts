@@ -188,7 +188,7 @@ export async function getSitemapProviders() {
         where organization_locations.organization_slug = providers.organization_slug
           and organization_locations.publication_status = 'published')::int as organization_location_count
       from providers
-      where publication_status = 'published' and verification_status <> 'listed'
+      where publication_status = 'published'
         and organization_slug is not null and location_slug is not null
       order by organization_slug, location_slug`;
     return rows.map((row) => ({

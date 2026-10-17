@@ -58,7 +58,7 @@ export function ProviderDetailPage({ provider, organizationProviders = [provider
     {gallery.length > 0 && <section className="shell provider-gallery-wrap">
       <div className={`provider-gallery gallery-count-${Math.min(gallery.length, 5)}`}>
         {gallery.map((image, index) => <div className="provider-gallery-image" key={image}>
-          <Image src={image} alt={`${provider.name} facility${index ? ` photo ${index + 1}` : ""}`} fill sizes={index === 0 ? "(max-width: 760px) 100vw, 65vw" : "(max-width: 760px) 50vw, 25vw"} priority={index === 0} unoptimized />
+          <Image src={image} alt={`${provider.name} facility${index ? ` photo ${index + 1}` : ""}`} fill sizes={index === 0 ? "(max-width: 760px) 100vw, 65vw" : "(max-width: 760px) 50vw, 25vw"} priority={index === 0} />
         </div>)}
       </div>
       <p className="image-attribution"><Images size={14} /> Photos come from public source data or the organization. Confirm that photos are current before making a decision.</p>

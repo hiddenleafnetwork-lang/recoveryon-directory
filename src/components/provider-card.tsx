@@ -25,7 +25,7 @@ export function ProviderCard({ provider }: { provider: Provider }) {
       {provider.isSponsored && <FeaturedBadge />}
       <Link className="provider-card-media" href={href} aria-label={`View ${provider.name}`}>
         {provider.featuredImageUrl
-          ? <Image src={provider.featuredImageUrl} alt={`${provider.name} facility`} fill sizes="(max-width: 760px) 100vw, 190px" unoptimized />
+          ? <Image src={provider.featuredImageUrl} alt={`${provider.name} facility`} fill sizes="(max-width: 760px) 100vw, 190px" />
           : <span className="provider-card-placeholder" aria-hidden="true"><Building2 /></span>}
       </Link>
       <div className="provider-card-body">
