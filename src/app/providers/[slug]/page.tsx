@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { ProviderCard } from "@/components/provider-card";
 import { ProviderDetailPage } from "@/components/provider-detail-page";
+import { getLifeStanceLocationMetadata, getLifeStanceOrganizationMetadata } from "@/lib/provider-metadata";
 import { getProviderByLegacySlug, getProvidersByOrganizationSlug, providerPath } from "@/lib/providers";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -13,18 +14,20 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!providers.length) return {};
   if (providers.length === 1) {
     const provider = providers[0];
+    const ctrMetadata = getLifeStanceLocationMetadata(provider);
     return {
-      title: `${provider.name} in ${provider.city}, ${provider.state}`,
-      description: provider.description || `Review treatment types, services, insurance information, and contact details for ${provider.name}.`,
+      title: ctrMetadata ? { absolute: ctrMetadata.title } : `${provider.name} in ${provider.city}, ${provider.state}`,
+      description: ctrMetadata?.description || provider.description || `Review treatment types, services, insurance information, and contact details for ${provider.name}.`,
       alternates: { canonical: providerPath(provider) },
       robots: { index: provider.verificationStatus !== "listed", follow: true },
       openGraph: provider.featuredImageUrl ? { images: [{ url: provider.featuredImageUrl }] } : undefined,
     };
   }
   const name = providers[0].name;
+  const ctrMetadata = getLifeStanceOrganizationMetadata(slug, providers.length);
   return {
-    title: `${name} locations`,
-    description: `View published ${name} locations, services, source details, and verification status on TreatmentLane.`,
+    title: ctrMetadata ? { absolute: ctrMetadata.title } : `${name} locations`,
+    description: ctrMetadata?.description || `View published ${name} locations, services, source details, and verification status on TreatmentLane.`,
     alternates: { canonical: `/providers/${slug}` },
     robots: { index: providers.some((provider) => provider.verificationStatus !== "listed"), follow: true },
   };
