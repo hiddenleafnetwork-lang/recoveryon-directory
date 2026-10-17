@@ -183,14 +183,18 @@ export async function getSitemapProviders() {
   const sql = getDatabase();
   if (!sql) return [] as Array<{ organizationSlug: string; locationSlug: string; locationCount: number; updatedAt: string }>;
   try {
-    const rows = await sql`select organization_slug, location_slug, updated_at,
-      (select count(*) from providers organization_locations
-        where organization_locations.organization_slug = providers.organization_slug
-          and organization_locations.publication_status = 'published')::int as organization_location_count
-      from providers
-      where publication_status = 'published'
-        and organization_slug is not null and location_slug is not null
-      order by organization_slug, location_slug`;
+    const rows = await sql`select p.organization_slug, p.location_slug, p.updated_at,
+        coalesce(org_counts.cnt, 1)::int as organization_location_count
+      from providers p
+      left join (
+        select organization_slug, count(*)::int as cnt
+        from providers
+        where publication_status = 'published' and organization_slug is not null
+        group by organization_slug
+      ) org_counts on org_counts.organization_slug = p.organization_slug
+      where p.publication_status = 'published'
+        and p.organization_slug is not null and p.location_slug is not null
+      order by p.organization_slug, p.location_slug`;
     return rows.map((row) => ({
       organizationSlug: String(row.organization_slug), locationSlug: String(row.location_slug),
       locationCount: Number(row.organization_location_count || 1), updatedAt: String(row.updated_at),
