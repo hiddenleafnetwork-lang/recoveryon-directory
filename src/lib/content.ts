@@ -291,4 +291,243 @@ export const guides: Guide[] = [
       },
     ],
   },
+  {
+    slug: "what-is-medical-detox-like",
+    title: "What is medical detox like?",
+    description:
+      "Medical detox helps manage withdrawal safely while alcohol or drugs leave the body. Learn what happens during intake, monitoring, medication, and the transition into ongoing treatment. This is educational information only, not medical advice.",
+    reviewedOn: "2026-10-17",
+    sections: [
+      {
+        heading: "Detox is withdrawal management, not a complete treatment plan",
+        body: "Medical detox, also called withdrawal management, focuses on keeping a person safe and as comfortable as possible while the body adjusts to stopping or reducing a substance. It can be an important first step, especially when withdrawal may cause serious medical problems, but detox alone does not address the longer-term patterns, health needs, and recovery supports involved in addiction. The safest setting depends on the substance, amount and duration of use, previous withdrawal history, current medications, physical health, mental health, and home environment. A clinician should assess those factors before recommending inpatient or outpatient detox.",
+      },
+      {
+        heading: "The first step is a detailed assessment",
+        body: "At intake, expect questions about every substance you use, when you last used it, how much you typically use, and whether you have had seizures, hallucinations, delirium, overdose, or severe withdrawal before. Staff may check vital signs, review medications and allergies, ask about pregnancy and medical conditions, and screen for depression, anxiety, trauma, or suicide risk. Blood or urine testing may be used when clinically necessary. Honest answers help the team predict complications and choose the safest plan. Bring prescription bottles or an accurate medication list, identification, insurance information if available, and emergency contact details.",
+      },
+      {
+        heading: "Monitoring and medication depend on the substance",
+        body: "During detox, nurses or other clinicians monitor symptoms, blood pressure, pulse, temperature, hydration, sleep, and mental status. Medications may be used to reduce symptoms or prevent complications, but the approach is different for alcohol, opioids, benzodiazepines, stimulants, and other substances. Alcohol withdrawal can include seizures or delirium and may be life threatening, so a person who has been drinking heavily should not suddenly stop without medical guidance. Opioid withdrawal is usually not life threatening by itself, but it can be intensely uncomfortable and raises overdose risk if tolerance falls and opioid use resumes. Ask which medications are available and who provides medical coverage overnight.",
+      },
+      {
+        heading: "Detox may be inpatient or outpatient",
+        body: "Some people can complete withdrawal management through scheduled outpatient visits while living at home. Others need 24-hour monitoring in a residential or hospital setting. Inpatient care is more likely when there is a history of severe withdrawal, serious medical or psychiatric illness, pregnancy, use of several substances, an unsafe home environment, or limited support. Hospital-level care may be appropriate when complex medical needs require continuous nursing and physician availability. A reputable program should explain why it recommends a setting and how it will respond if symptoms become more severe than expected.",
+      },
+      {
+        heading: "Length varies, and the plan can change",
+        body: "There is no universal detox timeline. Symptoms may begin within hours for some substances and later for others, and the most intense period may last several days. The team should reassess you throughout the stay and adjust medication, monitoring, and discharge timing to your response rather than promising an exact schedule in advance. Ask how often a clinician will review the plan, what would trigger transfer to a hospital, and how the program handles an unexpected positive test or a return to use. You should also receive clear information about what symptoms require urgent help after discharge.",
+      },
+      {
+        heading: "Plan the next treatment step before discharge",
+        body: "The period after detox can carry high risk because tolerance may be lower and cravings may continue. Before discharge, the team should connect you with ongoing treatment, which may include medication for opioid or alcohol use disorder, residential care, partial hospitalization, intensive outpatient treatment, standard outpatient care, primary care, and recovery support. Ask for appointments, medication instructions, and contact names in writing. If possible, the next appointment should already be scheduled. If a detox program offers no assessment, no treatment referral, or no plan for continuing medication, compare other options.",
+      },
+    ],
+    sources: [
+      {
+        label: "NIAAA: Alcohol use disorder, withdrawal, and recovery",
+        href: "https://www.niaaa.nih.gov/health-professionals-communities/core-resource-on-alcohol/alcohol-use-disorder-risk-diagnosis-recovery",
+      },
+      {
+        label: "SAMHSA: Detoxification and substance use treatment",
+        href: "https://library.samhsa.gov/sites/default/files/sma15-4131.pdf",
+      },
+      {
+        label: "SAMHSA: What to expect from treatment",
+        href: "https://www.samhsa.gov/find-support/learn-about-treatment/what-to-expect-from-treatment",
+      },
+    ],
+  },
+  {
+    slug: "php-vs-iop-vs-outpatient",
+    title: "How to choose between PHP, IOP, and outpatient care",
+    description:
+      "PHP, IOP, and standard outpatient treatment let you live outside a facility while receiving different levels of structure. Learn how assessments, safety, support, and daily responsibilities affect the choice. This is educational information only, not medical advice.",
+    reviewedOn: "2026-10-17",
+    sections: [
+      {
+        heading: "The main difference is treatment intensity",
+        body: "Partial hospitalization programs, intensive outpatient programs, and standard outpatient care are all delivered without an overnight stay, but they require different amounts of time and support. PHP is usually the most structured and may run for much of the day on several days each week. IOP commonly provides several hours of treatment on multiple days while leaving more time for work, school, or family. Standard outpatient care may involve one or a few appointments each week for therapy, medication, or recovery planning. Exact schedules and names vary by state, insurer, and program, so compare the actual hours and services rather than relying on the label alone.",
+      },
+      {
+        heading: "Start with a complete clinical assessment",
+        body: "The choice should begin with an assessment of substance use, withdrawal risk, physical health, mental health, overdose history, safety, housing, transportation, family support, and previous treatment. A person who needs withdrawal management, continuous nursing, or a protected living environment may need a higher level of care before outpatient treatment is safe. Someone with stable housing, reliable transportation, supportive people, and manageable medical needs may be able to begin with outpatient care. Ask who performed the assessment, which placement criteria were used, and what findings support the recommendation.",
+      },
+      {
+        heading: "PHP fits people who need near-daily structure",
+        body: "PHP may be a good fit when symptoms and relapse risk require frequent clinical contact but 24-hour residential care is not necessary. Programs may include group therapy, individual sessions, medication management, psychiatric care, skills practice, and regular monitoring. The person still returns home outside program hours, so the living environment must be reasonably safe and supportive. Ask how many days and hours are required, whether medical and psychiatric clinicians are on site, how missed sessions are handled, and whether transportation is available. Confirm that the program treats both substance use and any co-occurring mental health condition.",
+      },
+      {
+        heading: "IOP balances structured care with daily life",
+        body: "IOP can provide a strong treatment schedule while allowing more time for employment, school, caregiving, or other responsibilities. It may work well as a step down from residential care or PHP, or as a starting level when the assessment shows that residential treatment is not needed. Look beyond convenience: evening sessions are useful only if the program has the clinical services you need. Ask about weekly hours, individual therapy, medication access, drug-testing policies, family involvement, telehealth, and how the team responds to worsening symptoms or repeated return to use.",
+      },
+      {
+        heading: "Standard outpatient care offers the most flexibility",
+        body: "Standard outpatient treatment can include individual therapy, group counseling, medical visits, medication management, and recovery support at a lower weekly intensity. It may fit someone with lower clinical risk, strong support, and the ability to use recovery skills between appointments. It is also a common continuing-care option after more intensive treatment. Less time in a program does not mean less responsibility: the person needs a realistic schedule, a safe place to live, and a plan for cravings and high-risk situations. Ask how quickly appointments are available if needs change.",
+      },
+      {
+        heading: "Expect to move between levels as needs change",
+        body: "Treatment intensity is not a permanent label. A person may step down from PHP to IOP and then outpatient care as stability improves, or step up when symptoms, substance use, safety, or housing worsen. Ask how often the team reviews progress and what specific signs would trigger a change. Confirm insurance authorization for the recommended level, but do not let coverage language replace a clinical discussion. The best plan is the least restrictive setting that can safely meet current needs, with a clear route to more or less support when the situation changes.",
+      },
+    ],
+    sources: [
+      {
+        label: "NIAAA: Types and levels of alcohol treatment",
+        href: "https://alcoholtreatment.niaaa.nih.gov/what-to-know/types-of-alcohol-treatment",
+      },
+      {
+        label: "NIAAA: Matching treatment to a person's needs",
+        href: "https://alcoholtreatment.niaaa.nih.gov/what-to-know/different-people-different-options",
+      },
+      {
+        label: "SAMHSA: What to expect from treatment",
+        href: "https://www.samhsa.gov/find-support/learn-about-treatment/what-to-expect-from-treatment",
+      },
+    ],
+  },
+  {
+    slug: "paying-for-rehab-without-insurance",
+    title: "Paying for rehab without insurance",
+    description:
+      "No insurance does not mean no treatment. Learn how to find state-funded care, sliding fees, Medicaid, health centers, grants, and safer payment arrangements without accepting unclear debt.",
+    reviewedOn: "2026-10-17",
+    sections: [
+      {
+        heading: "Start with free referral services",
+        body: "SAMHSA's National Helpline at 1-800-662-4357 is free, confidential, and available every day. It can refer people without insurance to state-funded programs and facilities that offer sliding fees or accept Medicaid. FindTreatment.gov also lets you search for substance use treatment and review payment options. Your state substance use agency or county behavioral health office can explain local assessment and funding rules. Publicly funded programs may have waitlists or require a referral, so call more than one source and ask what documents are needed. If withdrawal may be medically dangerous or there is an emergency, seek urgent care instead of waiting for a funding decision.",
+      },
+      {
+        heading: "Check Medicaid eligibility before paying privately",
+        body: "Medicaid covers substance use disorder services, but eligibility, covered levels of care, and provider networks differ by state. Apply even if you were not eligible in the past, especially after a change in income, household, disability status, pregnancy, or other circumstances. Ask the treatment program whether it can help with an application and whether coverage can apply to care received before approval under your state's rules. If you are already enrolled, call the number on the Medicaid card and request an assessment or a list of contracted providers. Confirm the exact program, address, and level of care before admission.",
+      },
+      {
+        heading: "Ask directly about sliding fees and public funding",
+        body: "Many providers adjust fees according to income and family size, offer payment assistance, or reserve beds supported by state or federal funds. Use direct language when calling: ask whether the program has a sliding-fee scale, charity care, block-grant funding, county funding, or a reduced self-pay rate. Find out whether an income statement, tax return, benefits letter, or proof of residence is required. If a grant or scholarship is offered, ask how much it covers, how long it lasts, whether funds are available now, and whether you become responsible for the balance if you leave early.",
+      },
+      {
+        heading: "Use community health centers for affordable outpatient care",
+        body: "HRSA-funded health centers serve people whether or not they can pay and adjust fees based on income and family size. Many provide mental health and substance use services, primary care, case management, and discounted pharmacy access. A health center may not offer residential treatment, but it can be a practical starting point for assessment, medication, counseling, and referrals. Use HRSA's Find a Health Center tool, then ask whether the location provides addiction treatment, medication for opioid or alcohol use disorder, and behavioral health appointments. Also ask about transportation help and pharmacy discounts.",
+      },
+      {
+        heading: "Compare the full cost, not the advertised deposit",
+        body: "A low deposit can hide a much larger obligation. Request an itemized written estimate that separates assessment, room and board, therapy, physician services, medications, laboratory testing, transportation, and aftercare. Ask whether the price changes if the level of care changes or if you leave early. If a payment plan is offered, get the interest rate, fees, due dates, and total repayment amount in writing. Be cautious with high-interest medical credit, personal loans, or pressure to borrow immediately. A reputable admissions team should explain lower-cost alternatives and give you time to review the terms.",
+      },
+      {
+        heading: "Build a realistic plan for continuing care",
+        body: "The most expensive program is not automatically the best, and one short stay is not a complete recovery plan. Compare whether a lower-cost outpatient program can safely meet your needs, and budget for medication, therapy, transportation, housing, and follow-up care. Ask each provider what services continue after discharge and which of them have separate charges. Free peer-support groups can add community support but do not replace medical care or clinically necessary treatment. Keep copies of every estimate, financial-assistance decision, receipt, and payment agreement until billing is finished.",
+      },
+    ],
+    sources: [
+      {
+        label: "SAMHSA: Free and low-cost treatment options",
+        href: "https://www.samhsa.gov/find-support/how-to-pay-for-treatment/free-or-low-cost-treatment",
+      },
+      {
+        label: "FindTreatment.gov: Payment and treatment costs",
+        href: "https://findtreatment.gov/what-to-expect/payment",
+      },
+      {
+        label: "HRSA: What is a health center?",
+        href: "https://bphc.hrsa.gov/about-health-center-program/what-health-center",
+      },
+    ],
+  },
+  {
+    slug: "what-happens-in-residential-treatment",
+    title: "What happens in residential treatment day to day?",
+    description:
+      "Residential treatment provides a structured place to live while receiving addiction care. Learn what intake, a typical schedule, therapy, medication, rules, family contact, and discharge planning may look like.",
+    reviewedOn: "2026-10-17",
+    sections: [
+      {
+        heading: "The first days focus on assessment and a treatment plan",
+        body: "Residential treatment begins with an intake that should cover substance use, withdrawal risk, physical and mental health, medications, housing, family support, work, legal issues, and recovery goals. The program uses this information to create a written plan with a diagnosis, goals, services, and next steps. You may complete medical screening, meet members of the clinical team, review program rules, and receive a room assignment. If withdrawal management is needed, it may occur before residential care or in a program licensed to provide both services. Ask which assessments happen on site and which require an outside provider.",
+      },
+      {
+        heading: "Most days follow a structured schedule",
+        body: "A typical day may include a set wake-up time, meals, group therapy, educational sessions, individual counseling, recovery activities, medication times, exercise or recreation, and an evening check-in. Some programs include mutual-help meetings, mindfulness, family sessions, or practical skills such as planning, communication, and relapse prevention. The exact schedule varies widely. Ask for a sample weekday and weekend schedule before admission, including the amount of individual therapy, unstructured time, and access to outdoor space. A full calendar of activities is not the same as clinically appropriate care, so also ask who leads each service and how it connects to your treatment plan.",
+      },
+      {
+        heading: "Medical and mental health support varies by facility",
+        body: "Residential care is a 24-hour living setting, but it is not always a hospital. A non-hospital program may have a physician on certain days or on call rather than on site at all times. Nursing coverage, psychiatric care, medication management, and emergency procedures differ between facilities. Ask who is physically present overnight, how often you meet a prescriber, and which hospital receives transfers. If you have depression, anxiety, trauma, bipolar disorder, psychosis, chronic pain, pregnancy, or another medical condition, confirm that the program can treat or coordinate that need instead of assuming it is included.",
+      },
+      {
+        heading: "Rules create structure but should be explained clearly",
+        body: "Programs often have rules about phones, visitors, leaving the grounds, personal belongings, smoking, medication storage, drug testing, and contact with other residents after discharge. These rules can support safety and focus, but they should be available before admission and applied consistently. Ask when you can contact family, whether devices are stored or restricted, how work or legal obligations are handled, and what happens after a rule violation or a return to use. You should also receive information about privacy, complaints, patient rights, and how to request an accommodation for disability, language, religion, diet, or family responsibilities.",
+      },
+      {
+        heading: "Family involvement requires the patient's permission",
+        body: "Many programs offer family education, counseling, or scheduled visits because substance use affects the whole household. The patient should be involved in deciding what information can be shared and with whom. Ask how releases of information work, when family sessions begin, and whether relatives can receive support even if the patient does not authorize clinical updates. A family program should help people understand recovery, communication, boundaries, and planning for home, not turn relatives into monitors. If family contact is unsafe or unwanted, discuss that during intake so the treatment plan protects privacy and safety.",
+      },
+      {
+        heading: "Discharge planning should start early",
+        body: "Residential treatment lasts for a limited time, while recovery support continues afterward. A quality program begins planning early for the next level of care, medication, therapy, recovery housing if needed, primary care, transportation, and peer support. Ask how progress is measured, how often the plan is reviewed, and what could lead to a longer stay, earlier discharge, or a step down to PHP, IOP, or outpatient care. Before leaving, you should have written medication instructions, scheduled follow-up appointments, emergency contacts, and a practical plan for the first days at home.",
+      },
+    ],
+    sources: [
+      {
+        label: "SAMHSA: What to expect from treatment",
+        href: "https://www.samhsa.gov/find-support/learn-about-treatment/what-to-expect-from-treatment",
+      },
+      {
+        label: "NIAAA: Questions for alcohol treatment programs",
+        href: "https://alcoholtreatment.niaaa.nih.gov/how-to-find-alcohol-treatment/10-questions-for-alcohol-treatment-programs",
+      },
+      {
+        label: "NIAAA: Signs of quality treatment",
+        href: "https://alcoholtreatment.niaaa.nih.gov/how-to-find-alcohol-treatment/step-3-choose-quality-care",
+      },
+    ],
+  },
+  {
+    slug: "help-a-loved-one-who-refuses-treatment",
+    title: "How to help a loved one who refuses treatment",
+    description:
+      "You cannot force a lasting recovery conversation, but you can improve safety, reduce barriers, set clear boundaries, and keep the door open. Learn practical steps for supporting a loved one and yourself.",
+    reviewedOn: "2026-10-17",
+    sections: [
+      {
+        heading: "Handle immediate danger first",
+        body: "If the person is unconscious, cannot be awakened, has slow or stopped breathing, is having a seizure, is severely confused, or may harm themselves or someone else, call 911. If opioids may be involved, give naloxone if it is available and stay until emergency help arrives. Naloxone can reverse an opioid overdose when given in time and is available over the counter in the United States. Do not wait for the person to agree to treatment during an emergency. For a mental health or suicide crisis, call or text 988. When the situation is stable, you can return to a calmer conversation about longer-term help.",
+      },
+      {
+        heading: "Choose a calm time and speak without judgment",
+        body: "Do not start the conversation while the person is intoxicated, in withdrawal, or in the middle of an argument. Choose a private time with few distractions. Describe specific things you have noticed and how they affect safety, health, work, or family, rather than using labels or listing every past mistake. Use a calm tone and listen for what the person fears about treatment. SAMHSA recommends open-ended questions, such as what they like and do not like about their current situation or how they would want life to be different. Reflect back what you heard before offering solutions.",
+      },
+      {
+        heading: "Offer choices and remove practical barriers",
+        body: "A refusal may be about a specific option rather than all help. Ask what they might consider: a primary care visit, medication, individual therapy, telehealth, an outpatient program, a support group, or a confidential assessment. Offer to research licensed providers, sit with them during calls, arrange transportation, care for children, or help verify insurance. Present two or three credible choices instead of one ultimatum. If every option is rejected, leave written information and ask permission to check in later. It may take many conversations before someone accepts help.",
+      },
+      {
+        heading: "Set boundaries around what you will and will not do",
+        body: "Support does not require protecting someone from every consequence or accepting unsafe behavior. Decide which boundaries are necessary for safety and your own wellbeing, such as not providing cash, not allowing substance use in your home, not lying to an employer, or not driving with someone who is impaired. State the boundary clearly, explain what you will do if it is crossed, and follow through consistently. Avoid threats you cannot keep. You can say that you will help arrange treatment, transportation, or meals while also declining requests that increase risk or take over your life.",
+      },
+      {
+        heading: "Prepare for the moment they become willing",
+        body: "Motivation can change quickly, so do the research in advance. Keep contact information for a licensed treatment provider, the person's insurer, the state substance use agency, and SAMHSA's National Helpline. Ask programs how quickly they can complete an assessment, what identification is needed, whether withdrawal requires medical care, and which payment options are available. Do not promise that one program will cure the problem. Offer a first step that can happen soon, such as calling a clinician together or attending an appointment, and let the person participate in choosing the plan whenever it is safe to do so.",
+      },
+      {
+        heading: "Get support for yourself",
+        body: "Living with another person's substance use can be exhausting and isolating. Family therapy, a licensed counselor, and peer groups for relatives can help you make decisions, practice conversations, and maintain boundaries. Support for yourself is useful even if your loved one refuses treatment. Protect your sleep, finances, medical care, and connections with other people. If children or vulnerable adults are affected, seek professional guidance about safety and legal responsibilities in your area. Your support can matter, but the other person remains responsible for their choices and recovery.",
+      },
+    ],
+    sources: [
+      {
+        label: "SAMHSA: How to talk to someone about getting help",
+        href: "https://www.samhsa.gov/find-support/helping-someone/how-to-talk-to-someone-about-help",
+      },
+      {
+        label: "NIAAA: Starting the conversation",
+        href: "https://alcoholtreatment.niaaa.nih.gov/support-through-the-process/starting-the-conversation",
+      },
+      {
+        label: "SAMHSA: Taking care of yourself",
+        href: "https://www.samhsa.gov/find-support/helping-someone/caring-for-yourself",
+      },
+      {
+        label: "CDC: Lifesaving naloxone",
+        href: "https://www.cdc.gov/stop-overdose/caring/naloxone.html",
+      },
+    ],
+  },
 ];
