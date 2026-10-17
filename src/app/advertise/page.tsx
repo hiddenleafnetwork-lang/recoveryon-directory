@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { ArrowRight, BadgeCheck, BarChart3, Check, ImageIcon, Mail, Star } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, BadgeCheck, BarChart3, Check, Mail, Star } from "lucide-react";
+import { BrandMark } from "@/components/brand-mark";
 import { FeaturedBadge } from "@/components/featured-badge";
 import { CONTACT_EMAIL } from "@/lib/site";
 
@@ -32,7 +34,11 @@ export default function AdvertisePage() {
         </div>
         <div className="featured-listing-preview" aria-label="Example featured listing card">
           <FeaturedBadge />
-          <div className="featured-listing-preview-image"><ImageIcon aria-hidden="true" /></div>
+          <div className="featured-listing-preview-image">
+            <Image src="/images/treatmentlane-featured-listing.webp" alt="Illustration of a welcoming treatment facility entrance" fill sizes="(max-width: 980px) 100vw, 45vw" priority />
+            <span className="visual-brand-chip"><BrandMark /></span>
+            <span className="illustration-label">Illustrative example</span>
+          </div>
           <div>
             <span className="eyebrow">City, State</span>
             <h2>Your organization</h2>
